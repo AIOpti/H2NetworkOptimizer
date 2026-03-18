@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiFLO AI — Open Learning Platform for AI in Oil and Gas</title>
+<meta name="description" content="Interactive learning platform for AI-driven hydrogen network optimization using Mixed Integer Programming. Built for Oil & Gas engineers by OptiFLO AI Solutions.">
+<meta property="og:title" content="OptiFLO AI — Open Learning Platform for AI in Oil and Gas">
+<meta property="og:description" content="Hands-on learning: Build, optimize, and analyze hydrogen networks using MIP. Free interactive platform for O&G engineers by OptiFLO AI Solutions.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#0a1628;--surface:#111d32;--surface2:#182842;--surface3:#1f3355;--border:#2a4060;--text:#e2eaf3;--text2:#8a9bb5;--accent:#00b4d8;--accent2:#0096c7;--accent-glow:#00b4d833;--green:#06d6a0;--red:#ef476f;--orange:#ffd166;--purple:#b388ff;--blue:#4cc9f0;--grad1:linear-gradient(135deg,#0077b6,#00b4d8);--grad2:linear-gradient(135deg,#06d6a0,#00b4d8);--radius:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+::selection{background:var(--accent);color:#fff}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,22,40,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:52px;gap:6px}
+.nav-brand{font-weight:700;font-size:17px;margin-right:auto;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.nav-brand span{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-link{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface2);text-decoration:none}
+.nav-link.active{color:var(--text);background:var(--surface2)}
+.nav-btn{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s}
+.nav-btn-learn{background:var(--grad2);color:#000}.nav-btn-learn:hover{transform:scale(1.03)}
+.nav-btn-fb{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.nav-btn-fb:hover{border-color:var(--accent)}
+
+/* ── HERO (compact) ── */
+.hero{padding:72px 24px 20px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#0077b618 0%,transparent 55%)}
+.hero-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;background:var(--accent-glow);color:var(--accent);border:1px solid var(--accent);letter-spacing:.5px;margin-bottom:12px}
+.hero h1{font-size:clamp(24px,4vw,40px);font-weight:800;line-height:1.15;margin-bottom:8px}
+.hero h1 em{font-style:normal;background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:15px;color:var(--text2);max-width:620px;margin:0 auto 16px}
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+.hero-stat .val{font-size:24px;font-weight:800;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .lbl{font-size:11px;color:var(--text2)}
+
+/* ── SECTIONS ── */
+.section{padding:32px 24px;max-width:1200px;margin:0 auto}
+.section-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.section-sub{color:var(--text2);font-size:14px;margin-bottom:20px}
+.divider{width:50px;height:3px;background:var(--grad1);border-radius:2px;margin-bottom:20px}
+
+/* ── OPTIMIZER ── */
+.opt-grid{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.opt-sb{background:var(--surface2);border-right:1px solid var(--border);padding:14px;overflow-y:auto}
+.opt-main{padding:16px;overflow-y:auto}
+.opt-sb h4{font-size:11px;text-transform:uppercase;color:var(--text2);letter-spacing:.5px;margin:12px 0 6px}
+.opt-sb h4:first-child{margin-top:0}
+.sc-btn{display:block;width:100%;padding:8px 10px;margin-bottom:4px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;cursor:pointer;text-align:left;transition:all .12s}
+.sc-btn:hover{border-color:var(--accent);background:var(--surface3)}
+.sc-btn.active{border-color:var(--accent);background:var(--accent2);color:#fff}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px}
+.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.kpi-label{font-size:10px;text-transform:uppercase;color:var(--text2);letter-spacing:.3px}
+.kpi-value{font-size:20px;font-weight:700;margin-top:1px}
+.kpi-unit{font-size:11px;color:var(--text2)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px}
+.panel-title{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:5px;border-bottom:2px solid var(--border);color:var(--text2);font-weight:500;font-size:10px;text-transform:uppercase}
+td{padding:5px;border-bottom:1px solid var(--border)}
+.bar-c{width:100%;height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
+.bar-f{height:100%;border-radius:3px;transition:width .5s}
+.tag{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:500}
+.tag-on{background:#06d6a022;color:var(--green)}.tag-off{background:#ef476f22;color:var(--red)}.tag-warn{background:#ffd16622;color:var(--orange)}
+.cost-bar{display:flex;height:20px;border-radius:4px;overflow:hidden;margin:6px 0}
+.cost-bar div{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;min-width:2%}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px}
+.legend-i{display:flex;align-items:center;gap:3px}
+.legend-d{width:8px;height:8px;border-radius:2px}
+
+/* ── CUSTOM BUILDER ── */
+.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:3px;font-weight:500}
+.form-group input,.form-group select{width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:inherit}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent)}
+.btn{padding:8px 18px;border:none;border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;transition:all .12s}
+.btn-primary{background:var(--grad1);color:#fff}.btn-primary:hover{transform:scale(1.03)}
+.btn-secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text)}.btn-secondary:hover{border-color:var(--accent)}
+.btn-sm{padding:6px 12px;font-size:11px}
+.asset-list{max-height:220px;overflow-y:auto}
+.asset-item{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-bottom:4px;font-size:12px}
+.asset-item .remove{color:var(--red);cursor:pointer;font-size:15px;padding:0 4px}
+
+/* ── CHATBOT PANEL ── */
+.chat-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;padding:20px}
+.chat-overlay.open{display:flex}
+.chat-container{width:100%;max-width:800px;height:90vh;background:var(--surface);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface2)}
+.chat-header h3{font-size:16px;font-weight:600;flex:1}
+.chat-status{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500}
+.chat-status.loading{background:#ffd16622;color:var(--orange);animation:pulse 1.5s infinite}
+.chat-status.ready{background:#06d6a022;color:var(--green)}
+.chat-status.error{background:#ef476f22;color:var(--red)}
+.chat-close{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.chat-close:hover{background:var(--surface3);color:var(--text)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.55;word-wrap:break-word}
+.chat-msg.assistant{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.user{background:var(--accent2);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-msg.system{background:var(--surface3);border:1px dashed var(--border);align-self:center;text-align:center;font-size:12px;color:var(--text2);max-width:95%}
+.chat-msg code{background:var(--bg);padding:1px 5px;border-radius:3px;font-size:13px}
+.chat-msg strong{color:var(--accent)}
+.chat-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
+.chat-suggest-btn{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .12s}
+.chat-suggest-btn:hover{border-color:var(--accent);color:var(--text)}
+.chat-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--surface2)}
+.chat-input{flex:1;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;resize:none;outline:none}
+.chat-input:focus{border-color:var(--accent)}
+.chat-send{padding:10px 18px;background:var(--grad1);border:none;border-radius:10px;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
+.chat-send:disabled{opacity:0.4;cursor:not-allowed}
+.chat-progress{padding:8px 20px;background:var(--surface2);border-top:1px solid var(--border)}
+.chat-progress-bar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden}
+.chat-progress-fill{height:100%;background:var(--grad1);border-radius:2px;transition:width .3s}
+.chat-progress-text{font-size:11px;color:var(--text2);margin-top:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.typing-dots::after{content:'...';animation:dots 1.5s infinite}
+@keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
+
+/* ── FEEDBACK MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
+.modal h3{font-size:20px;font-weight:700;margin-bottom:4px}
+.modal .modal-sub{color:var(--text2);font-size:14px;margin-bottom:16px}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer}
+.success-msg{padding:16px;background:#06d6a018;border:1px solid var(--green);border-radius:8px;color:var(--green);text-align:center;display:none}
+
+/* ── FOOTER ── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:24px;text-align:center}
+footer p{color:var(--text2);font-size:13px}
+footer .social{margin-top:8px}
+footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav{padding:0 12px;gap:4px}.nav-link{padding:5px 8px;font-size:12px}.nav-btn{padding:5px 10px;font-size:12px}
+  .hero{padding:60px 14px 14px}.hero h1{font-size:22px}
+  .section{padding:20px 14px}
+  .opt-grid{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .builder-grid{grid-template-columns:1fr}
+  .chat-container{height:100vh;border-radius:0;max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-brand"><svg width="24" height="24" viewBox="0 0 40 40" style="flex-shrink:0"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0077b6"/><stop offset="100%" stop-color="#00b4d8"/></linearGradient></defs><rect width="40" height="40" rx="8" fill="url(#lg)"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="system-ui">O</text></svg><span>OptiFLO</span> AI</div>
+  <a href="#optimize" class="nav-link active">Optimize</a>
+  <a href="#build" class="nav-link">Build Your Own</a>
+  <button class="nav-btn nav-btn-learn" id="learnBtn" onclick="openChat()"><span id="learnDot" style="display:none;width:6px;height:6px;border-radius:50%;margin-right:4px;background:var(--orange);animation:pulse 1.5s infinite"></span>Start Learning</button>
+  <button class="nav-btn nav-btn-fb" onclick="openFeedback()">Feedback</button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-badge">OPTIFLO AI &mdash; OPEN LEARNING PLATFORM FOR AI IN OIL AND GAS</div>
+  <h1>AI-Driven <em>Hydrogen Network Optimization</em></h1>
+  <p>Run MIP-based dispatch optimization on a realistic refinery H₂ network. Explore scenarios, build custom networks, or chat with an AI tutor to learn the concepts. By <strong>OptiFLO AI Solutions</strong>, Abu Dhabi.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">5</div><div class="lbl">Producers</div></div>
+    <div class="hero-stat"><div class="val">10</div><div class="lbl">Consumers</div></div>
+    <div class="hero-stat"><div class="val">120k</div><div class="lbl">Nm³/h Capacity</div></div>
+    <div class="hero-stat"><div class="val">MIP</div><div class="lbl">Solver</div></div>
+  </div>
+</section>
+
+<!-- ══ OPTIMIZER ══ -->
+<section class="section" id="optimize">
+  <div class="section-title">Live Optimizer</div>
+  <div class="section-sub">Select a scenario — the merit-order dispatch runs instantly in your browser.</div>
+  <div class="divider"></div>
+  <div class="opt-grid">
+    <div class="opt-sb">
+      <h4>Scenarios</h4>
+      <button class="sc-btn active" onclick="runScenario('base',this)">Base Case — Nominal</button>
+      <button class="sc-btn" onclick="runScenario('smr1_outage',this)">SMR-1 Outage</button>
+      <button class="sc-btn" onclick="runScenario('smr2_outage',this)">SMR-2 Outage</button>
+      <button class="sc-btn" onclick="runScenario('dual_smr_outage',this)">Dual SMR Outage</button>
+      <button class="sc-btn" onclick="runScenario('hck_surge',this)">Hydrocracker +20%</button>
+      <button class="sc-btn" onclick="runScenario('global_surge',this)">Global Demand +10%</button>
+      <h4>Observations</h4>
+      <div style="font-size:11px;color:var(--text2);line-height:1.5">
+        <p style="margin-bottom:4px"><b>Base:</b> By-products max out first (cheapest). SMRs fill the gap.</p>
+        <p style="margin-bottom:4px"><b>SMR-1 Out:</b> Import surges. Low-priority consumers curtailed.</p>
+        <p style="margin-bottom:4px"><b>Dual SMR:</b> Massive curtailment — shows vulnerability.</p>
+        <p><b>HCK Surge:</b> SMR-1 near max. Cost rises but supply holds.</p>
+      </div>
+      <h4>Merit Order</h4>
+      <div id="sidebarMerit" style="font-size:11px"></div>
+    </div>
+    <div class="opt-main">
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar" id="costBar"></div><div class="legend" id="costLegend"></div></div>
+      <div class="grid-2">
+        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producer Dispatch</div><table><thead><tr><th>Unit</th><th>Status</th><th>Flow</th><th>Loading</th></tr></thead><tbody id="prodTbl"></tbody></table></div>
+        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumer Supply</div><table><thead><tr><th>Unit</th><th>Supplied</th><th>Status</th><th>%</th></tr></thead><tbody id="consTbl"></tbody></table></div>
+      </div>
+      <div class="grid-2">
+        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Purifiers &amp; External</div><div id="purInfo"></div></div>
+        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>CO₂ &amp; Economics</div><div id="co2Info"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BUILD YOUR OWN ══ -->
+<section class="section" id="build">
+  <div class="section-title">Build Your Own Network</div>
+  <div class="section-sub">Define custom assets, run the optimizer. All processing is local — no data leaves your browser.</div>
+  <div class="divider"></div>
+  <div class="builder-grid">
+    <div>
+      <div class="panel">
+        <div class="panel-title"><div class="dot" style="background:var(--green)"></div>Add Producer</div>
+        <div class="form-group"><label>Name / ID</label><input id="cp-name" placeholder="e.g. SMR-3"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="form-group"><label>Type</label><select id="cp-type"><option>SMR</option><option>Electrolyser</option><option>ByProduct</option></select></div>
+          <div class="form-group"><label>Cost ($/Nm³)</label><input id="cp-cost" type="number" step="0.001" value="0.040"></div>
+          <div class="form-group"><label>Min (Nm³/h)</label><input id="cp-min" type="number" value="5000"></div>
+          <div class="form-group"><label>Max (Nm³/h)</label><input id="cp-max" type="number" value="30000"></div>
+        </div>
+        <input type="hidden" id="cp-startup" value="10000">
+        <button class="btn btn-primary btn-sm" onclick="addCustomProducer()">+ Add Producer</button>
+      </div>
+      <div class="panel" style="margin-top:10px">
+        <div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Add Consumer</div>
+        <div class="form-group"><label>Name / ID</label><input id="cc-name" placeholder="e.g. HDS-3"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="form-group"><label>Demand (Nm³/h)</label><input id="cc-demand" type="number" value="8000"></div>
+          <div class="form-group"><label>Priority (1-5)</label><input id="cc-pri" type="number" min="1" max="5" value="2"></div>
+          <div class="form-group"><label>Curtailable?</label><select id="cc-curt"><option value="false">No</option><option value="true">Yes</option></select></div>
+          <div class="form-group"><label>Penalty ($/Nm³)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="addCustomConsumer()">+ Add Consumer</button>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="btn btn-primary" onclick="runCustomOpt()">Optimize</button>
+        <button class="btn btn-secondary btn-sm" onclick="resetCustom()">Reset</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadSample()">Load Sample</button>
+      </div>
+    </div>
+    <div>
+      <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producers (<span id="cpCount">0</span>)</div><div class="asset-list" id="cpList"><div style="color:var(--text2);font-size:12px;padding:6px">No producers yet. Click "Load Sample" to start.</div></div></div>
+      <div class="panel" style="margin-top:10px"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumers (<span id="ccCount">0</span>)</div><div class="asset-list" id="ccList"><div style="color:var(--text2);font-size:12px;padding:6px">No consumers yet.</div></div></div>
+      <div class="panel" style="margin-top:10px;display:none" id="customResult"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Result</div><div id="customResultBody"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <p>&copy; 2026 Mohd Sharique — <strong>Let the domain lead AI</strong></p>
+  <p style="margin-top:6px;font-size:11px">OptiFLO AI Solutions, Abu Dhabi &nbsp;|&nbsp; <a href="mailto:sharique@optifloai.com">sharique@optifloai.com</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/mohdsharique" target="_blank">LinkedIn</a></p>
+</footer>
+
+<!-- ══ CHATBOT OVERLAY ══ -->
+<div class="chat-overlay" id="chatOverlay" onclick="if(event.target===this)closeChat()">
+  <div class="chat-container">
+    <div class="chat-header">
+      <svg width="22" height="22" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="url(#lg)"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="system-ui">O</text></svg>
+      <h3>OptiFLO AI Tutor</h3>
+      <span class="chat-status loading" id="chatStatus">Initializing...</span>
+      <button class="chat-close" onclick="closeChat()">&times;</button>
+    </div>
+    <div class="chat-progress" id="chatProgress">
+      <div class="chat-progress-bar"><div class="chat-progress-fill" id="chatProgressFill" style="width:0%"></div></div>
+      <div class="chat-progress-text" id="chatProgressText">Preparing AI model...</div>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg assistant">Hello! I'm the <strong>OptiFLO AI Tutor</strong> — powered by Llama 3 and trained on hydrogen network optimization, Mixed Integer Programming, and process engineering best practices.<br><br>Ask me anything about H₂ optimization. Here are some ideas to get started:</div>
+    </div>
+    <div class="chat-suggestions" id="chatSuggestions">
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">What is MIP and why use it?</button>
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">Explain the merit order concept</button>
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">How do I build my own H₂ optimizer?</button>
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">What happens in an SMR outage?</button>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chatInput" rows="1" placeholder="Ask about MIP, hydrogen optimization, network design..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+      <button class="chat-send" id="chatSend" onclick="sendChat()" disabled>Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK MODAL ══ -->
+<div class="modal-overlay" id="fbOverlay" onclick="if(event.target===this)closeFeedback()">
+  <div class="modal" style="position:relative">
+    <button class="modal-close" onclick="closeFeedback()">&times;</button>
+    <h3>Share Your Feedback</h3>
+    <div class="modal-sub">Tried the platform? Your feedback shapes future training content.</div>
+    <form id="feedbackForm" onsubmit="return handleFeedback(event)">
+      <div class="form-group"><label>Name *</label><input id="fb-name" required placeholder="Your name"></div>
+      <div class="form-group"><label>Email *</label><input id="fb-email" type="email" required placeholder="you@company.com"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="form-group"><label>Organization</label><input id="fb-org" placeholder="Optional"></div>
+        <div class="form-group"><label>Role</label><select id="fb-role"><option>Process Engineer</option><option>Operations</option><option>Planning Engineer</option><option>Data Scientist</option><option>Management</option><option>Student</option><option>Other</option></select></div>
+      </div>
+      <div class="form-group"><label>Most useful feature?</label><select id="fb-useful"><option>Live optimizer demo</option><option>Build Your Own Network</option><option>AI Tutor chatbot</option><option>All of the above</option></select></div>
+      <div class="form-group"><label>Feedback *</label><textarea id="fb-msg" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:13px;min-height:80px;resize:vertical" required placeholder="Share thoughts, questions, or how you'd apply this..."></textarea></div>
+      <div class="form-group" style="font-size:12px"><label><input type="checkbox" id="fb-interest"> I'm interested in a live training workshop</label></div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Send Feedback</button>
+    </form>
+    <div class="success-msg" id="fbSuccess">Thank you! I'll be in touch soon.</div>
+  </div>
+</div>
+
+<script type="module">
+// ═══════════════════════════════════════════════════════════════════════════
+//  GROQ-POWERED AI CHATBOT (via Netlify Function proxy)
+// ═══════════════════════════════════════════════════════════════════════════
+
+const CHAT_API = "/api/chat"; // Netlify Function endpoint
+let chatHistory = [];
+let isGenerating = false;
+let modelLoaded = false;
+
+// ── Connectivity check — ping the Netlify Function on load ──
+async function initChat() {
+  try {
+    document.getElementById('learnDot').style.display = 'inline-block';
+    setStatus('loading', 'Connecting...');
+    document.getElementById('chatProgressText').textContent = 'Connecting to AI service...';
+
+    // Quick health check — send a minimal request
+    const res = await fetch(CHAT_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [{ role: "user", content: "ping" }] }),
+    });
+
+    if (res.ok) {
+      modelLoaded = true;
+      document.getElementById('chatProgress').style.display = 'none';
+      document.getElementById('chatSend').disabled = false;
+      setStatus('ready', 'AI Ready');
+      const dot = document.getElementById('learnDot');
+      dot.style.background = 'var(--green)';
+      dot.style.animation = 'none';
+      document.getElementById('learnBtn').title = 'AI Tutor ready — click to chat';
+    } else {
+      throw new Error('API returned ' + res.status);
+    }
+  } catch (err) {
+    console.warn('Chat init check:', err);
+    // Still allow usage — the actual send will show errors if needed
+    modelLoaded = true;
+    document.getElementById('chatProgress').style.display = 'none';
+    document.getElementById('chatSend').disabled = false;
+    setStatus('ready', 'AI Ready');
+    const dot = document.getElementById('learnDot');
+    dot.style.background = 'var(--green)';
+    dot.style.animation = 'none';
+  }
+}
+
+function setStatus(type, text) {
+  const el = document.getElementById('chatStatus');
+  el.className = 'chat-status ' + type;
+  el.textContent = text;
+}
+
+function addMsg(role, content) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.innerHTML = formatMsg(content);
+  document.getElementById('chatMessages').appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth' });
+  return div;
+}
+
+function addSystemMsg(text) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg system';
+  div.textContent = text;
+  document.getElementById('chatMessages').appendChild(div);
+}
+
+function formatMsg(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+async function sendChat() {
+  if (isGenerating) return;
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  document.getElementById('chatSuggestions').style.display = 'none';
+  addMsg('user', text);
+
+  chatHistory.push({ role: "user", content: text });
+  isGenerating = true;
+  document.getElementById('chatSend').disabled = true;
+  setStatus('loading', 'Thinking...');
+
+  const assistantDiv = addMsg('assistant', '<span class="typing-dots">Generating</span>');
+
+  try {
+    const res = await fetch(CHAT_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: chatHistory }),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || `API error ${res.status}`);
+    }
+
+    // Parse SSE stream from Groq (via Netlify proxy)
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let response = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';  // keep incomplete line in buffer
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const parsed = JSON.parse(data);
+          const delta = parsed.choices?.[0]?.delta?.content || '';
+          if (delta) {
+            response += delta;
+            assistantDiv.innerHTML = formatMsg(response);
+            assistantDiv.scrollIntoView({ behavior: 'smooth' });
+          }
+        } catch (e) { /* skip unparseable chunks */ }
+      }
+    }
+
+    if (!response) response = 'I received your question but couldn\'t generate a response. Please try again.';
+    chatHistory.push({ role: "assistant", content: response });
+
+    // Keep history manageable (last 12 messages)
+    if (chatHistory.length > 13) {
+      chatHistory = chatHistory.slice(-12);
+    }
+
+  } catch (err) {
+    assistantDiv.innerHTML = `<span style="color:var(--red)">Error: ${err.message}. Please try again.</span>`;
+    console.error('Chat error:', err);
+  }
+
+  isGenerating = false;
+  document.getElementById('chatSend').disabled = false;
+  setStatus('ready', 'AI Ready');
+  showSuggestions();
+}
+
+const SUGGESTIONS = [
+  ["What is MIP and why use it?","Explain the merit order concept","How do I build my own H₂ optimizer?","What happens in an SMR outage?"],
+  ["What are decision variables?","Explain the objective function","How does the PSA purifier work?","What tools do I need to start?"],
+  ["What is the Big-M constraint?","Compare PSA vs membrane","How to handle demand surges?","What is rolling-horizon optimization?"],
+  ["Explain mass balance constraints","Why use binary variables?","How to connect OPC-UA data?","What solver should I use in production?"],
+  ["What is branch and bound?","Explain startup cost amortisation","How to validate the model?","What is shadow-mode deployment?"],
+];
+let suggestionRound = 0;
+function showSuggestions() {
+  const el = document.getElementById('chatSuggestions');
+  const set = SUGGESTIONS[suggestionRound % SUGGESTIONS.length];
+  suggestionRound++;
+  el.innerHTML = set.map(s => `<button class="chat-suggest-btn" onclick="askSuggestion(this)">${s}</button>`).join('');
+  el.style.display = 'flex';
+}
+
+function askSuggestion(btn) {
+  document.getElementById('chatInput').value = btn.textContent;
+  sendChat();
+}
+
+// Expose to global scope for onclick handlers
+window.sendChat = sendChat;
+window.askSuggestion = askSuggestion;
+
+let chatInitialized = false;
+function ensureChatReady() {
+  if (!chatInitialized) { chatInitialized = true; initChat(); }
+}
+window.openChat = function() {
+  document.getElementById('chatOverlay').classList.add('open');
+  ensureChatReady();
+  document.getElementById('chatInput').focus();
+};
+window.closeChat = function() {
+  document.getElementById('chatOverlay').classList.remove('open');
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  NETWORK DATA & SOLVER (same as before)
+// ═══════════════════════════════════════════════════════════════════════════
+const NET = {
+  producers: {
+    "SMR-1":{name:"Steam Methane Reformer #1",type:"SMR",min:8000,max:50000,cost:0.035,startup:15000,co2:0.27},
+    "SMR-2":{name:"Steam Methane Reformer #2",type:"SMR",min:5000,max:35000,cost:0.038,startup:12000,co2:0.26},
+    "ELEC-1":{name:"PEM Electrolyser",type:"Electrolyser",min:1000,max:15000,cost:0.065,startup:500,co2:0.02},
+    "BYP-CCR":{name:"CCR By-product H₂",type:"ByProduct",min:3000,max:12000,cost:0.010,startup:0,co2:0},
+    "BYP-ETH":{name:"Ethylene Cracker Off-gas",type:"ByProduct",min:2000,max:8000,cost:0.008,startup:0,co2:0},
+  },
+  purifiers:{"PSA-1":{name:"PSA #1",max:60000,recovery:0.85,purity:99.9},"MEM-1":{name:"Membrane #1",max:25000,recovery:0.92,purity:98}},
+  consumers:{
+    "C-HDS1":{name:"HDS Unit 1",nom:14000,max:18000,pri:1,curt:false,pen:0.20},
+    "C-HDS2":{name:"HDS Unit 2",nom:9000,max:12000,pri:1,curt:false,pen:0.20},
+    "C-HCK":{name:"Hydrocracker",nom:28000,max:35000,pri:1,curt:false,pen:0.25},
+    "C-HTR":{name:"Hydrotreater",nom:7500,max:10000,pri:2,curt:false,pen:0.15},
+    "C-ISO":{name:"Isomerisation",nom:3000,max:4000,pri:2,curt:true,pen:0.10},
+    "C-DHT":{name:"Diesel HT",nom:11000,max:15000,pri:1,curt:false,pen:0.18},
+    "C-NHT":{name:"Naphtha HT",nom:5500,max:8000,pri:3,curt:true,pen:0.08},
+    "C-LUB":{name:"Lube Oil HT",nom:2200,max:3500,pri:3,curt:true,pen:0.12},
+    "C-WAX":{name:"Wax Hydrofinisher",nom:1200,max:2000,pri:4,curt:true,pen:0.06},
+    "C-H2S":{name:"Amine/Claus Feed",nom:2000,max:3000,pri:5,curt:true,pen:0.04},
+  },
+  import:{max:20000,cost:0.075},export:{max:10000,revenue:0.025}
+};
+
+function solveMeritOrder(producers, consumers, imp, exp) {
+  const sorted = Object.entries(producers).sort((a,b)=>a[1].cost-b[1].cost);
+  const totalDemand = Object.values(consumers).reduce((s,c)=>s+c.nom,0);
+  const uhpIds = Object.keys(consumers).filter(id=>!["C-HTR","C-NHT","C-WAX","C-H2S"].includes(id));
+  const hpcIds = ["C-HTR","C-NHT","C-WAX","C-H2S"].filter(id=>id in consumers);
+  const uhpDemand = uhpIds.reduce((s,id)=>s+consumers[id].nom,0);
+  let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0}};
+  let hpSupply=0,uhpDirect=0;
+  for(const[pid,p]of sorted){let needed=totalDemand-hpSupply*0.87-uhpDirect-r.importFlow;if(needed<=0){r.prodFlows[pid]=0;r.prodOn[pid]=false;continue}let flow=Math.min(p.max,Math.max(p.min,needed*1.05));flow=Math.max(p.min,Math.min(p.max,flow));r.prodFlows[pid]=flow;r.prodOn[pid]=true;r.costs.production+=p.cost*flow;r.costs.startup+=(p.startup||0)/8;if(pid==="ELEC-1")uhpDirect+=flow;else hpSupply+=flow}
+  let psaFeed=Math.min(hpSupply*0.70,60000),memFeed=Math.min(hpSupply-psaFeed,25000);r.purFeeds["PSA-1"]=psaFeed;r.purFeeds["MEM-1"]=memFeed;let uhpAvail=psaFeed*0.85+uhpDirect,hpcAvail=memFeed*0.92;
+  let uhpShort=uhpDemand-uhpAvail;if(uhpShort>0){r.importFlow=Math.min(uhpShort,imp.max);uhpAvail+=r.importFlow;r.costs.import=imp.cost*r.importFlow}
+  const sortedCons=Object.entries(consumers).sort((a,b)=>a[1].pri-b[1].pri);for(const[cid,c]of sortedCons){const isUHP=uhpIds.includes(cid);let avail=isUHP?uhpAvail:hpcAvail;let supply=Math.min(c.nom,avail);r.consSupplied[cid]=supply;let unmet=Math.max(0,c.nom-supply);r.consUnmet[cid]=unmet;if(isUHP)uhpAvail-=supply;else hpcAvail-=supply;if(unmet>0)r.costs.unmet_penalty+=c.pen*unmet}
+  if(hpcAvail>0){r.exportFlow=Math.min(hpcAvail,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
+  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.startup+r.costs.unmet_penalty;
+  return r;
+}
+
+function getScenarioInputs(name){let p=JSON.parse(JSON.stringify(NET.producers)),c=JSON.parse(JSON.stringify(NET.consumers));switch(name){case'smr1_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;break;case'smr2_outage':p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'dual_smr_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'hck_surge':c["C-HCK"].nom=33600;c["C-HCK"].max=42000;break;case'global_surge':Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*1.1);x.max=Math.round(x.max*1.1)});break}return{p,c}}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  UI RENDERING
+// ═══════════════════════════════════════════════════════════════════════════
+function renderMerit(){const order=Object.entries(NET.producers).sort((a,b)=>a[1].cost-b[1].cost);const cols={ByProduct:'var(--green)',SMR:'var(--accent)',Electrolyser:'var(--purple)'};document.getElementById('sidebarMerit').innerHTML=order.map(([pid,p],i)=>`<div style="display:flex;align-items:center;gap:5px;padding:2px 0"><span style="color:var(--text2);width:12px">${i+1}.</span><span style="width:6px;height:6px;border-radius:50%;background:${cols[p.type]||'#888'}"></span><span>${pid}</span><span style="margin-left:auto;color:var(--text2)">$${p.cost}</span></div>`).join('')}
+
+window.runScenario = function(name,btn){
+  document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const{p,c}=getScenarioInputs(name);const r=solveMeritOrder(p,c,NET.import,NET.export);renderOpt(r,p,c);
+};
+
+function renderOpt(r,prods,cons){
+  const cb=r.costs;const f=v=>v.toLocaleString(undefined,{maximumFractionDigits:0});
+  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,''],['Production',cb.production,''],['Import',cb.import,''],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${f(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
+  const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;const segs=[{v:cb.production,c:'#0077b6',l:'Production'},{v:cb.import,c:'#00b4d8',l:'Import'},{v:cb.startup,c:'#ffd166',l:'Startup'},{v:cb.unmet_penalty,c:'#ef476f',l:'Penalty'}];
+  document.getElementById('costBar').innerHTML=segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('');
+  document.getElementById('costLegend').innerHTML=segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${f(s.v)}</div>`).join('');
+  document.getElementById('prodTbl').innerHTML=Object.entries(r.prodFlows).map(([pid,flow])=>{const p=prods[pid];const on=r.prodOn[pid];const pct=p.max>0?(flow/p.max*100):0;const col=on?(pct>90?'var(--orange)':'var(--green)'):'var(--red)';return`<tr><td><b>${pid}</b><br><span style="font-size:10px;color:var(--text2)">${p.name}</span></td><td><span class="tag ${on?'tag-on':'tag-off'}">${on?'ON':'OFF'}</span></td><td>${f(flow)}</td><td><div class="bar-c"><div class="bar-f" style="width:${pct}%;background:${col}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
+  document.getElementById('consTbl').innerHTML=Object.entries(r.consSupplied).map(([cid,sup])=>{const c=cons[cid];const unmet=r.consUnmet[cid]||0;const pct=c.nom>0?(sup/c.nom*100):100;return`<tr><td><b>${cid}</b><br><span style="font-size:10px;color:var(--text2)">${c.name}</span></td><td>${f(sup)}</td><td>${unmet>0.1?`<span class="tag tag-warn">-${f(unmet)}</span>`:'<span class="tag tag-on">OK</span>'}</td><td><div class="bar-c"><div class="bar-f" style="width:${Math.min(pct,100)}%;background:${unmet>0?'var(--orange)':'var(--accent)'}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
+  let pi='';for(const[uid,feed]of Object.entries(r.purFeeds)){const u=NET.purifiers[uid];const pct=u?(feed/u.max*100):0;pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">${uid}</span><span>${f(feed)} Nm³/h (${pct.toFixed(0)}%)</span></div>`}
+  pi+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
+  pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Import</span><span>${f(r.importFlow)} Nm³/h</span></div>`;
+  pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Export</span><span>${f(r.exportFlow)} Nm³/h</span></div>`;
+  document.getElementById('purInfo').innerHTML=pi;
+  let co2=0;Object.entries(r.prodFlows).forEach(([pid,flow])=>{if(r.prodOn[pid]&&prods[pid].co2)co2+=flow*prods[pid].co2});
+  let ci=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:600"><span>Total CO₂</span><span>${f(co2)} kg/h</span></div>`;
+  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Annual est.</span><span>${f(co2*8760/1000)} t/yr</span></div>`;
+  ci+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
+  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Prod. cost/Nm³</span><span>$${(cb.production/(Object.values(r.prodFlows).reduce((s,v)=>s+v,0)||1)).toFixed(4)}</span></div>`;
+  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Avg. total cost</span><span>$${(cb.total/(Object.values(r.consSupplied).reduce((s,v)=>s+v,0)||1)).toFixed(4)}/Nm³</span></div>`;
+  document.getElementById('co2Info').innerHTML=ci;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CUSTOM BUILDER
+// ═══════════════════════════════════════════════════════════════════════════
+let cProds={},cCons={};
+window.addCustomProducer=function(){const n=document.getElementById('cp-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cProds[id]={name:n,type:document.getElementById('cp-type').value,min:+document.getElementById('cp-min').value,max:+document.getElementById('cp-max').value,cost:+document.getElementById('cp-cost').value,startup:+document.getElementById('cp-startup').value,co2:document.getElementById('cp-type').value==='SMR'?0.27:0.02};document.getElementById('cp-name').value='';renderCL()};
+window.addCustomConsumer=function(){const n=document.getElementById('cc-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cCons[id]={name:n,nom:+document.getElementById('cc-demand').value,max:Math.round(+document.getElementById('cc-demand').value*1.3),pri:+document.getElementById('cc-pri').value,curt:document.getElementById('cc-curt').value==='true',pen:+document.getElementById('cc-pen').value};document.getElementById('cc-name').value='';renderCL()};
+window.removeProducer=function(id){delete cProds[id];renderCL()};
+window.removeConsumer=function(id){delete cCons[id];renderCL()};
+function renderCL(){const pl=Object.entries(cProds);document.getElementById('cpCount').textContent=pl.length;document.getElementById('cpList').innerHTML=pl.length?pl.map(([id,p])=>`<div class="asset-item"><span><b>${id}</b> ${p.type} | ${p.min.toLocaleString()}-${p.max.toLocaleString()} | $${p.cost}</span><span class="remove" onclick="removeProducer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:11px;padding:6px">None yet.</div>';const cl=Object.entries(cCons);document.getElementById('ccCount').textContent=cl.length;document.getElementById('ccList').innerHTML=cl.length?cl.map(([id,c])=>`<div class="asset-item"><span><b>${id}</b> ${c.nom.toLocaleString()} Nm³/h P${c.pri}</span><span class="remove" onclick="removeConsumer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:11px;padding:6px">None yet.</div>'}
+window.resetCustom=function(){cProds={};cCons={};document.getElementById('customResult').style.display='none';renderCL()};
+window.loadSample=function(){cProds={"SMR-A":{name:"SMR-A",type:"SMR",min:5000,max:40000,cost:0.035,startup:12000,co2:0.27},"ELEC-A":{name:"ELEC-A",type:"Electrolyser",min:1000,max:10000,cost:0.060,startup:300,co2:0.02},"BYP-A":{name:"BYP-A",type:"ByProduct",min:2000,max:8000,cost:0.009,startup:0,co2:0}};cCons={"HDS-A":{name:"HDS Unit A",nom:12000,max:16000,pri:1,curt:false,pen:0.20},"HCK-A":{name:"Hydrocracker A",nom:20000,max:28000,pri:1,curt:false,pen:0.25},"HTR-A":{name:"Hydrotreater A",nom:6000,max:8000,pri:2,curt:true,pen:0.10},"NHT-A":{name:"Naphtha HT A",nom:4000,max:6000,pri:3,curt:true,pen:0.08}};renderCL()};
+window.runCustomOpt=function(){if(!Object.keys(cProds).length||!Object.keys(cCons).length)return alert('Add producers and consumers first.');const r=solveMeritOrder(cProds,cCons,{max:15000,cost:0.075},{max:5000,revenue:0.025});const pan=document.getElementById('customResult');pan.style.display='block';const f=v=>v.toLocaleString(undefined,{maximumFractionDigits:0});let h=`<div style="font-size:13px;margin-bottom:8px"><b>Total: $${f(r.costs.total)}/h</b> | Prod: $${f(r.costs.production)} | Imp: $${f(r.costs.import)} | Pen: $${f(r.costs.unmet_penalty)}</div>`;h+='<table><thead><tr><th>Producer</th><th>Status</th><th>Flow</th></tr></thead><tbody>';for(const[pid,flow]of Object.entries(r.prodFlows))h+=`<tr><td>${pid}</td><td><span class="tag ${r.prodOn[pid]?'tag-on':'tag-off'}">${r.prodOn[pid]?'ON':'OFF'}</span></td><td>${f(flow)}</td></tr>`;h+='</tbody></table><table style="margin-top:8px"><thead><tr><th>Consumer</th><th>Supplied</th><th>Unmet</th></tr></thead><tbody>';for(const[cid,sup]of Object.entries(r.consSupplied)){const u=r.consUnmet[cid]||0;h+=`<tr><td>${cid}</td><td>${f(sup)}</td><td style="color:${u>0?'var(--red)':'var(--green)'}">${u>0?'-'+f(u):'OK'}</td></tr>`}h+='</tbody></table>';if(r.importFlow>0)h+=`<div style="margin-top:6px;font-size:11px;color:var(--text2)">Import: ${f(r.importFlow)} Nm³/h</div>`;document.getElementById('customResultBody').innerHTML=h};
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  FEEDBACK MODAL
+// ═══════════════════════════════════════════════════════════════════════════
+window.openFeedback=function(){document.getElementById('fbOverlay').classList.add('open')};
+window.closeFeedback=function(){document.getElementById('fbOverlay').classList.remove('open')};
+window.handleFeedback=function(e){
+  e.preventDefault();
+  const d={name:document.getElementById('fb-name').value,email:document.getElementById('fb-email').value,org:document.getElementById('fb-org').value,role:document.getElementById('fb-role').value,useful:document.getElementById('fb-useful').value,message:document.getElementById('fb-msg').value,interest:document.getElementById('fb-interest').checked};
+  const body=`Name: ${d.name}%0AEmail: ${d.email}%0AOrg: ${d.org}%0ARole: ${d.role}%0AMost Useful: ${d.useful}%0AInterested in training: ${d.interest}%0A%0AMessage: ${d.message}`;
+  const mailto=`mailto:sharique@optifloai.com?subject=OptiFLO%20AI%20Feedback%20from%20${encodeURIComponent(d.name)}&body=${body}`;
+  fetch('https://formspree.io/f/xplaceholder',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(r=>{if(r.ok){document.getElementById('feedbackForm').style.display='none';document.getElementById('fbSuccess').style.display='block'}else{window.location.href=mailto}}).catch(()=>{window.location.href=mailto});
+  return false;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════════════
+renderMerit();
+renderCL();
+window.runScenario('base',document.querySelector('.sc-btn'));
+
+// Verify API connectivity on load so the green dot shows immediately
+setTimeout(() => { ensureChatReady(); }, 1000);
+</script>
+</body>
+</html>
