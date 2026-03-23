@@ -277,7 +277,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
       <div class="chat-progress-text" id="chatProgressText">Preparing AI model...</div>
     </div>
     <div class="chat-messages" id="chatMessages">
-      <div class="chat-msg assistant">Hello! I'm the <strong>OptiFLO AI Tutor</strong> — powered by Llama 3 and trained on hydrogen network optimization, Mixed Integer Programming, and process engineering best practices.<br><br>Ask me anything about H₂ optimization. Here are some ideas to get started:</div>
+      <div class="chat-msg assistant">Hello! I'm the <strong>OptiFLO AI Tutor</strong>. Ask me anything about hydrogen network optimization, Mixed Integer Programming, and best practices. Here are some ideas to get started:</div>
     </div>
     <div class="chat-suggestions" id="chatSuggestions">
       <button class="chat-suggest-btn" onclick="askSuggestion(this)">What is MIP and why use it?</button>
@@ -609,7 +609,7 @@ window.handleFeedback=function(e){
   const d={name:document.getElementById('fb-name').value,email:document.getElementById('fb-email').value,org:document.getElementById('fb-org').value,role:document.getElementById('fb-role').value,useful:document.getElementById('fb-useful').value,message:document.getElementById('fb-msg').value,interest:document.getElementById('fb-interest').checked};
   const body=`Name: ${d.name}%0AEmail: ${d.email}%0AOrg: ${d.org}%0ARole: ${d.role}%0AMost Useful: ${d.useful}%0AInterested in training: ${d.interest}%0A%0AMessage: ${d.message}`;
   const mailto=`mailto:sharique@optifloai.com?subject=OptiFLO%20AI%20Feedback%20from%20${encodeURIComponent(d.name)}&body=${body}`;
-  fetch('https://formspree.io/f/xplaceholder',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(r=>{if(r.ok){document.getElementById('feedbackForm').style.display='none';document.getElementById('fbSuccess').style.display='block'}else{window.location.href=mailto}}).catch(()=>{window.location.href=mailto});
+  fetch('https://formspree.io/f/xpqykrwb',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(r=>{if(r.ok){document.getElementById('feedbackForm').style.display='none';document.getElementById('fbSuccess').style.display='block'}else{window.location.href=mailto}}).catch(()=>{window.location.href=mailto});
   return false;
 };
 
@@ -623,5 +623,7 @@ window.runScenario('base',document.querySelector('.sc-btn'));
 // Verify API connectivity on load so the green dot shows immediately
 setTimeout(() => { ensureChatReady(); }, 1000);
 </script>
+<script data-goatcounter="https://optifloai.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
