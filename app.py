@@ -213,4 +213,5 @@ if __name__ == "__main__":
     print(f"  Dashboard: http://localhost:5000")
     print(f"  API:       http://localhost:5000/api/network")
     print("=" * 60)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    import os
+    app.run(host="0.0.0.0", port=5000, debug=os.getenv('FLASK_ENV')=='development')

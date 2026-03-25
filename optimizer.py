@@ -156,7 +156,7 @@ def optimize_dispatch(
         network.external[e].cost * x_imp[e] for e in IMP
     )
     export_revenue = pulp.lpSum(
-        network.external[e].cost * x_exp[e] for e in EXP  # cost is negative
+        -abs(network.external[e].cost) * x_exp[e] for e in EXP  # subtract revenue from cost
     )
     startup_cost = pulp.lpSum(
         (network.producers[p].startup_cost / STARTUP_AMORT_HOURS) * y_on[p]

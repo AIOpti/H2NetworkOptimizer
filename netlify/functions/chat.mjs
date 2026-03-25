@@ -5,6 +5,18 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.1-8b-instant"; // Fast, high quality, free tier friendly
 
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  "https://optifloai.netlify.app",
+  "http://localhost:8888",
+  "http://localhost:3000",
+];
+
+function getCorsOrigin(req) {
+  const origin = req.headers.get("Origin") || "";
+  return ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+}
+
 const SYSTEM_PROMPT = `You are the OptiFLO AI Tutor — an expert teaching assistant for hydrogen network optimization in Oil & Gas refineries. You were created by OptiFLO AI Solutions, Abu Dhabi, founded by Mohd Sharique.
 
 KNOWLEDGE BASE — Use this to answer questions accurately:
@@ -51,12 +63,14 @@ PERSONALITY RULES:
 - Use Nm3/h for flow, $/Nm3 for costs, mol% for purity.`;
 
 export default async (req) => {
+  const corsOrigin = getCorsOrigin(req);
+
   // CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
       headers: {
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": corsOrigin,
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
@@ -64,16 +78,40 @@ export default async (req) => {
   }
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405 });
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
+    });
   }
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: "GROQ_API_KEY not configured. Set it in Netlify Environment Variables." }), { status: 500 });
+    return new Response(JSON.stringify({ error: "GROQ_API_KEY not configured. Set it in Netlify Environment Variables." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
+    });
   }
 
   try {
     const { messages } = await req.json();
+
+    // Input validation
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return new Response(JSON.stringify({ error: "Invalid request: messages must be a non-empty array" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
+      });
+    }
+    for (const msg of messages) {
+      if (!msg || typeof msg.role !== 'string' || typeof msg.content !== 'string') {
+        return new Response(JSON.stringify({ error: "Invalid message format" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
+        });
+      }
+      // Truncate overly long content
+      if (msg.content.length > 2000) msg.content = msg.content.slice(0, 2000);
+    }
 
     // Merge static knowledge base with any client-provided context
     // Client sends a system message with live optimizer state; we append our knowledge base to it
@@ -106,10 +144,10 @@ export default async (req) => {
     });
 
     if (!groqRes.ok) {
-      const err = await groqRes.text();
-      return new Response(JSON.stringify({ error: `Groq API error: ${groqRes.status}`, detail: err }), {
-        status: groqRes.status,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      console.error("Groq API error:", groqRes.status, await groqRes.text());
+      return new Response(JSON.stringify({ error: "AI service temporarily unavailable" }), {
+        status: 502,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
       });
     }
 
@@ -120,14 +158,15 @@ export default async (req) => {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
         "Connection": "keep-alive",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": corsOrigin,
       },
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: "Server error", detail: err.message }), {
+    console.error("Server error:", err);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
-      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
     });
   }
 };

@@ -19,45 +19,72 @@ The AI Tutor chatbot is powered by Groq's Llama 3 API (free tier, no credit card
 
 **What you'll get:** Emails at sharique@optifloai.com with name, email, org, role, and feedback.
 
-## Step 2: Deploy to Netlify (with Serverless Functions)
+## Step 2: Prepare Your Deployment Folder
 
-The chatbot requires a Netlify Function to proxy API calls securely. This means you need to deploy a **folder** (not just the HTML file).
+You need to create a clean folder on your Desktop with ONLY the files Netlify needs. Here is exactly what to do:
 
-### Your folder structure should be:
+### 2A. Create the folder on your computer
+
+1. On your Desktop, create a new folder called `optiflo-ai`
+2. COPY these 2 items into it from your current project folder:
+   - `index.html` (the platform file)
+   - `netlify` folder (which contains `functions/chat.mjs` — the AI chatbot backend)
+
+3. Your folder should look EXACTLY like this when done:
+
 ```
-optiflo-ai/
-├── index.html                    ← the platform
-└── netlify/
-    └── functions/
-        └── chat.mjs              ← Groq API proxy (serverless function)
+Desktop/
+  optiflo-ai/
+    index.html
+    netlify/
+      functions/
+        chat.mjs
 ```
 
-### Deploy via GitHub (Recommended)
+That's it — just 2 things inside `optiflo-ai`: the HTML file and the `netlify` folder.
 
-1. Create a GitHub repository (e.g., `optiflo-ai`)
-2. Upload the folder structure above to the repo
-3. In Netlify: **"Add new site"** → **"Import an existing project"** → Select your GitHub repo
-4. Build settings: Leave everything blank (no build command needed)
-5. Click **Deploy**
+**DO NOT** copy the Python files, markdown files, or anything else. Netlify only needs these 2 items.
 
-### Add your Groq API Key as Environment Variable
+### 2B. Sign up on Netlify
 
-**CRITICAL — do this before the chatbot will work:**
+1. Open your browser and go to **https://app.netlify.com**
+2. Click **"Sign up"** — you can sign up with your GitHub account or email
+3. It's free, no credit card needed
 
-1. In your Netlify site dashboard → **"Site configuration"** → **"Environment variables"**
-2. Click **"Add a variable"**
-3. Key: `GROQ_API_KEY`
-4. Value: paste your Groq API key (`gsk_...`)
-5. Save
+### 2C. Deploy your folder (Drag & Drop method)
 
-The serverless function reads this key server-side — it's never exposed to visitors.
+1. After logging in, you'll see the Netlify dashboard
+2. Click the **"Add new site"** button (top area of the page)
+3. Select **"Deploy manually"**
+4. You'll see a large dotted rectangle that says "Drag and drop your site output folder here"
+5. Open your Desktop in File Explorer, find the `optiflo-ai` folder
+6. **Drag the ENTIRE `optiflo-ai` folder** and drop it onto that dotted rectangle
+7. Wait 10-20 seconds — Netlify will deploy your site
+8. You'll get a live URL like `https://sunny-dolphin-a1b2c3.netlify.app`
 
-### Deploy via Drag & Drop (Quick Test)
+### 2D. Add your Groq API Key (IMPORTANT — chatbot won't work without this)
 
-1. Create the folder structure above on your computer
-2. Go to **https://app.netlify.com** → **"Add new site"** → **"Deploy manually"**
-3. Drag the **entire folder** (not just index.html) into the upload area
-4. Then add the GROQ_API_KEY environment variable as described above
+1. On your Netlify dashboard, click on your newly deployed site
+2. Click **"Site configuration"** in the left sidebar
+3. Click **"Environment variables"**
+4. Click **"Add a variable"**
+5. In the **Key** field, type exactly: `GROQ_API_KEY`
+6. In the **Value** field, paste your Groq API key (the one starting with `gsk_...` from Step 0)
+7. Click **"Save"**
+
+### 2E. Redeploy (required after adding the environment variable)
+
+1. Go back to your site's **"Deploys"** tab
+2. Click **"Trigger deploy"** → **"Deploy site"**
+3. Wait for it to finish (10-20 seconds)
+4. Your site is now live with the chatbot working!
+
+### 2F. Rename your site URL (optional but recommended)
+
+1. Go to **"Site configuration"** → **"Site details"**
+2. Click **"Change site name"**
+3. Type a clean name like `optiflo-ai`
+4. Your URL becomes: `https://optiflo-ai.netlify.app`
 
 ## Step 3: Custom Domain (Optional)
 

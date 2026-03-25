@@ -16,29 +16,33 @@
 <meta name="apple-mobile-web-app-title" content="OptiFLO AI">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='28' fill='%23008B8B'/><text x='90' y='122' text-anchor='middle' fill='white' font-size='90' font-weight='800' font-family='system-ui'>O</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F5F2EE;--surface:#FFFFFF;--surface2:#FAF8F5;--surface3:#F0EDE8;
   --border:#E0DBD4;--border2:#C8C2B8;
-  --text:#2D3436;--text2:#636E72;--text3:#95A5A6;
+  --text:#2D3436;--text2:#636E72;--text3:#6B7280;
   --accent:#008B8B;--accent2:#006D6D;--accent-light:#E0F5F5;--accent-glow:rgba(0,139,139,0.1);
   --green:#27AE60;--green-light:#E8F8F0;
   --red:#E74C3C;--red-light:#FDEDEC;
   --orange:#F39C12;--orange-light:#FEF5E7;
   --purple:#8E44AD;--blue:#2980B9;
-  --grad1:linear-gradient(135deg,#008B8B,#00ACAC);
+  --grad1:linear-gradient(135deg,#006D6D,#00BFBF);
   --grad2:linear-gradient(135deg,#008B8B,#27AE60);
   --shadow-sm:0 1px 3px rgba(0,0,0,0.06);
   --shadow-md:0 4px 12px rgba(0,0,0,0.08);
   --shadow-lg:0 8px 30px rgba(0,0,0,0.1);
-  --radius:12px;--radius-lg:16px
+  --radius:12px;--radius-lg:16px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --warm:#E67E22;--warm-light:#FEF0E0
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:-1;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline;color:var(--accent2)}
 ::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}:focus:not(:focus-visible){outline:none}
 
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:56px;gap:8px}
@@ -55,13 +59,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 
 /* ── SECTIONS ── */
 .section{padding:40px 32px;max-width:1240px;margin:0 auto}
-.section-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .section-title{font-size:22px;font-weight:700;color:var(--text)}
-.section-sub{color:var(--text2);font-size:14px;margin-bottom:24px;margin-left:48px}
+.section-sub{color:var(--text2);font-size:14px;margin-bottom:20px;margin-left:48px}
 
 /* ── NETWORK DIAGRAM ── */
-.network-svg-wrap{position:relative;width:100%;overflow:hidden;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:14px}
+.network-svg-wrap{position:relative;width:100%;overflow:hidden;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--shadow-sm)}
 .network-svg-wrap svg{display:block;width:100%;height:auto}
 .node-group{cursor:pointer;transition:transform .15s}
 .node-group:hover{transform:scale(1.04)}
@@ -74,45 +78,60 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .tooltip-box.show{opacity:1}
 
 /* ── TWO-PANEL LAYOUT (used by both Optimizer and Builder) ── */
-.two-panel{display:grid;grid-template-columns:2fr 3fr;gap:20px;align-items:start}
+.two-panel{display:grid;grid-template-columns:3fr 4fr;gap:20px;align-items:start}
 .panel-left{min-width:0}
-.panel-right{position:sticky;top:72px;min-width:0;max-height:calc(100vh - 88px);overflow-y:auto;overflow-x:auto}
+.panel-right{position:sticky;top:72px;min-width:0;max-height:calc(100vh - 96px);overflow-y:auto;overflow-x:auto;padding-bottom:12px}
 .panel-right::-webkit-scrollbar{width:4px}
 .panel-right::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
 /* ── OPTIMIZER ── */
-.opt-controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);margin-bottom:14px}
+.opt-controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);margin-bottom:14px}
 .opt-controls h4{font-size:10px;text-transform:uppercase;color:var(--text3);letter-spacing:.8px;font-weight:600;margin:14px 0 8px}
 .opt-controls h4:first-child{margin-top:0}
-.sc-btn{display:block;width:100%;padding:9px 12px;margin-bottom:5px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12.5px;cursor:pointer;text-align:left;transition:all .15s;font-weight:500}
+.sc-btn{display:block;width:100%;padding:9px 12px;margin-bottom:5px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;cursor:pointer;text-align:left;transition:all .15s;font-weight:500}
 .sc-btn:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent2)}
 .sc-btn.active{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(0,139,139,0.2)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;transition:transform .15s}
-.kpi:hover{transform:translateY(-1px)}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;box-shadow:var(--shadow-sm)}
 .kpi-label{font-size:10px;text-transform:uppercase;color:var(--text3);letter-spacing:.3px;font-weight:600}
-.kpi-value{font-size:22px;font-weight:700;margin-top:2px;color:var(--text)}
-.kpi-unit{font-size:11px;color:var(--text2);font-weight:400}
+.kpi-value{font-family:var(--mono);font-size:16px;font-weight:700;margin-top:2px;color:var(--text)}
+.kpi-unit{font-size:10px;color:var(--text2);font-weight:400}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.panel{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;transition:box-shadow .2s}
-.panel:hover{box-shadow:var(--shadow-sm)}
+.panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow-sm);overflow:auto;min-width:0}
 .panel-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text)}
 .dot{width:8px;height:8px;border-radius:50%}
 table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--border);color:var(--text3);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.3px}
-td{padding:6px 8px;border-bottom:1px solid var(--border)}
+th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--border);color:var(--text3);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+td{padding:5px 8px;border-bottom:1px solid var(--border)}
 .bar-c{width:100%;height:16px;background:var(--surface3);border-radius:4px;overflow:hidden}
 .bar-f{height:100%;border-radius:4px;transition:width .5s}
 .tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600}
 .tag-on{background:var(--green-light);color:var(--green)}.tag-off{background:var(--red-light);color:var(--red)}.tag-warn{background:var(--orange-light);color:var(--orange)}
-.cost-bar{display:flex;height:24px;border-radius:6px;overflow:hidden;margin:8px 0;box-shadow:inset 0 1px 2px rgba(0,0,0,0.06)}
-.cost-bar div{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;min-width:3%}
+.cost-bar,.co2-bar{display:flex;height:22px;border-radius:6px;overflow:hidden;margin:8px 0;box-shadow:inset 0 1px 2px rgba(0,0,0,0.06)}
+.cost-bar div,.co2-bar div{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;min-width:3%;transition:width 0.5s}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text2)}
 .legend-i{display:flex;align-items:center;gap:4px}
 .legend-d{width:10px;height:10px;border-radius:3px}
 
+/* ── CARBON & EFFICIENCY ── */
+.carbon-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.carbon-header{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.ci-gauge{position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,#27AE60 0%,#F39C12 50%,#E74C3C 100%);margin:8px 0 4px;overflow:visible}
+.ci-needle{position:absolute;top:-4px;width:3px;height:16px;background:var(--text);border-radius:2px;transition:left 0.6s ease}
+.ci-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.ci-score{font-family:var(--mono);font-size:22px;font-weight:800;line-height:1}
+.ci-unit{font-size:10px;color:var(--text2);font-weight:500}
+.insight-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border)}
+.insight-row:last-child{border:none}
+.insight-label{color:var(--text2)}
+.insight-value{font-family:var(--mono);font-weight:600;font-size:12px}
+.delta-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-left:6px}
+.delta-up{background:var(--red-light);color:var(--red)}
+.delta-down{background:var(--green-light);color:var(--green)}
+
 /* ── CUSTOM BUILDER ── */
-.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.builder-grid>*{min-width:0;overflow:auto}
 .form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:600}
 .form-group input,.form-group select{width:100%;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;transition:border-color .2s,box-shadow .2s}
@@ -194,6 +213,9 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 /* ── PAGE VIEWS ── */
 .page-view{animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.kpi{animation:fadeInUp 0.4s ease both}
+.kpi:nth-child(1){animation-delay:0s}.kpi:nth-child(2){animation-delay:0.08s}.kpi:nth-child(3){animation-delay:0.16s}.kpi:nth-child(4){animation-delay:0.24s}.kpi:nth-child(5){animation-delay:0.32s}
 
 /* ── ABOUT / HOW IT WORKS ── */
 .about-section{padding:32px;max-width:1240px;margin:0 auto}
@@ -218,7 +240,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 .about-tab:hover{color:var(--text2)}
 .about-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .about-panel{display:none}
-.about-panel.active{display:block}
+.about-panel.active{display:block;padding-top:16px;border-top:2px solid var(--accent)}
 
 /* ── SCENARIO COMPARE ── */
 .compare-grid{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;margin-top:14px}
@@ -237,27 +259,32 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 .sens-bar:hover{opacity:0.8}
 
 /* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .two-panel{grid-template-columns:1fr}
+  .panel-right{position:static;max-height:none;padding-bottom:0}
+  .grid-2{grid-template-columns:1fr}
+  .builder-grid{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
+  .nav-brand{font-size:18px}
+}
 @media(max-width:768px){
   nav{padding:0 14px;gap:4px}.nav-link{padding:5px 10px;font-size:12px}.nav-btn{padding:5px 12px;font-size:12px}
   .section{padding:24px 16px}
-  .two-panel{grid-template-columns:1fr}
-  .panel-right{position:static;max-height:none;order:-1}
   .opt-controls{padding:12px}
-  .builder-grid{grid-template-columns:1fr}
-  .grid-2{grid-template-columns:1fr}
-  .builder-grid{grid-template-columns:1fr}
   .compare-grid{grid-template-columns:1fr;gap:8px}
   .compare-vs{transform:rotate(90deg);padding:4px}
   .chat-container{height:100vh;border-radius:0;max-width:100%}
   .network-svg-wrap{overflow-x:scroll}
   .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .kpi-value{font-size:16px}
+  .chat-suggestions{max-height:80px;overflow-y:auto}
 }
 </style>
 </head>
 <body>
 
 <!-- NAV (no F symbol - clean text logo) -->
-<nav>
+<nav aria-label="Main navigation">
   <div class="nav-brand">Opti<span>FLO</span> AI</div>
   <button class="nav-link" onclick="showPage('about',this)">About</button>
   <button class="nav-link active" onclick="showPage('optimizer',this)">Optimizer</button>
@@ -336,17 +363,26 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
           <h3><span style="color:var(--blue)">&#9672;</span> What Is the Export Header?</h3>
           <p><b>Export</b> means selling surplus hydrogen out of the refinery through a pipeline to neighbouring facilities. This happens when your producers generate more than your consumers need &#8212; often because a minimum-stable-rate constraint forces a producer to run above what is actually required. Rather than wasting this excess, the refinery sells it at a lower price ($0.025/Nm&#179;) to recover some cost. On the diagram, the blue &#8220;Export Header&#8221; box shows how much surplus is being sold. Export revenue reduces your total operating cost. If it says &#8220;No surplus,&#8221; all produced hydrogen is consumed internally.</p>
         </div>
+        <div class="concept-box" style="background:var(--red-light)">
+          <h3><span style="color:var(--red)">&#9672;</span> Carbon Footprint &amp; Carbon Intensity</h3>
+          <p>Every hydrogen production method carries a <b>carbon footprint</b> &#8212; the total CO&#8322; emissions attributed to producing each unit of H&#8322;. This is measured as <b>Carbon Intensity (CI)</b> in kg CO&#8322;/Nm&#179;. The optimizer&#8217;s dispatch decisions directly determine the network&#8217;s carbon footprint: <b>SMR</b> (Steam Methane Reforming) is <b>Scope 1</b> &#8212; direct combustion emitting ~0.27 kg CO&#8322;/Nm&#179;. <b>Electrolysers</b> are <b>Scope 2</b> &#8212; indirect emissions from grid electricity (~0.02 kg CO&#8322;/Nm&#179; with renewables). <b>By-product H&#8322;</b> carries an allocated upstream footprint (near-zero for refinery off-gas). The platform calculates <b>CO&#8322; avoidance</b>: how much carbon is saved compared to an all-SMR baseline. When the optimizer dispatches cheaper SMRs first, CO&#8322; goes up &#8212; this is the <b>cost-vs-carbon trade-off</b> every refinery faces.</p>
+        </div>
+        <div class="concept-box" style="background:var(--green-light)">
+          <h3><span style="color:var(--green)">&#9672;</span> Hydrogen Colour Spectrum</h3>
+          <p>Industry classifies hydrogen by its production carbon intensity: <b>Grey H&#8322;</b> comes from SMR without carbon capture (~10 kg CO&#8322;/kg H&#8322;). <b>Blue H&#8322;</b> adds carbon capture to SMR (90%+ reduction). <b>Green H&#8322;</b> uses electrolysis powered by renewables (near-zero emissions). <b>Turquoise H&#8322;</b> uses methane pyrolysis (solid carbon, no CO&#8322;). The Carbon Intensity gauge in this platform maps your network&#8217;s CI from Green (low) through Grey (moderate) to Black (high), helping you visualize where your dispatch strategy sits on this spectrum.</p>
+        </div>
       </div>
     </div>
 
     <!-- TAB: Platform Features -->
     <div class="about-panel" id="tab-features">
       <div class="step-grid">
-        <div class="step-card" style="border-left:3px solid var(--accent)"><h3>Live Optimizer</h3><p>Run 6 pre-configured scenarios on a realistic refinery network. See cost breakdowns, producer loading, consumer satisfaction, CO&#8322; emissions, and purifier utilization &#8212; all updating in real time.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--accent)"><h3>Reference Network</h3><p>Run 6 pre-configured scenarios on a realistic refinery network. See cost breakdowns, producer loading, consumer satisfaction, CO&#8322; emissions, and purifier utilization &#8212; all updating in real time.</p></div>
         <div class="step-card" style="border-left:3px solid var(--green)"><h3>Network Diagram</h3><p>Interactive SVG diagram embedded directly in the optimizer. Nodes show live flow values, color-coded status (green=OK, orange=curtailed, red=OFF), and animated flow lines. Hover for details.</p></div>
         <div class="step-card" style="border-left:3px solid var(--purple)"><h3>Scenario Comparison</h3><p>Compare any two scenarios side-by-side. See delta costs, curtailment differences, and a quantified impact summary. Great for understanding the cost of resilience.</p></div>
         <div class="step-card" style="border-left:3px solid var(--orange)"><h3>Sensitivity Analysis</h3><p>Sweep a parameter &#177;50% (costs, demand) and visualize how total cost responds. The tool rates sensitivity as Low/Moderate/High and highlights risky parameters.</p></div>
         <div class="step-card" style="border-left:3px solid var(--blue)"><h3>Custom Network Builder</h3><p>Define your own producers and consumers. Set costs, capacities, priorities, and curtailability. Auto-generates a network diagram. Toggle purifier routing on/off. Configure import/export parameters.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--red)"><h3>Carbon Footprint &amp; Efficiency</h3><p>Real-time Carbon Intensity (CI) gauge, annual carbon footprint, CO&#8322; avoidance vs all-SMR baseline, Scope 1/2 emission breakdown by source, emission factors per unit, and network efficiency KPIs &#8212; all updating with each scenario.</p></div>
         <div class="step-card" style="border-left:3px solid var(--accent2)"><h3>Smart Insights</h3><p>After optimization, get auto-generated insights: merit order rationale, supply/demand analysis, utilization warnings, unit economics, and export revenue impact.</p></div>
         <div class="step-card" style="border-left:3px solid #008B8B"><h3>AI Tutor</h3><p>Chat with an AI trained on hydrogen optimization, MIP, and process engineering. Ask anything from "what is a binary variable?" to "how do I build my own optimizer in Python?"</p></div>
         <div class="step-card" style="border-left:3px solid var(--text3)"><h3>Save / Load / Export</h3><p>Save custom networks as JSON files and reload them later. Export optimization results as CSV for further analysis in Excel. Everything runs locally &#8212; no data leaves your browser.</p></div>
@@ -383,7 +419,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
     <div style="margin-top:24px;padding:16px;background:var(--accent-light);border-radius:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:200px">
         <div style="font-size:14px;font-weight:700;color:var(--accent2)">Ready to explore?</div>
-        <div style="font-size:13px;color:var(--text2);margin-top:2px">Scroll down to the Live Optimizer, or click "AI Tutor" to start learning with the chatbot.</div>
+        <div style="font-size:13px;color:var(--text2);margin-top:2px">Scroll down to the Reference Network, or click "AI Tutor" to start learning with the chatbot.</div>
       </div>
       <button class="btn btn-primary" onclick="showPage('optimizer',document.querySelectorAll('.nav-link')[1])">Try the Optimizer</button>
       <button class="btn btn-secondary" onclick="openChat()">Ask the AI Tutor</button>
@@ -393,14 +429,14 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 
 </div><!-- /page-about -->
 
-<!-- PAGE: OPTIMIZER (shown by default, includes Hero + Live Optimizer + Build Your Own) -->
+<!-- PAGE: OPTIMIZER (shown by default, includes Hero + Reference Network + Build Your Own) -->
 <div id="page-optimizer" class="page-view">
 
 <!-- OPTIMIZER — 2-panel layout: controls+results left, diagram right -->
 <section class="section" id="optimize" style="padding-top:72px">
   <div class="section-header">
     <div class="section-icon" style="background:var(--accent-light);color:var(--accent)">&#9881;</div>
-    <div class="section-title">Live Optimizer</div>
+    <div class="section-title">Reference Network</div>
   </div>
   <div class="section-sub" style="margin-left:48px">Reference network: 5 producers, 2 purifiers, 10 consumers, 120,000 Nm&#179;/h capacity &#8212; MIP dispatch optimizer</div>
 
@@ -419,19 +455,13 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
         </div>
       </div>
 
-      <div class="kpi-row" id="kpiRow"></div>
-
-      <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar" id="costBar"></div><div class="legend" id="costLegend"></div></div>
-
       <div class="grid-2">
         <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producer Dispatch</div><table><thead><tr><th>Unit</th><th>Status</th><th>Flow</th><th>Load</th></tr></thead><tbody id="prodTbl"></tbody></table></div>
         <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumer Supply</div><table><thead><tr><th>Unit</th><th>Supplied</th><th>Status</th><th>%</th></tr></thead><tbody id="consTbl"></tbody></table></div>
       </div>
 
-      <div class="grid-2">
-        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Purifiers &amp; External</div><div id="purInfo"></div></div>
-        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>CO&#8322; &amp; Economics</div><div id="co2Info"></div></div>
-      </div>
+      <div id="purInfo" style="display:none"></div>
+      <div class="carbon-panel"><div class="carbon-header"><div class="dot" style="background:var(--orange)"></div>Carbon Footprint &amp; Efficiency</div><div id="co2Info"></div></div>
 
       <!-- Analysis Tools -->
       <div class="opt-controls" style="margin-top:14px">
@@ -461,8 +491,10 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
       <div id="sensPanel" style="display:none"></div>
     </div>
 
-    <!-- RIGHT: Sticky Network Diagram -->
+    <!-- RIGHT: KPIs + Cost Breakdown + Network Diagram -->
     <div class="panel-right">
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="panel" style="margin-bottom:12px"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar" id="costBar"></div><div class="legend" id="costLegend"></div></div>
       <div class="network-svg-wrap" id="optDiagramWrap">
         <svg id="networkSvg" width="100%" viewBox="0 0 700 460" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -488,6 +520,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
           </g>
         </svg>
       </div>
+      <div id="materialBalance" class="panel" style="display:none;margin-bottom:0"></div>
     </div>
   </div>
 </section>
@@ -507,85 +540,106 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
     <!-- LEFT: Forms + Asset Lists + Results -->
     <div class="panel-left">
       <div class="builder-grid">
-        <div>
-      <div class="panel">
-        <div class="panel-title"><div class="dot" style="background:var(--green)"></div>Add Producer</div>
-        <div class="form-group"><label>Name / ID</label><input id="cp-name" placeholder="e.g. SMR-3"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="form-group"><label>Type</label><select id="cp-type"><option>SMR</option><option>Electrolyser</option><option>ByProduct</option></select></div>
-          <div class="form-group"><label>Cost ($/Nm&#179;)</label><input id="cp-cost" type="number" step="0.001" value="0.040"></div>
-          <div class="form-group"><label>Min (Nm&#179;/h)</label><input id="cp-min" type="number" value="5000"></div>
-          <div class="form-group"><label>Max (Nm&#179;/h)</label><input id="cp-max" type="number" value="30000"></div>
+        <!-- Producers card: form + list combined -->
+        <div class="panel">
+          <div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producers (<span id="cpCount">0</span>)</div>
+          <div class="asset-list" id="cpList"><div style="color:var(--text2);font-size:12px;padding:8px">No producers yet. Click "Load Sample" to start.</div></div>
+          <div style="border-top:1px solid var(--border);margin:10px 0"></div>
+          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px">Add Producer</div>
+          <div class="form-group"><label>Name / ID</label><input id="cp-name" placeholder="e.g. SMR-3"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-group"><label>Type</label><select id="cp-type"><option>SMR</option><option>Electrolyser</option><option>ByProduct</option></select></div>
+            <div class="form-group"><label>Cost ($/Nm&#179;)</label><input id="cp-cost" type="number" step="0.001" value="0.040"></div>
+            <div class="form-group"><label>Min (Nm&#179;/h)</label><input id="cp-min" type="number" value="5000"></div>
+            <div class="form-group"><label>Max (Nm&#179;/h)</label><input id="cp-max" type="number" value="30000"></div>
+          </div>
+          <input type="hidden" id="cp-startup" value="10000">
+          <button class="btn btn-primary btn-sm" style="width:100%" onclick="addCustomProducer()">+ Add Producer</button>
         </div>
-        <input type="hidden" id="cp-startup" value="10000">
-        <button class="btn btn-primary btn-sm" onclick="addCustomProducer()">+ Add Producer</button>
-      </div>
-      <div class="panel" style="margin-top:12px">
-        <div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Add Consumer</div>
-        <div class="form-group"><label>Name / ID</label><input id="cc-name" placeholder="e.g. HDS-3"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="form-group"><label>Demand (Nm&#179;/h)</label><input id="cc-demand" type="number" value="8000"></div>
-          <div class="form-group"><label>Priority (1-5)</label><input id="cc-pri" type="number" min="1" max="5" value="2"></div>
-          <div class="form-group"><label>Curtailable?</label><select id="cc-curt"><option value="false">No</option><option value="true">Yes</option></select></div>
-          <div class="form-group"><label>Penalty ($/Nm&#179;)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
+        <!-- Consumers card: form + list combined -->
+        <div class="panel">
+          <div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumers (<span id="ccCount">0</span>)</div>
+          <div class="asset-list" id="ccList"><div style="color:var(--text2);font-size:12px;padding:8px">No consumers yet.</div></div>
+          <div style="border-top:1px solid var(--border);margin:10px 0"></div>
+          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px">Add Consumer</div>
+          <div class="form-group"><label>Name / ID</label><input id="cc-name" placeholder="e.g. HDS-3"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-group"><label>Demand (Nm&#179;/h)</label><input id="cc-demand" type="number" value="8000"></div>
+            <div class="form-group"><label>Priority (1-5)</label><input id="cc-pri" type="number" min="1" max="5" value="2"></div>
+            <div class="form-group"><label>Curtailable?</label><select id="cc-curt"><option value="false">No</option><option value="true">Yes</option></select></div>
+            <div class="form-group"><label>Penalty ($/Nm&#179;)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
+          </div>
+          <div class="form-group"><label>Purity (purifiers only)</label><select id="cc-purity"><option value="UHP">UHP (PSA, 99.9%)</option><option value="STD">STD (Membrane, 98%)</option></select></div>
+          <button class="btn btn-primary btn-sm" style="width:100%" onclick="addCustomConsumer()">+ Add Consumer</button>
         </div>
-        <div class="form-group"><label>Purity requirement (only when purifiers enabled)</label><select id="cc-purity"><option value="UHP">Ultra-High Purity (via PSA, 99.9%)</option><option value="STD">Standard Purity (via Membrane, 98%)</option></select></div>
-        <button class="btn btn-primary btn-sm" onclick="addCustomConsumer()">+ Add Consumer</button>
-      </div>
-      <div class="panel" style="margin-top:12px">
-        <div class="panel-title"><div class="dot" style="background:var(--orange)"></div>External Supply</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="form-group"><label>Import Max</label><input id="cp-imp-max" type="number" value="15000"></div>
-          <div class="form-group"><label>Import $/Nm&#179;</label><input id="cp-imp-cost" type="number" step="0.001" value="0.075"></div>
-          <div class="form-group"><label>Export Max</label><input id="cp-exp-max" type="number" value="5000"></div>
-          <div class="form-group"><label>Export $/Nm&#179;</label><input id="cp-exp-rev" type="number" step="0.001" value="0.025"></div>
-        </div>
-      </div>
-      <div class="panel" style="margin-top:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <label style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer">
-            <input type="checkbox" id="cp-purifiers" style="accent-color:var(--accent)" onchange="document.getElementById('purifier-config').style.display=this.checked?'grid':'none'"> Include PSA/MEM purifiers
-          </label>
-          <span style="font-size:10px;color:var(--text3)" title="H&#8322; splits between PSA and MEM. Configure the split ratio, recovery rates, and max capacities below.">&#9432;</span>
-        </div>
-        <div id="purifier-config" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
-          <div class="form-group"><label>PSA split %</label><input id="cp-psa-split" type="number" min="10" max="90" value="70" title="% of feed routed to PSA (rest goes to MEM)"></div>
-          <div class="form-group"><label>PSA recovery %</label><input id="cp-psa-rec" type="number" min="50" max="99" value="85"></div>
-          <div class="form-group"><label>PSA max cap</label><input id="cp-psa-max" type="number" value="60000" title="Max PSA feed capacity (Nm&#179;/h)"></div>
-          <div class="form-group"><label>MEM split %</label><input id="cp-mem-split" type="number" value="30" disabled style="opacity:0.5" title="Auto-calculated: 100 - PSA split"></div>
-          <div class="form-group"><label>MEM recovery %</label><input id="cp-mem-rec" type="number" min="50" max="99" value="92"></div>
-          <div class="form-group"><label>MEM max cap</label><input id="cp-mem-max" type="number" value="25000" title="Max MEM feed capacity (Nm&#179;/h)"></div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn btn-primary" onclick="runCustomOpt()">Optimize</button>
-          <button class="btn btn-secondary btn-sm" onclick="loadSample()">Load Sample</button>
-          <button class="btn btn-secondary btn-sm" onclick="resetCustom()">Reset</button>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <button class="btn btn-secondary btn-sm" onclick="saveNetwork()" title="Download network config as JSON">&#128190; Save</button>
-          <label class="btn btn-secondary btn-sm" style="cursor:pointer" title="Load a saved JSON network">&#128194; Load<input type="file" id="loadFile" accept=".json" onchange="loadNetwork(event)" style="display:none"></label>
-          <button class="btn btn-secondary btn-sm" id="csvExportBtn" onclick="exportCSV()" style="display:none" title="Download results as CSV">&#128202; CSV</button>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producers (<span id="cpCount">0</span>)</div><div class="asset-list" id="cpList"><div style="color:var(--text2);font-size:12px;padding:8px">No producers yet. Click "Load Sample" to start.</div></div></div>
-      <div class="panel" style="margin-top:12px"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumers (<span id="ccCount">0</span>)</div><div class="asset-list" id="ccList"><div style="color:var(--text2);font-size:12px;padding:8px">No consumers yet.</div></div></div>
-    </div>
       </div><!-- /builder-grid -->
+
+      <!-- Config + Controls row (full width below the two cards) -->
+      <div class="grid-2" style="margin-top:14px">
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-title"><div class="dot" style="background:var(--orange)"></div>External Supply</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-group"><label>Import Max</label><input id="cp-imp-max" type="number" value="15000"></div>
+            <div class="form-group"><label>Import $/Nm&#179;</label><input id="cp-imp-cost" type="number" step="0.001" value="0.075"></div>
+            <div class="form-group"><label>Export Max</label><input id="cp-exp-max" type="number" value="5000"></div>
+            <div class="form-group"><label>Export $/Nm&#179;</label><input id="cp-exp-rev" type="number" step="0.001" value="0.025"></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <label style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input type="checkbox" id="cp-purifiers" style="accent-color:var(--accent)" onchange="document.getElementById('purifier-config').style.display=this.checked?'grid':'none'"> Include PSA/MEM purifiers
+            </label>
+            <span style="font-size:10px;color:var(--text3)" title="H&#8322; splits between PSA and MEM.">&#9432;</span>
+          </div>
+          <div id="purifier-config" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div class="form-group"><label>PSA split %</label><input id="cp-psa-split" type="number" min="10" max="90" value="70"></div>
+            <div class="form-group"><label>PSA rec %</label><input id="cp-psa-rec" type="number" min="50" max="99" value="85"></div>
+            <div class="form-group"><label>PSA max</label><input id="cp-psa-max" type="number" value="60000"></div>
+            <div class="form-group"><label>MEM split %</label><input id="cp-mem-split" type="number" value="30" disabled style="opacity:0.5"></div>
+            <div class="form-group"><label>MEM rec %</label><input id="cp-mem-rec" type="number" min="50" max="99" value="92"></div>
+            <div class="form-group"><label>MEM max</label><input id="cp-mem-max" type="number" value="25000"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="runCustomOpt()">Optimize</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadSample()">Load Sample</button>
+        <button class="btn btn-secondary btn-sm" onclick="resetCustom()">Reset</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-secondary btn-sm" onclick="saveNetwork()">&#128190; Save</button>
+        <label class="btn btn-secondary btn-sm" style="cursor:pointer">&#128194; Load<input type="file" id="loadFile" accept=".json" onchange="loadNetwork(event)" style="display:none"></label>
+        <button class="btn btn-secondary btn-sm" id="csvExportBtn" onclick="exportCSV()" style="display:none">&#128202; CSV</button>
+      </div>
 
       <!-- Results below the forms -->
       <div class="panel" style="margin-top:14px;display:none" id="customResult"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Result</div><div id="customResultBody"></div></div>
+
+      <!-- Compare Runs -->
+      <div class="opt-controls" style="margin-top:14px;display:none" id="customCompareControls">
+        <h4 style="margin-top:0">Compare Optimization Runs</h4>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:6px">Each optimization is saved as a run. Compare any two to see the impact of parameter changes.</div>
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <select id="customCmpA" style="flex:1;padding:5px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text)"></select>
+          <span style="font-size:10px;color:var(--text3);align-self:center">vs</span>
+          <select id="customCmpB" style="flex:1;padding:5px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text)"></select>
+        </div>
+        <button class="sc-btn" style="text-align:center;font-weight:600;color:var(--accent)" onclick="compareCustomRuns()">Compare</button>
+      </div>
+      <div id="customComparePanel" style="display:none"></div>
     </div><!-- /panel-left -->
 
-    <!-- RIGHT: Sticky Auto-generated Diagram -->
+    <!-- RIGHT: KPIs + Cost Breakdown + Diagram + Material Balance -->
     <div class="panel-right">
+      <div id="customKpiRow" class="kpi-row" style="display:none"></div>
+      <div id="customCostPanel" class="panel" style="display:none;margin-bottom:12px"></div>
       <div class="network-svg-wrap" id="builderDiagramWrap" style="min-height:200px">
         <svg id="builderSvg" width="100%" viewBox="0 0 700 200" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
           <text x="470" y="90" font-size="14" fill="#95A5A6" text-anchor="middle">Add producers and consumers,</text>
           <text x="470" y="112" font-size="14" fill="#95A5A6" text-anchor="middle">or click "Load Sample" to see the network.</text>
         </svg>
       </div>
+      <div id="customMaterialBalance" class="panel" style="display:none;margin-bottom:0"></div>
     </div>
   </div><!-- /two-panel -->
 </section>
@@ -601,7 +655,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 </footer>
 
 <!-- CHATBOT OVERLAY -->
-<div class="chat-overlay" id="chatOverlay" onclick="if(event.target===this){if(this.classList.contains('minimized'))restoreChat();else closeChat()}">
+<div class="chat-overlay" id="chatOverlay" role="dialog" aria-modal="true" aria-label="AI Tutor Chat" onclick="if(event.target===this){if(this.classList.contains('minimized'))restoreChat();else closeChat()}">
   <div class="chat-container" onclick="if(document.getElementById('chatOverlay').classList.contains('minimized'))restoreChat()">
     <div class="chat-header">
       <svg width="24" height="24" viewBox="0 0 40 40" style="flex-shrink:0"><rect width="40" height="40" rx="8" fill="#008B8B"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="system-ui">O</text></svg>
@@ -643,7 +697,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 </div>
 
 <!-- FEEDBACK MODAL -->
-<div class="modal-overlay" id="fbOverlay" onclick="if(event.target===this)closeFeedback()">
+<div class="modal-overlay" id="fbOverlay" role="dialog" aria-modal="true" aria-label="Feedback Form" onclick="if(event.target===this)closeFeedback()">
   <div class="modal" style="position:relative">
     <button class="modal-close" onclick="closeFeedback()">&times;</button>
     <h3>Share Your Feedback</h3>
@@ -671,7 +725,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 const NET = {
   producers: {
     "SMR-1":{name:"Steam Methane Reformer #1",type:"SMR",min:8000,max:50000,cost:0.035,startup:15000,co2:0.27},
-    "SMR-2":{name:"Steam Methane Reformer #2",type:"SMR",min:5000,max:35000,cost:0.038,startup:12000,co2:0.26},
+    "SMR-2":{name:"Steam Methane Reformer #2",type:"SMR",min:5000,max:35000,cost:0.038,startup:12000,co2:0.27},
     "ELEC-1":{name:"PEM Electrolyser",type:"Electrolyser",min:1000,max:15000,cost:0.065,startup:500,co2:0.02},
     "BYP-CCR":{name:"CCR By-product H\u2082",type:"ByProduct",min:3000,max:12000,cost:0.010,startup:0,co2:0},
     "BYP-ETH":{name:"Ethylene Cracker Off-gas",type:"ByProduct",min:2000,max:8000,cost:0.008,startup:0,co2:0},
@@ -694,6 +748,121 @@ const NET = {
 
 let currentResult = null;
 const fmt = v => v.toLocaleString(undefined,{maximumFractionDigits:0});
+function escapeHTML(s){const d=document.createElement('div');d.appendChild(document.createTextNode(String(s)));return d.innerHTML}
+function countUp(el,target,duration=600){const start=parseFloat(el.textContent.replace(/[^0-9.\-]/g,''))||0;const t0=performance.now();(function tick(now){const p=Math.min((now-t0)/duration,1);const eased=1-Math.pow(1-p,3);el.textContent='$'+fmt(start+(target-start)*eased);if(p<1)requestAnimationFrame(tick)})(t0)}
+
+// ── Shared Carbon & Efficiency panel renderer ──
+// Emission factors (kg CO2 per Nm3 H2): SMR = Scope 1 (direct combustion),
+// Electrolyser = Scope 2 (grid electricity), ByProduct = allocated upstream
+const SCOPE_LABELS={'SMR':'Scope 1','Electrolyser':'Scope 2','ByProduct':'Allocated'};
+const CO2_COLORS={'SMR':'#E74C3C','Electrolyser':'#F39C12','ByProduct':'#27AE60'};
+
+function renderCarbonPanel(r, prods, costs, prevResult){
+  // ── Calculate emissions per producer ──
+  let totalCo2=0;const co2ByProd=[];
+  for(const[pid,flow]of Object.entries(r.prodFlows)){
+    const p=prods[pid];if(!p||!r.prodOn[pid])continue;
+    const ef=p.co2||0; // emission factor kg CO2/Nm3
+    const c2=flow*ef;totalCo2+=c2;
+    if(c2>0)co2ByProd.push({id:pid,type:p.type,co2:c2,ef:ef,flow:flow,color:CO2_COLORS[p.type]||'#888'});
+  }
+  const totalProd=Object.values(r.prodFlows).reduce((s,v)=>s+v,0)||1;
+  const totalServed=Object.values(r.consSupplied).reduce((s,v)=>s+v,0)||1;
+
+  // Carbon Intensity (CI) = total CO2 / total H2 produced
+  const ci=totalCo2/totalProd;
+  // All-SMR baseline for CO2 avoidance calc (assumes 0.27 kg/Nm3 if all were SMR)
+  const baselineCo2=totalProd*0.27;
+  const co2Avoided=baselineCo2-totalCo2;
+  const avoidancePct=baselineCo2>0?(co2Avoided/baselineCo2*100):0;
+  // Annual carbon footprint (8760 h/yr, kg -> tonnes)
+  const annualTonnes=totalCo2*8760/1000;
+
+  // Gauge position: 0-100% mapped to 0-0.30 kg/Nm3
+  const gaugePos=Math.min(ci/0.30*100,100);
+  let rating,ratingColor;
+  if(ci<0.05){rating='Very Low';ratingColor='var(--green)'}
+  else if(ci<0.10){rating='Low';ratingColor='var(--green)'}
+  else if(ci<0.20){rating='Moderate';ratingColor='var(--orange)'}
+  else{rating='High';ratingColor='var(--red)'}
+
+  let h='';
+
+  // ── Section 1: Carbon Intensity (CI) ──
+  h+=`<div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Carbon Intensity (CI)</div>`;
+  h+=`<div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:8px">`;
+  h+=`<div><div class="ci-score" style="color:${ratingColor}">${ci.toFixed(3)}</div><div class="ci-unit">kg CO\u2082 / Nm\u00B3 H\u2082</div></div>`;
+  h+=`<div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px"><span style="font-size:11px;font-weight:600;color:${ratingColor}">${rating}</span><span style="font-size:10px;color:var(--text3)">${fmt(totalCo2)} kg CO\u2082/h</span></div>`;
+  h+=`<div class="ci-gauge"><div class="ci-needle" style="left:${gaugePos}%"></div></div>`;
+  h+=`<div class="ci-labels"><span>Green H\u2082</span><span>Blue H\u2082</span><span>Grey H\u2082</span></div>`;
+  h+=`</div></div>`;
+
+  // ── Section 2: Carbon Footprint ──
+  h+=`<div style="border-top:1px solid var(--border);margin:10px 0"></div>`;
+  h+=`<div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Carbon Footprint</div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">`;
+  h+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center"><div style="font-family:var(--mono);font-size:16px;font-weight:700">${fmt(annualTonnes)}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">tonnes CO\u2082 / year</div></div>`;
+  h+=`<div style="background:${co2Avoided>0?'var(--green-light)':'var(--red-light)'};border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center"><div style="font-family:var(--mono);font-size:16px;font-weight:700;color:${co2Avoided>0?'var(--green)':'var(--red)'}">${co2Avoided>0?'-':'+'} ${avoidancePct.toFixed(1)}%</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">CO\u2082 avoidance vs all-SMR</div></div>`;
+  h+=`</div>`;
+
+  // ── Section 3: Emission Breakdown by Source (Scope 1/2/Allocated) ──
+  if(co2ByProd.length>0){
+    const byType={};co2ByProd.forEach(p=>{byType[p.type]=(byType[p.type]||0)+p.co2});
+    h+=`<div style="font-size:11px;font-weight:600;color:var(--text2);margin:6px 0 4px;text-transform:uppercase;letter-spacing:.3px">Emissions by Source</div>`;
+    h+=`<div class="co2-bar">`;
+    for(const[type,val]of Object.entries(byType)){
+      const pct=(val/totalCo2*100);
+      h+=`<div style="width:${pct.toFixed(1)}%;background:${CO2_COLORS[type]||'#888'}">${pct>=10?pct.toFixed(0)+'%':''}</div>`;
+    }
+    h+=`</div>`;
+    h+=`<div class="legend">`;
+    for(const[type,val]of Object.entries(byType)){
+      h+=`<div class="legend-i"><div class="legend-d" style="background:${CO2_COLORS[type]||'#888'}"></div>${type} <span style="font-size:9px;color:var(--text3)">(${SCOPE_LABELS[type]||''})</span>: ${fmt(val)} kg/h</div>`;
+    }
+    h+=`</div>`;
+
+    // Emission factor table for top units
+    co2ByProd.sort((a,b)=>b.co2-a.co2);
+    h+=`<div style="font-size:11px;font-weight:600;color:var(--text2);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.3px">Emission Factors (EF)</div>`;
+    co2ByProd.slice(0,4).forEach(p=>{
+      const pct=(p.co2/totalCo2*100);
+      h+=`<div class="insight-row"><span class="insight-label">${escapeHTML(p.id)} <span style="font-size:9px;color:var(--text3)">${SCOPE_LABELS[p.type]||''} \u2022 ${p.ef} kg/Nm\u00B3</span></span><span class="insight-value">${fmt(p.co2)} kg/h <span style="font-size:9px;color:var(--text3)">(${pct.toFixed(0)}%)</span></span></div>`;
+    });
+  }
+
+  // ── Section 4: Network Efficiency KPIs ──
+  h+=`<div style="border-top:1px solid var(--border);margin:10px 0"></div>`;
+  h+=`<div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px">Network Efficiency</div>`;
+  const prodCostPerNm3=costs.production/totalProd;
+  const blendedCost=costs.total/totalServed;
+  const activeCount=Object.entries(r.prodFlows).filter(([pid])=>r.prodOn[pid]).length;
+  const networkUtil=Object.entries(r.prodFlows).reduce((s,[pid,f])=>{const p=prods[pid];return s+(p&&r.prodOn[pid]?f/p.max:0)},0)/Math.max(activeCount,1)*100;
+  // Specific Energy Cost = total cost / total H2 delivered
+  const sec=costs.total/totalServed;
+
+  h+=`<div class="insight-row"><span class="insight-label">Marginal production cost</span><span class="insight-value">$${prodCostPerNm3.toFixed(4)}/Nm\u00B3</span></div>`;
+  h+=`<div class="insight-row"><span class="insight-label">Specific delivery cost (SDC)</span><span class="insight-value">$${sec.toFixed(4)}/Nm\u00B3</span></div>`;
+  h+=`<div class="insight-row"><span class="insight-label">Avg. asset utilization</span><span class="insight-value">${networkUtil.toFixed(0)}%</span></div>`;
+  h+=`<div class="insight-row"><span class="insight-label">Carbon cost ratio</span><span class="insight-value">${(ci/sec*1000).toFixed(1)} g CO\u2082 / $</span></div>`;
+
+  // ── Section 5: Scenario Delta ──
+  if(prevResult){
+    let prevCo2=0;
+    for(const[pid,flow]of Object.entries(prevResult.prodFlows)){
+      const p=prods[pid];if(p&&prevResult.prodOn[pid])prevCo2+=flow*(p.co2||0);
+    }
+    const delta=totalCo2-prevCo2;
+    if(Math.abs(delta)>10){
+      const up=delta>0;
+      h+=`<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:${up?'var(--red-light)':'var(--green-light)'}; font-size:11px;display:flex;align-items:center;gap:6px">`;
+      h+=`<span style="font-size:14px">${up?'\u2B06':'\u2B07'}</span>`;
+      h+=`<span><b style="color:${up?'var(--red)':'var(--green)'}">${up?'+':''}${fmt(delta)} kg/h</b> vs previous scenario \u2014 ${up?'higher Scope 1 emissions from increased SMR dispatch':'reduced footprint from lower SMR reliance'}</span>`;
+      h+=`</div>`;
+    }
+  }
+
+  return h;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SOLVER
@@ -722,7 +891,7 @@ function solveMeritOrder(producers, consumers, imp, exp, customHpcIds, purCfg) {
   const memEffective = MEM_SPLIT * MEM_REC;  // e.g., 0.30×0.92 = 0.276
   const reqForUHP = uhpDemand > 0 ? uhpDemand / psaEffective : 0;
   const reqForHPC = hpcDemand > 0 ? hpcDemand / memEffective : 0;
-  const requiredHP = Math.max(reqForUHP, reqForHPC);
+  const requiredHP = reqForUHP + reqForHPC;
   const dispatchFactor = requiredHP > 0 ? Math.max(totalDemand / requiredHP, 0.40) : (psaEffective+memEffective);
 
   let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0},crossTier:{},importAlloc:{}};
@@ -1143,7 +1312,7 @@ function buildCustomDiagram(customResult) {
       // Node
       html+=`<rect x="${PX}" y="${y}" width="${PW}" height="42" rx="8" fill="${on?'#F0FAFA':'#FDEDEC'}" stroke="${on?col:'#E74C3C'}" stroke-width="1.5" filter="url(#ns)"/>`;
       html+=`<circle cx="${PX+14}" cy="${y+12}" r="4" fill="${on?'#27AE60':'#E74C3C'}"/>`;
-      html+=`<text x="${PX+PW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${PX+PW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${escapeHTML(id)}</text>`;
       html+=`<text x="${PX+PW/2}" y="${y+32}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(flow))+' Nm\u00B3/h':fmt(p.max)+' max'}</text>`;
       const sw=on&&flow>0?Math.max(1,Math.min(3,(flow/(p.max||1))*3)):0.8;
       const act=on&&flow>0;
@@ -1162,7 +1331,7 @@ function buildCustomDiagram(customResult) {
       const unmet = customResult ? (customResult.consUnmet[id]||0) : 0;
       const ok = unmet<=0.1;
       html+=`<rect x="${CX}" y="${y}" width="${CW}" height="42" rx="8" fill="${ok?'#F0FBF5':'#FEF5E7'}" stroke="${ok?'#27AE60':'#F39C12'}" stroke-width="1.5" filter="url(#ns)"/>`;
-      html+=`<text x="${CX+CW/2}" y="${y+13}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+13}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${escapeHTML(id)}</text>`;
       html+=`<text x="${CX+CW/2}" y="${y+27}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(sup))+(unmet>0?' (-'+fmt(Math.round(unmet))+')':''):fmt(c.nom)+' nom'}</text>`;
       html+=`<text x="${CX+CW/2}" y="${y+39}" font-size="7.5" fill="#008B8B" text-anchor="middle" font-weight="600">PSA \u2192 UHP</text>`;
       html+=`<circle cx="${CX+CW-12}" cy="${y+12}" r="3.5" fill="${ok?'#27AE60':'#F39C12'}"/>`;
@@ -1181,7 +1350,7 @@ function buildCustomDiagram(customResult) {
       const ok = unmet<=0.1;
       // Node box
       html+=`<rect x="${CX}" y="${y}" width="${CW}" height="42" rx="8" fill="${ok?'#F0FBF5':'#FEF5E7'}" stroke="${ok?'#8E44AD':'#F39C12'}" stroke-width="1.5" filter="url(#ns)"/>`;
-      html+=`<text x="${CX+CW/2}" y="${y+13}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+13}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${escapeHTML(id)}</text>`;
       html+=`<text x="${CX+CW/2}" y="${y+27}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(sup))+(unmet>0?' (-'+fmt(Math.round(unmet))+')':''):fmt(c.nom)+' nom'}</text>`;
       html+=`<text x="${CX+CW/2}" y="${y+39}" font-size="7.5" fill="#8E44AD" text-anchor="middle" font-weight="600">MEM \u2192 STD</text>`;
       html+=`<circle cx="${CX+CW-12}" cy="${y+12}" r="3.5" fill="${ok?'#27AE60':'#F39C12'}"/>`;
@@ -1249,7 +1418,7 @@ function buildCustomDiagram(customResult) {
       const col = p.type==='SMR'?'#008B8B':p.type==='Electrolyser'?'#8E44AD':'#27AE60';
       html+=`<rect x="${PX}" y="${y}" width="${PW}" height="42" rx="8" fill="${on?'#F0FAFA':'#FDEDEC'}" stroke="${on?col:'#E74C3C'}" stroke-width="1.5" filter="url(#ns)"/>`;
       html+=`<circle cx="${PX+14}" cy="${y+12}" r="4" fill="${on?'#27AE60':'#E74C3C'}"/>`;
-      html+=`<text x="${PX+PW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${PX+PW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${escapeHTML(id)}</text>`;
       html+=`<text x="${PX+PW/2}" y="${y+32}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(flow))+' Nm\u00B3/h':fmt(p.max)+' max'}</text>`;
       const sw=on&&flow>0?Math.max(1,Math.min(3,(flow/(p.max||1))*3)):0.8;
       html+=`<line class="flow-line${on&&flow>0?'':' inactive'}" x1="${PX+PW}" y1="${y+21}" x2="310" y2="${y+21}" stroke="${on&&flow>0?col:'#D5D0C8'}" stroke-width="${sw}"/>`;
@@ -1263,7 +1432,7 @@ function buildCustomDiagram(customResult) {
       const ok = unmet<=0.1;
       html+=`<rect x="${CX}" y="${y}" width="${CW}" height="42" rx="8" fill="${ok?'#F0FBF5':'#FEF5E7'}" stroke="${ok?'#27AE60':'#F39C12'}" stroke-width="1.5" filter="url(#ns)"/>`;
       html+=`<circle cx="${CX+CW-12}" cy="${y+12}" r="4" fill="${ok?'#27AE60':'#F39C12'}"/>`;
-      html+=`<text x="${CX+CW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${escapeHTML(id)}</text>`;
       html+=`<text x="${CX+CW/2}" y="${y+32}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(sup))+(unmet>0?' (-'+fmt(Math.round(unmet))+')':''):fmt(c.nom)+' nom'}</text>`;
       const sw=sup>0?Math.max(1,Math.min(3,(sup/(c.nom||1))*3)):0.8;
       html+=`<line class="flow-line${sup>0?'':' inactive'}" x1="370" y1="${y+21}" x2="${CX}" y2="${y+21}" stroke="${sup>0?(ok?'#27AE60':'#F39C12'):'#D5D0C8'}" stroke-width="${sw}"/>`;
@@ -1321,7 +1490,8 @@ window.runScenario = function(name,btn){
 
 function renderOpt(r,prods,cons){
   const cb=r.costs;
-  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,'color:var(--text)'],['Production',cb.production,'color:var(--accent)'],['Import',cb.import,'color:var(--blue)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
+  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,'color:var(--text)'],['Production',cb.production,'color:var(--accent)'],['Import',cb.import,'color:var(--blue)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" data-target="${v}" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
+  document.querySelectorAll('#kpiRow .kpi-value[data-target]').forEach(el=>{const t=parseFloat(el.dataset.target);if(!isNaN(t))countUp(el,t)});
   const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.startup,c:'#F39C12',l:'Startup'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Penalty'}];
   document.getElementById('costBar').innerHTML=segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('');
   document.getElementById('costLegend').innerHTML=segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('');
@@ -1332,27 +1502,71 @@ function renderOpt(r,prods,cons){
   pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Import</span><span style="font-weight:500">${fmt(r.importFlow)} Nm\u00B3/h</span></div>`;
   pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Export</span><span style="font-weight:500">${fmt(r.exportFlow)} Nm\u00B3/h</span></div>`;
   document.getElementById('purInfo').innerHTML=pi;
-  let co2=0;Object.entries(r.prodFlows).forEach(([pid,flow])=>{if(r.prodOn[pid]&&prods[pid].co2)co2+=flow*prods[pid].co2});
-  let ci=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;font-weight:600"><span>Total CO\u2082</span><span>${fmt(co2)} kg/h</span></div>`;
-  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Annual est.</span><span style="font-weight:500">${fmt(co2*8760/1000)} t/yr</span></div>`;
-  ci+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
-  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Prod. cost/Nm\u00B3</span><span style="font-weight:500">$${(cb.production/(Object.values(r.prodFlows).reduce((s,v)=>s+v,0)||1)).toFixed(4)}</span></div>`;
-  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Avg. total cost</span><span style="font-weight:500">$${(cb.total/(Object.values(r.consSupplied).reduce((s,v)=>s+v,0)||1)).toFixed(4)}/Nm\u00B3</span></div>`;
-  document.getElementById('co2Info').innerHTML=ci;
+  document.getElementById('co2Info').innerHTML=renderCarbonPanel(r, prods, cb, window._prevRefResult||null);
+  window._prevRefResult=JSON.parse(JSON.stringify(r));
+  // Material Balance card
+  const mbEl=document.getElementById('materialBalance');
+  mbEl.style.display='block';
+  mbEl.innerHTML=renderMaterialBalanceCard(r,prods);
 }
 
+// ── Shared Material Balance card renderer ──
+function renderMaterialBalanceCard(r,prods){
+  const totalProd=Object.values(r.prodFlows).reduce((s,v)=>s+v,0);
+  const totalServed=Object.values(r.consSupplied).reduce((s,v)=>s+v,0);
+  const totalUnmet=Object.values(r.consUnmet).reduce((s,v)=>s+v,0);
+  const purLoss=(r.psaLoss||0)+(r.memLoss||0);
+  const hasPur=purLoss>0;
+  // Surplus = production that can't be exported (export cap reached) or consumed
+  const inTotal=totalProd+r.importFlow;
+  const accounted=totalServed+r.exportFlow+purLoss;
+  const surplus=Math.max(0,Math.round(inTotal-accounted));
+
+  let h=`<div class="panel-title"><div class="dot" style="background:var(--blue)"></div>Material Balance</div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:stretch;font-size:11px">`;
+
+  // IN column
+  h+=`<div style="background:var(--green-light);border-radius:8px;padding:10px">`;
+  h+=`<div style="font-size:9px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.3px;text-align:center">Supply IN</div>`;
+  h+=`<div style="font-family:var(--mono);font-size:16px;font-weight:700;margin:4px 0;text-align:center">${fmt(inTotal)}</div>`;
+  h+=`<div style="font-size:9px;color:var(--text2);text-align:center">Nm\u00B3/h</div>`;
+  h+=`<div style="border-top:1px solid var(--border);margin:6px 0;padding-top:6px;font-size:10px;color:var(--text2)">`;
+  h+=`Production: <b>${fmt(totalProd)}</b><br>Import: <b>${fmt(r.importFlow)}</b>`;
+  h+=`</div></div>`;
+
+  // Arrow
+  h+=`<div style="font-size:18px;color:var(--text3);display:flex;align-items:center">\u2192</div>`;
+
+  // OUT column
+  h+=`<div style="background:var(--accent-light);border-radius:8px;padding:10px">`;
+  h+=`<div style="font-size:9px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.3px;text-align:center">Distribution OUT</div>`;
+  h+=`<div style="font-family:var(--mono);font-size:16px;font-weight:700;margin:4px 0;text-align:center">${fmt(inTotal)}</div>`;
+  h+=`<div style="font-size:9px;color:var(--text2);text-align:center">Nm\u00B3/h</div>`;
+  h+=`<div style="border-top:1px solid var(--border);margin:6px 0;padding-top:6px;font-size:10px;color:var(--text2)">`;
+  h+=`Served: <b>${fmt(totalServed)}</b>`;
+  if(r.exportFlow>0) h+=`<br>Export: <b>${fmt(r.exportFlow)}</b>`;
+  if(hasPur) h+=`<br>Purifier loss: <b>${fmt(Math.round(purLoss))}</b>`;
+  if(surplus>0) h+=`<br>To fuel gas: <b>${fmt(surplus)}</b>`;
+  if(totalUnmet>0) h+=`<br><span style="color:var(--red)">Unmet demand: <b>${fmt(totalUnmet)}</b></span>`;
+  h+=`</div></div>`;
+  h+=`</div>`;
+
+  // Balance always closes because OUT = IN (surplus accounts for the gap)
+  h+=`<div style="margin-top:6px;text-align:center;font-size:10px;font-weight:600;color:var(--green)">\u2713 Balance closed${surplus>0?' \u2014 <span style="color:var(--orange)">'+fmt(surplus)+' Nm\u00B3/h routed to fuel gas (export cap reached)</span>':''}</div>`;
+  return h;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CUSTOM BUILDER
 // ═══════════════════════════════════════════════════════════════════════════
 let cProds={},cCons={};
-window.addCustomProducer=function(){const n=document.getElementById('cp-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cProds[id]={name:n,type:document.getElementById('cp-type').value,min:+document.getElementById('cp-min').value,max:+document.getElementById('cp-max').value,cost:+document.getElementById('cp-cost').value,startup:+document.getElementById('cp-startup').value,co2:document.getElementById('cp-type').value==='SMR'?0.27:0.02};document.getElementById('cp-name').value='';renderCL();buildCustomDiagram()};
+window.addCustomProducer=function(){const n=document.getElementById('cp-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cProds[id]={name:n,type:document.getElementById('cp-type').value,min:+document.getElementById('cp-min').value,max:+document.getElementById('cp-max').value,cost:+document.getElementById('cp-cost').value,startup:+document.getElementById('cp-startup').value,co2:document.getElementById('cp-type').value==='SMR'?0.27:document.getElementById('cp-type').value==='Electrolyser'?0.02:0};document.getElementById('cp-name').value='';renderCL();buildCustomDiagram()};
 window.addCustomConsumer=function(){const n=document.getElementById('cc-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cCons[id]={name:n,nom:+document.getElementById('cc-demand').value,max:Math.round(+document.getElementById('cc-demand').value*1.3),pri:+document.getElementById('cc-pri').value,curt:document.getElementById('cc-curt').value==='true',pen:+document.getElementById('cc-pen').value,purity:document.getElementById('cc-purity').value};document.getElementById('cc-name').value='';renderCL();buildCustomDiagram()};
 window.removeProducer=function(id){delete cProds[id];renderCL();buildCustomDiagram()};
 window.removeConsumer=function(id){delete cCons[id];renderCL();buildCustomDiagram()};
-function renderCL(){const pl=Object.entries(cProds);document.getElementById('cpCount').textContent=pl.length;document.getElementById('cpList').innerHTML=pl.length?pl.map(([id,p])=>`<div class="asset-item"><span><b>${id}</b> ${p.type} | ${p.min.toLocaleString()}-${p.max.toLocaleString()} | $${p.cost}</span><span class="remove" onclick="removeProducer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>';const cl=Object.entries(cCons);document.getElementById('ccCount').textContent=cl.length;document.getElementById('ccList').innerHTML=cl.length?cl.map(([id,c])=>`<div class="asset-item"><span><b>${id}</b> ${c.nom.toLocaleString()} Nm\u00B3/h P${c.pri} <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:${c.purity==='STD'?'#F6F0FF':'#E0F5F5'};color:${c.purity==='STD'?'#8E44AD':'#008B8B'}">${c.purity==='STD'?'MEM':'PSA'}</span></span><span class="remove" onclick="removeConsumer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>'}
-window.resetCustom=function(){cProds={};cCons={};document.getElementById('customResult').style.display='none';renderCL();buildCustomDiagram()};
-window.loadSample=function(){cProds={"SMR-A":{name:"SMR-A",type:"SMR",min:5000,max:40000,cost:0.035,startup:12000,co2:0.27},"ELEC-A":{name:"ELEC-A",type:"Electrolyser",min:1000,max:10000,cost:0.060,startup:300,co2:0.02},"BYP-A":{name:"BYP-A",type:"ByProduct",min:2000,max:8000,cost:0.009,startup:0,co2:0}};cCons={"HDS-A":{name:"HDS Unit A",nom:12000,max:16000,pri:1,curt:false,pen:0.20,purity:"UHP"},"HCK-A":{name:"Hydrocracker A",nom:20000,max:28000,pri:1,curt:false,pen:0.25,purity:"UHP"},"HTR-A":{name:"Hydrotreater A",nom:6000,max:8000,pri:2,curt:true,pen:0.10,purity:"STD"},"NHT-A":{name:"Naphtha HT A",nom:4000,max:6000,pri:3,curt:true,pen:0.08,purity:"STD"}};renderCL();buildCustomDiagram()};
+function renderCL(){const pl=Object.entries(cProds);document.getElementById('cpCount').textContent=pl.length;document.getElementById('cpList').innerHTML=pl.length?pl.map(([id,p])=>`<div class="asset-item"><span><b>${escapeHTML(id)}</b> ${escapeHTML(p.type)} | ${p.min.toLocaleString()}-${p.max.toLocaleString()} | $${p.cost}</span><span class="remove" onclick="removeProducer('${escapeHTML(id)}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>';const cl=Object.entries(cCons);document.getElementById('ccCount').textContent=cl.length;document.getElementById('ccList').innerHTML=cl.length?cl.map(([id,c])=>`<div class="asset-item"><span><b>${escapeHTML(id)}</b> ${c.nom.toLocaleString()} Nm\u00B3/h P${c.pri} <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:${c.purity==='STD'?'#F6F0FF':'#E0F5F5'};color:${c.purity==='STD'?'#8E44AD':'#008B8B'}">${c.purity==='STD'?'MEM':'PSA'}</span></span><span class="remove" onclick="removeConsumer('${escapeHTML(id)}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>'}
+window.resetCustom=function(){cProds={};cCons={};document.getElementById('customResult').style.display='none';document.getElementById('customCompareControls').style.display='none';document.getElementById('customComparePanel').style.display='none';document.getElementById('customMaterialBalance').style.display='none';document.getElementById('customKpiRow').style.display='none';document.getElementById('customCostPanel').style.display='none';window._customRunHistory=[];renderCL();buildCustomDiagram()};
+window.loadSample=function(){cProds={"A":{name:"A",type:"SMR",min:5000,max:30000,cost:0.04,startup:10000,co2:0.27},"B":{name:"B",type:"SMR",min:5000,max:30000,cost:0.04,startup:10000,co2:0.27},"C":{name:"C",type:"Electrolyser",min:5000,max:30000,cost:0.04,startup:10000,co2:0.02},"D":{name:"D",type:"Electrolyser",min:1000,max:3000,cost:0.04,startup:10000,co2:0.02},"E":{name:"E",type:"ByProduct",min:1000,max:3000,cost:0.04,startup:10000,co2:0}};cCons={"F":{name:"F",nom:8000,max:10400,pri:2,curt:false,pen:0.15,purity:"UHP"},"G":{name:"G",nom:8000,max:10400,pri:2,curt:true,pen:0.15,purity:"UHP"},"H":{name:"H",nom:10000,max:13000,pri:2,curt:true,pen:0.15,purity:"STD"},"J":{name:"J",nom:40000,max:52000,pri:1,curt:true,pen:0.15,purity:"STD"},"K":{name:"K",nom:40000,max:52000,pri:1,curt:false,pen:0.15,purity:"STD"}};document.getElementById('cp-imp-max').value=15000;document.getElementById('cp-imp-cost').value=0.075;document.getElementById('cp-exp-max').value=5000;document.getElementById('cp-exp-rev').value=0.025;document.getElementById('cp-purifiers').checked=true;document.getElementById('purifier-config').style.display='grid';document.getElementById('cp-psa-split').value=55;document.getElementById('cp-psa-rec').value=85;document.getElementById('cp-psa-max').value=60000;document.getElementById('cp-mem-rec').value=92;document.getElementById('cp-mem-max').value=40000;document.getElementById('cp-mem-split').value=45;renderCL();buildCustomDiagram()};
 // Direct-supply solver (no purifiers — used for custom builder when toggle is off)
 function solveDirectSupply(producers, consumers, imp, exp) {
   const sorted = Object.entries(producers).sort((a,b)=>a[1].cost-b[1].cost);
@@ -1425,19 +1639,21 @@ window.runCustomOpt=function(){
   const avgCost=totalProd>0?(r.costs.production/totalProd):0;
   const utilization=Object.entries(r.prodFlows).map(([id,f])=>({id,pct:cProds[id].max>0?(f/cProds[id].max*100):0,on:r.prodOn[id]}));
 
-  // ── Build result HTML (unified format matching Live Optimizer) ──
+  // ── Build result HTML (unified format matching Reference Network) ──
   let h='';
   const cb=r.costs;
 
-  // KPI row — same class as Live Optimizer
-  h+=`<div class="kpi-row">${[['Total Cost',cb.total,'color:var(--accent)'],['Production',cb.production,'color:var(--text)'],['Import',cb.import,cb.import>0?'color:var(--orange)':'color:var(--text2)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('')}</div>`;
-
-  // Cost breakdown bar — same as Live Optimizer
+  // KPI row + Cost breakdown → rendered in RIGHT panel (above diagram)
+  const ckpi=document.getElementById('customKpiRow');
+  ckpi.style.display='grid';
+  ckpi.innerHTML=[['Total Cost',cb.total,'color:var(--accent)'],['Production',cb.production,'color:var(--text)'],['Import',cb.import,cb.import>0?'color:var(--orange)':'color:var(--text2)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
   const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;
   const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.startup,c:'#F39C12',l:'Startup'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Penalty'}];
-  h+=`<div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar">${segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('')}</div><div class="legend">${segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('')}</div></div>`;
+  const ccp=document.getElementById('customCostPanel');
+  ccp.style.display='block';
+  ccp.innerHTML=`<div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar">${segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('')}</div><div class="legend">${segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('')}</div>`;
 
-  // Producer + Consumer tables — same structure as Live Optimizer
+  // Producer + Consumer tables
   h+='<div class="grid-2">';
   h+='<div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producer Dispatch</div><table><thead><tr><th>Unit</th><th>Status</th><th>Flow</th><th>Load</th></tr></thead><tbody>';
   for(const[pid,flow]of Object.entries(r.prodFlows)){const p=cProds[pid];const on=r.prodOn[pid];const pct=p.max>0?(flow/p.max*100):0;const col=on?(pct>90?'var(--orange)':'var(--green)'):'var(--red)';h+=`<tr><td><b>${pid}</b><br><span style="font-size:10px;color:var(--text2)">${p.name||pid}</span></td><td><span class="tag ${on?'tag-on':'tag-off'}">${on?'ON':'OFF'}</span></td><td>${fmt(flow)}</td><td><div class="bar-c"><div class="bar-f" style="width:${pct}%;background:${col}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}
@@ -1445,14 +1661,6 @@ window.runCustomOpt=function(){
   h+='<div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumer Supply</div><table><thead><tr><th>Unit</th><th>Supplied</th><th>Status</th><th>%</th></tr></thead><tbody>';
   for(const[cid,sup]of Object.entries(r.consSupplied)){const c=cCons[cid];const u=r.consUnmet[cid]||0;const dem=c?c.nom:sup;const pct=dem>0?(sup/dem*100):100;h+=`<tr><td><b>${cid}</b><br><span style="font-size:10px;color:var(--text2)">${c?.name||cid}</span></td><td>${fmt(sup)}</td><td>${u>0.1?`<span class="tag tag-warn">-${fmt(u)}</span>`:'<span class="tag tag-on">OK</span>'}</td><td><div class="bar-c"><div class="bar-f" style="width:${Math.min(pct,100)}%;background:${u>0?'var(--orange)':'var(--accent)'}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}
   h+='</tbody></table></div></div>';
-
-  // Import/Export boxes
-  if(r.importFlow>0||r.exportFlow>0){
-    h+='<div class="grid-2">';
-    if(r.importFlow>0) h+=`<div class="panel" style="border-left:3px solid var(--orange)"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Pipeline Import</div><div style="font-size:12px">${fmt(r.importFlow)} Nm\u00B3/h @ $${(+(document.getElementById('cp-imp-cost')?.value)||0.075).toFixed(3)}/Nm\u00B3 = <b>$${fmt(r.costs.import)}/h</b></div></div>`;
-    if(r.exportFlow>0) h+=`<div class="panel" style="border-left:3px solid var(--blue)"><div class="panel-title"><div class="dot" style="background:var(--blue)"></div>Export Header</div><div style="font-size:12px">${fmt(r.exportFlow)} Nm\u00B3/h @ $${(+(document.getElementById('cp-exp-rev')?.value)||0.025).toFixed(3)}/Nm\u00B3 = <b>$${fmt(r.costs.export_revenue)}/h revenue</b></div></div>`;
-    h+='</div>';
-  }
 
   // ── SMART INSIGHTS ──
   h+=`<div style="background:linear-gradient(135deg,#F0FAFA,#FAF8F5);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:0">`;
@@ -1487,8 +1695,8 @@ window.runCustomOpt=function(){
   // Utilization insight
   const overloaded=utilization.filter(u=>u.on&&u.pct>90);
   const underloaded=utilization.filter(u=>u.on&&u.pct<50);
-  if(overloaded.length>0) insights.push(`<b style="color:var(--orange)">High utilization:</b> ${overloaded.map(u=>u.id+' ('+u.pct.toFixed(0)+'%)').join(', ')} running near capacity \u2014 limited headroom for demand spikes.`);
-  if(underloaded.length>0) insights.push(`<b>Low utilization:</b> ${underloaded.map(u=>u.id+' ('+u.pct.toFixed(0)+'%)').join(', ')} running below 50% \u2014 bound by minimum stable rate constraint.`);
+  if(overloaded.length>0) insights.push(`<b style="color:var(--orange)">High utilization:</b> ${overloaded.map(u=>escapeHTML(u.id)+' ('+u.pct.toFixed(0)+'%)').join(', ')} running near capacity \u2014 limited headroom for demand spikes.`);
+  if(underloaded.length>0) insights.push(`<b>Low utilization:</b> ${underloaded.map(u=>escapeHTML(u.id)+' ('+u.pct.toFixed(0)+'%)').join(', ')} running below 50% \u2014 bound by minimum stable rate constraint.`);
 
   // Export insight
   if(r.exportFlow>0 && r.costs.export_revenue>0){
@@ -1498,24 +1706,87 @@ window.runCustomOpt=function(){
   h+=insights.map(i=>`<div style="font-size:12px;line-height:1.6;padding:4px 0;border-bottom:1px solid var(--border)">${i}</div>`).join('');
   h+=`</div>`;
 
+  // Carbon & Efficiency panel
+  // Material Balance — rendered in right panel under diagram
+  const cmb=document.getElementById('customMaterialBalance');
+  cmb.style.display='block';
+  cmb.innerHTML=renderMaterialBalanceCard(r,cProds);
+
+  // Carbon Footprint & Efficiency panel
+  h+=`<div class="carbon-panel" style="margin-top:12px"><div class="carbon-header"><div class="dot" style="background:var(--orange)"></div>Carbon Footprint &amp; Efficiency</div>`;
+  h+=renderCarbonPanel(r, cProds, r.costs, window._prevCustomResult||null);
+  h+=`</div>`;
+  window._prevCustomResult=JSON.parse(JSON.stringify(r));
+
   document.getElementById('customResultBody').innerHTML=h;
   document.getElementById('csvExportBtn').style.display='inline-block';
   window._lastCustomResult=r;
+  // Store run for comparison
+  if(!window._customRunHistory) window._customRunHistory=[];
+  const runLabel=`Run ${window._customRunHistory.length+1} (${Object.keys(cProds).length}P/${Object.keys(cCons).length}C) $${fmt(r.costs.total)}/h`;
+  window._customRunHistory.push({label:runLabel,result:JSON.parse(JSON.stringify(r)),prods:JSON.parse(JSON.stringify(cProds))});
+  if(window._customRunHistory.length>=2){
+    document.getElementById('customCompareControls').style.display='block';
+    const selA=document.getElementById('customCmpA'),selB=document.getElementById('customCmpB');
+    selA.innerHTML=window._customRunHistory.map((run,i)=>`<option value="${i}">${run.label}</option>`).join('');
+    selB.innerHTML=window._customRunHistory.map((run,i)=>`<option value="${i}">${run.label}</option>`).join('');
+    selA.value=window._customRunHistory.length-2;
+    selB.value=window._customRunHistory.length-1;
+  }
   buildCustomDiagram(r);
   updateContextBar();
 };
 
 
+// ── Compare Custom Runs ──
+window.compareCustomRuns=function(){
+  const hist=window._customRunHistory;if(!hist||hist.length<2)return;
+  const iA=+document.getElementById('customCmpA').value, iB=+document.getElementById('customCmpB').value;
+  const runA=hist[iA], runB=hist[iB];
+  if(!runA||!runB)return;
+  const rA=runA.result, rB=runB.result;
+
+  const metrics=[
+    ['Total Cost',rA.costs.total,rB.costs.total,'$/h',true],
+    ['Production',rA.costs.production,rB.costs.production,'$/h',true],
+    ['Import Cost',rA.costs.import,rB.costs.import,'$/h',true],
+    ['Import Flow',rA.importFlow,rB.importFlow,'Nm\u00B3/h',true],
+    ['Export Revenue',rA.costs.export_revenue,rB.costs.export_revenue,'$/h',false],
+    ['Penalty',rA.costs.unmet_penalty,rB.costs.unmet_penalty,'$/h',true],
+    ['Export Flow',rA.exportFlow,rB.exportFlow,'Nm\u00B3/h',false],
+  ];
+
+  let h=`<div class="panel" style="margin-top:14px"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Run Comparison</div>`;
+  h+=`<div class="compare-grid">`;
+  h+=`<div class="compare-col"><div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${escapeHTML(runA.label)}</div>`;
+  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(a)}</span></div>`});
+  h+=`</div><div class="compare-vs">vs</div>`;
+  h+=`<div class="compare-col"><div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${escapeHTML(runB.label)}</div>`;
+  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(b)}</span></div>`});
+  h+=`</div></div>`;
+
+  // Delta summary
+  const dTotal=rB.costs.total-rA.costs.total;
+  const dPct=rA.costs.total>0?((dTotal/rA.costs.total)*100):0;
+  const unmetA=Object.values(rA.consUnmet).reduce((s,v)=>s+v,0);
+  const unmetB=Object.values(rB.consUnmet).reduce((s,v)=>s+v,0);
+  const dUnmet=unmetB-unmetA;
+  h+=`<div style="margin-top:12px;padding:12px;background:linear-gradient(135deg,#F0FAFA,#FAF8F5);border:1px solid var(--border);border-radius:8px;font-size:12px;line-height:1.7">`;
+  h+=`<b>\u0394 Impact:</b> ${escapeHTML(runB.label)} ${dTotal>=0?'increases':'decreases'} total cost by <span class="${dTotal>=0?'delta-pos':'delta-neg'}">$${fmt(Math.abs(dTotal))}/h (${dTotal>=0?'+':''}${dPct.toFixed(1)}%)</span>`;
+  if(Math.abs(dUnmet)>0.1) h+=` | Curtailment ${dUnmet>0?'increases':'decreases'} by <span class="${dUnmet>0?'delta-pos':'delta-neg'}">${fmt(Math.abs(dUnmet))} Nm\u00B3/h</span>`;
+  h+=`</div></div>`;
+
+  document.getElementById('customComparePanel').innerHTML=h;
+  document.getElementById('customComparePanel').style.display='block';
+  document.getElementById('customComparePanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // CHATBOT
 // ═══════════════════════════════════════════════════════════════════════════
 // ── API Configuration ──
-// Local mode: calls Groq directly. Deployed mode: uses Netlify Function proxy.
-// IMPORTANT: Set your Groq API key here for local testing only. Clear before deploying.
-const GROQ_DIRECT_KEY="";
-const GROQ_DIRECT_URL="https://api.groq.com/openai/v1/chat/completions";
+// All chat requests go through Netlify Function proxy. For local dev, use: netlify dev
 const CHAT_API="/api/chat";
-const USE_DIRECT_API=location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:';
 
 let chatHistory=[],isGenerating=false,modelLoaded=false;
 let currentScenarioName='base';
@@ -1682,17 +1953,9 @@ async function initChat(){
   try{
     document.getElementById('learnDot').style.display='inline-block';
     setStatus('loading','Connecting...');
-    const modeLabel=USE_DIRECT_API?'Local (Direct Groq)':'Deployed (Netlify Proxy)';
-    document.getElementById('chatProgressText').textContent='Connecting to AI... ('+modeLabel+')';
-
-    if(USE_DIRECT_API){
-      // Direct Groq API — test with a minimal call
-      const res=await fetch(GROQ_DIRECT_URL,{method:"POST",headers:{"Authorization":"Bearer "+GROQ_DIRECT_KEY,"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.1-8b-instant",messages:[{role:"user",content:"ping"}],max_tokens:5})});
-      if(!res.ok) throw new Error('Groq API: '+res.status);
-    } else {
-      const res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:"ping"}]})});
-      if(!res.ok) throw new Error('API: '+res.status);
-    }
+    document.getElementById('chatProgressText').textContent='Connecting to AI...';
+    const res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:"ping"}]})});
+    if(!res.ok) throw new Error('API: '+res.status);
     modelLoaded=true;
     document.getElementById('chatProgress').style.display='none';
     document.getElementById('chatSend').disabled=false;
@@ -1700,17 +1963,17 @@ async function initChat(){
     const dot=document.getElementById('learnDot');dot.style.background='var(--green)';dot.style.animation='none';
   }catch(err){
     console.warn('Chat init:',err);
-    modelLoaded=true;
+    modelLoaded=false;
     document.getElementById('chatProgress').style.display='none';
     document.getElementById('chatSend').disabled=false;
-    setStatus('ready','Context-Aware');
-    const dot=document.getElementById('learnDot');dot.style.background='var(--green)';dot.style.animation='none';
+    setStatus('error','Connection failed — click Send to retry');
+    const dot=document.getElementById('learnDot');dot.style.background='var(--orange)';dot.style.animation='none';
   }
 }
 
 function setStatus(t,txt){const el=document.getElementById('chatStatus');el.className='chat-status '+t;el.textContent=txt}
 function addMsg(role,content){const div=document.createElement('div');div.className='chat-msg '+role;div.innerHTML=fmtMsg(content);document.getElementById('chatMessages').appendChild(div);div.scrollIntoView({behavior:'smooth'});return div}
-function fmtMsg(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/`(.*?)`/g,'<code>$1</code>').replace(/\n/g,'<br>')}
+function fmtMsg(t){t=escapeHTML(t);return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/`(.*?)`/g,'<code>$1</code>').replace(/\n/g,'<br>')}
 
 async function sendChat(){
   if(isGenerating)return;
@@ -1735,21 +1998,14 @@ async function sendChat(){
   const aDiv=addMsg('assistant','<span class="typing-dots">Analyzing your results</span>');
 
   try{
-    let res;
-    if(USE_DIRECT_API){
-      // Direct Groq API call (local testing)
-      res=await fetch(GROQ_DIRECT_URL,{method:"POST",headers:{"Authorization":"Bearer "+GROQ_DIRECT_KEY,"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.1-8b-instant",messages:apiMessages,temperature:0.7,max_tokens:500,stream:true})});
-    } else {
-      // Netlify Function proxy (deployed)
-      res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:apiMessages})});
-    }
+    const res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:apiMessages})});
     if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`API error ${res.status}`)}
     const reader=res.body.getReader();const dec=new TextDecoder();let resp='',buf='';
     while(true){const{done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);const delta=p.choices?.[0]?.delta?.content||'';if(delta){resp+=delta;aDiv.innerHTML=fmtMsg(resp);aDiv.scrollIntoView({behavior:'smooth'})}}catch(e){}}}
     if(!resp)resp='Could not generate a response. Please try again.';
     chatHistory.push({role:"assistant",content:resp});
     if(chatHistory.length>13)chatHistory=chatHistory.slice(-12);
-  }catch(err){aDiv.innerHTML=`<span style="color:var(--red)">Error: ${err.message}. Please try again.</span>`}
+  }catch(err){aDiv.innerHTML=`<span style="color:var(--red)">Error: ${escapeHTML(err.message)}. Please try again.</span>`}
   isGenerating=false;
   document.getElementById('chatSend').disabled=false;
   setStatus('ready','Context-Aware');
@@ -1804,18 +2060,19 @@ window.openChat=function(){
   document.getElementById('chatOverlay').classList.add('open');
   ensureChat();
   window.updateContextBar();
+  startContextUpdates();
   showSugg();
   document.getElementById('chatInput').focus();
 };
 // Keep context bar live — refresh every 2 seconds when chat is visible
-setInterval(()=>{
-  const ov=document.getElementById('chatOverlay');
-  if(ov && (ov.classList.contains('open')||ov.classList.contains('minimized'))) window.updateContextBar();
-},2000);
+let chatContextInterval=null;
+function startContextUpdates(){if(!chatContextInterval)chatContextInterval=setInterval(()=>window.updateContextBar(),2000)}
+function stopContextUpdates(){if(chatContextInterval){clearInterval(chatContextInterval);chatContextInterval=null}}
 window.closeChat=function(){
   const ov=document.getElementById('chatOverlay');
   ov.classList.remove('open');
   ov.classList.remove('minimized');
+  stopContextUpdates();
   // Chat history (chatHistory array + DOM messages) is preserved — reopening restores everything
 };
 window.minimizeChat=function(){
@@ -1828,6 +2085,7 @@ window.restoreChat=function(){
   ov.classList.remove('minimized');
   ov.classList.add('open');
   updateContextBar();
+  startContextUpdates();
   showSugg();
   document.getElementById('chatInput').focus();
   const msgs=document.getElementById('chatMessages');
@@ -1863,10 +2121,10 @@ window.compareScenarios = function(){
   let h=`<div class="panel" style="margin-top:14px"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Scenario Comparison</div>`;
   h+=`<div class="compare-grid">`;
   h+=`<div class="compare-col"><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${labels[nameA]}</div>`;
-  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty')?'$':''}${fmt(a)}</span></div>`});
+  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(a)}</span></div>`});
   h+=`</div><div class="compare-vs">vs</div>`;
   h+=`<div class="compare-col"><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${labels[nameB]}</div>`;
-  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty')?'$':''}${fmt(b)}</span></div>`});
+  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(b)}</span></div>`});
   h+=`</div></div>`;
 
   // Delta summary
@@ -1964,7 +2222,7 @@ window.saveNetwork = function(){
   a.href=URL.createObjectURL(blob);
   a.download=`optiflo-network-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
 
 window.loadNetwork = function(evt){
@@ -1974,8 +2232,28 @@ window.loadNetwork = function(evt){
   reader.onload=function(e){
     try{
       const data=JSON.parse(e.target.result);
-      if(data.producers)cProds=data.producers;
-      if(data.consumers)cCons=data.consumers;
+      if(data.producers && typeof data.producers==='object'){
+        for(const[id,p]of Object.entries(data.producers)){
+          if(typeof p.max!=='number'||typeof p.cost!=='number') throw new Error('Invalid producer: '+id);
+          p.min=Math.max(0,Math.min(500000,+p.min||0));
+          p.max=Math.max(0,Math.min(500000,+p.max||0));
+          p.cost=Math.max(0,Math.min(10,+p.cost||0));
+          p.startup=Math.max(0,Math.min(1000000,+p.startup||0));
+          if(!p.name) p.name=String(id);
+          if(!['SMR','Electrolyser','ByProduct'].includes(p.type)) p.type='SMR';
+        }
+        cProds=data.producers;
+      }
+      if(data.consumers && typeof data.consumers==='object'){
+        for(const[id,c]of Object.entries(data.consumers)){
+          if(typeof c.nom!=='number') throw new Error('Invalid consumer: '+id);
+          c.nom=Math.max(0,Math.min(500000,+c.nom||0));
+          c.max=Math.max(0,Math.min(500000,+c.max||c.nom*1.3));
+          c.pri=Math.max(1,Math.min(5,+c.pri||1));
+          if(!c.name) c.name=String(id);
+        }
+        cCons=data.consumers;
+      }
       if(data.config){
         if(data.config.importMax) document.getElementById('cp-imp-max').value=data.config.importMax;
         if(data.config.importCost) document.getElementById('cp-imp-cost').value=data.config.importCost;
@@ -2024,7 +2302,7 @@ window.exportCSV = function(){
   a.href=URL.createObjectURL(blob);
   a.download=`optiflo-results-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
