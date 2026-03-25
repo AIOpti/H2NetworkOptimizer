@@ -768,6 +768,14 @@ const NET = {
 };
 
 let currentResult = null;
+const OPTIMIZE_API = '/api/optimize';
+async function solveAPI(body) {
+  try {
+    const res = await fetch(OPTIMIZE_API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok){ const e=await res.json().catch(()=>({})); console.error('Optimize API error:',e); return null; }
+    return await res.json();
+  } catch(err){ console.error('Optimize API failed:',err); return null; }
+}
 const fmt = v => v.toLocaleString(undefined,{maximumFractionDigits:0});
 function escapeHTML(s){const d=document.createElement('div');d.appendChild(document.createTextNode(String(s)));return d.innerHTML}
 function countUp(el,target,duration=600){const start=parseFloat(el.textContent.replace(/[^0-9.\-]/g,''))||0;const t0=performance.now();(function tick(now){const p=Math.min((now-t0)/duration,1);const eased=1-Math.pow(1-p,3);el.textContent='$'+fmt(start+(target-start)*eased);if(p<1)requestAnimationFrame(tick)})(t0)}
@@ -886,142 +894,10 @@ function renderCarbonPanel(r, prods, costs, prevResult){
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SOLVER
+// SCENARIO INPUTS (kept client-side for diagram/table display)
+// Solver logic has been moved to /api/optimize (server-side)
 // ═══════════════════════════════════════════════════════════════════════════
-function solveMeritOrder(producers, consumers, imp, exp, customHpcIds, purCfg) {
-  const sorted = Object.entries(producers).sort((a,b)=>a[1].cost-b[1].cost);
-  const totalDemand = Object.values(consumers).reduce((s,c)=>s+c.nom,0);
-
-  // Determine HPC consumers: use custom list if provided, else hardcoded reference IDs
-  const defaultHpc = ["C-HTR","C-NHT","C-WAX","C-H2S"];
-  const hpcIds = customHpcIds || defaultHpc;
-  const uhpIds = Object.keys(consumers).filter(id=>!hpcIds.includes(id));
-  const uhpDemand = uhpIds.reduce((s,id)=>s+consumers[id].nom,0);
-  const hpcDemand = hpcIds.reduce((s,id)=>s+(consumers[id]?consumers[id].nom:0),0);
-
-  // Purifier parameters (configurable or defaults)
-  const PSA_SPLIT = purCfg ? purCfg.psaSplit : 0.70;
-  const PSA_REC   = purCfg ? purCfg.psaRec   : 0.85;
-  const PSA_MAX   = purCfg ? purCfg.psaMax   : 60000;
-  const MEM_REC   = purCfg ? purCfg.memRec   : 0.92;
-  const MEM_MAX   = purCfg ? purCfg.memMax   : 25000;
-  const MEM_SPLIT = 1 - PSA_SPLIT;
-
-  // Compute correct dispatch factor based on UHP/HPC demand split and purifier config
-  const psaEffective = PSA_SPLIT * PSA_REC;  // e.g., 0.70×0.85 = 0.595
-  const memEffective = MEM_SPLIT * MEM_REC;  // e.g., 0.30×0.92 = 0.276
-  const reqForUHP = uhpDemand > 0 ? uhpDemand / psaEffective : 0;
-  const reqForHPC = hpcDemand > 0 ? hpcDemand / memEffective : 0;
-  const requiredHP = reqForUHP + reqForHPC;
-  const dispatchFactor = requiredHP > 0 ? Math.max(totalDemand / requiredHP, 0.40) : (psaEffective+memEffective);
-
-  let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0},crossTier:{},importAlloc:{}};
-  let hpSupply=0,uhpDirect=0;
-
-  // Merit-order dispatch with corrected factor
-  for(const[pid,p]of sorted){
-    let needed=totalDemand-hpSupply*dispatchFactor-uhpDirect-r.importFlow;
-    if(needed<=0){r.prodFlows[pid]=0;r.prodOn[pid]=false;continue}
-    let flow=Math.min(p.max,Math.max(p.min,needed*1.05));
-    flow=Math.max(p.min,Math.min(p.max,flow));
-    r.prodFlows[pid]=flow;r.prodOn[pid]=true;
-    r.costs.production+=p.cost*flow;
-    if(pid==="ELEC-1")uhpDirect+=flow; else hpSupply+=flow;
-  }
-
-  // Purifier split (using configurable parameters)
-  // Step 1: Split by configured ratio
-  let psaFeed=Math.min(hpSupply*PSA_SPLIT, PSA_MAX);
-  let memFeed=Math.min(hpSupply*MEM_SPLIT, MEM_MAX);
-  // Step 2: Any overflow from caps goes to the other purifier
-  let overflow=hpSupply-psaFeed-memFeed;
-  if(overflow>0){
-    // Try to send overflow to whichever purifier has remaining capacity
-    const psaRoom=PSA_MAX-psaFeed;
-    const memRoom=MEM_MAX-memFeed;
-    const toPSA=Math.min(overflow,psaRoom);
-    psaFeed+=toPSA; overflow-=toPSA;
-    const toMEM=Math.min(overflow,memRoom);
-    memFeed+=toMEM; overflow-=toMEM;
-  }
-  // Material balance: psaFeed + memFeed + overflow = hpSupply (overflow = 0 if purifiers have capacity)
-  r.purFeeds={"PSA-1":psaFeed,"MEM-1":memFeed};
-  r.purBypass=overflow; // only >0 if BOTH purifiers are at max capacity
-  // Recovery calculations
-  const psaOut=psaFeed*PSA_REC;
-  const psaLoss=psaFeed*(1-PSA_REC);
-  const memOut=memFeed*MEM_REC;
-  const memLoss=memFeed*(1-MEM_REC);
-  r.psaOut=psaOut; r.psaLoss=psaLoss;
-  r.memOut=memOut; r.memLoss=memLoss;
-  let uhpAvail=psaOut+uhpDirect;
-  let hpcAvail=memOut+overflow; // true bypass only if both purifiers maxed
-
-  // Phase 1: Serve UHP consumers from PSA output
-  let uhpRemain=uhpAvail;
-  const sortedCons=Object.entries(consumers).sort((a,b)=>a[1].pri-b[1].pri);
-  for(const[cid,c]of sortedCons){
-    if(!uhpIds.includes(cid)) continue;
-    const supply=Math.min(c.nom,uhpRemain);
-    r.consSupplied[cid]=supply;
-    r.consUnmet[cid]=Math.max(0,c.nom-supply);
-    uhpRemain-=supply;
-  }
-
-  // Phase 2: Serve HPC consumers from MEM output
-  let hpcRemain=hpcAvail;
-  for(const[cid,c]of sortedCons){
-    if(uhpIds.includes(cid)) continue;
-    const supply=Math.min(c.nom,hpcRemain);
-    r.consSupplied[cid]=supply;
-    r.consUnmet[cid]=Math.max(0,c.nom-supply);
-    hpcRemain-=supply;
-  }
-
-  // Phase 3: Cross-tier flow — PSA surplus can serve HPC consumers (downgrade OK: 99.9% → 98% needs)
-  if(uhpRemain>0){
-    for(const[cid,c]of sortedCons){
-      if(uhpIds.includes(cid)) continue;
-      const unmet=r.consUnmet[cid];
-      if(unmet<=0) continue;
-      const extra=Math.min(unmet,uhpRemain);
-      r.consSupplied[cid]+=extra;
-      r.consUnmet[cid]-=extra;
-      r.crossTier[cid]=extra; // track how much came from PSA cross-tier
-      uhpRemain-=extra;
-      if(uhpRemain<=0) break;
-    }
-  }
-
-  // Phase 4: Import fills remaining shortfall on EITHER tier
-  let totalUnmet=0;
-  for(const[cid] of sortedCons) totalUnmet+=r.consUnmet[cid];
-  if(totalUnmet>0){
-    r.importFlow=Math.min(totalUnmet,imp.max);
-    r.costs.import=imp.cost*r.importFlow;
-    let importRemain=r.importFlow;
-    for(const[cid,c]of sortedCons){
-      const unmet=r.consUnmet[cid];
-      if(unmet<=0||importRemain<=0) continue;
-      const fill=Math.min(unmet,importRemain);
-      r.consSupplied[cid]+=fill;
-      r.consUnmet[cid]-=fill;
-      r.importAlloc[cid]=fill; // track how much came from import
-      importRemain-=fill;
-    }
-  }
-
-  // Phase 5: Compute penalties for any remaining unmet demand
-  for(const[cid,c]of sortedCons){
-    if(r.consUnmet[cid]>0) r.costs.unmet_penalty+=c.pen*r.consUnmet[cid];
-  }
-
-  // Phase 6: Export surplus from EITHER tier (PSA surplus + MEM surplus)
-  const totalSurplus=uhpRemain+hpcRemain;
-  if(totalSurplus>0){r.exportFlow=Math.min(totalSurplus,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
-  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.unmet_penalty;
-  return r;
-}
+// (solver removed — runs server-side at /api/optimize)
 function getScenarioInputs(name){let p=JSON.parse(JSON.stringify(NET.producers)),c=JSON.parse(JSON.stringify(NET.consumers));switch(name){case'smr1_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;break;case'smr2_outage':p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'dual_smr_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'hck_surge':c["C-HCK"].nom=33600;c["C-HCK"].max=42000;break;case'global_surge':Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*1.1);x.max=Math.round(x.max*1.1)});break}return{p,c}}
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1495,9 +1371,12 @@ function renderMerit(){
   document.getElementById('sidebarMerit').innerHTML=order.map(([pid,p],i)=>`<div style="display:flex;align-items:center;gap:6px;padding:3px 0"><span style="color:var(--text3);width:14px;font-weight:600">${i+1}.</span><span style="width:7px;height:7px;border-radius:50%;background:${cols[p.type]||'#888'}"></span><span style="font-weight:500">${pid}</span><span style="margin-left:auto;color:var(--text2);font-weight:500">$${p.cost}/Nm\u00B3</span></div>`).join('');
 }
 
-window.runScenario = function(name,btn){
+window.runScenario = async function(name,btn){
   document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
-  const{p,c}=getScenarioInputs(name); const r=solveMeritOrder(p,c,NET.import,NET.export);
+  const r = await solveAPI({mode:'reference',scenario:name});
+  if(!r) return;
+  // Get scenario-modified producers/consumers for display (diagram, tables)
+  const{p,c}=getScenarioInputs(name);
   currentResult=r;
   currentScenarioName=name;
   renderOpt(r,p,c);
@@ -1584,52 +1463,13 @@ window.removeConsumer=function(id){delete cCons[id];renderCL();buildCustomDiagra
 function renderCL(){const pl=Object.entries(cProds);document.getElementById('cpCount').textContent=pl.length;document.getElementById('cpList').innerHTML=pl.length?pl.map(([id,p])=>`<div class="asset-item"><span><b>${escapeHTML(id)}</b> ${escapeHTML(p.type)} | ${p.min.toLocaleString()}-${p.max.toLocaleString()} | $${p.cost}</span><span class="remove" onclick="removeProducer('${escapeHTML(id)}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>';const cl=Object.entries(cCons);document.getElementById('ccCount').textContent=cl.length;document.getElementById('ccList').innerHTML=cl.length?cl.map(([id,c])=>`<div class="asset-item"><span><b>${escapeHTML(id)}</b> ${c.nom.toLocaleString()} Nm\u00B3/h P${c.pri} <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:${c.purity==='STD'?'#F6F0FF':'#E0F5F5'};color:${c.purity==='STD'?'#8E44AD':'#008B8B'}">${c.purity==='STD'?'MEM':'PSA'}</span></span><span class="remove" onclick="removeConsumer('${escapeHTML(id)}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>'}
 window.resetCustom=function(){cProds={};cCons={};document.getElementById('customResult').style.display='none';document.getElementById('customCompareControls').style.display='none';document.getElementById('customComparePanel').style.display='none';document.getElementById('customMaterialBalance').style.display='none';document.getElementById('customKpiRow').style.display='none';document.getElementById('customCostPanel').style.display='none';window._customRunHistory=[];renderCL();buildCustomDiagram()};
 window.loadSample=function(){cProds={"A":{name:"A",type:"SMR",min:5000,max:30000,cost:0.04,startup:10000,co2:0.27},"B":{name:"B",type:"SMR",min:5000,max:30000,cost:0.04,startup:10000,co2:0.27},"C":{name:"C",type:"Electrolyser",min:5000,max:30000,cost:0.04,startup:10000,co2:0.02},"D":{name:"D",type:"Electrolyser",min:1000,max:3000,cost:0.04,startup:10000,co2:0.02},"E":{name:"E",type:"ByProduct",min:1000,max:3000,cost:0.04,startup:10000,co2:0}};cCons={"F":{name:"F",nom:8000,max:10400,pri:2,curt:false,pen:0.15,purity:"UHP"},"G":{name:"G",nom:8000,max:10400,pri:2,curt:true,pen:0.15,purity:"UHP"},"H":{name:"H",nom:10000,max:13000,pri:2,curt:true,pen:0.15,purity:"STD"},"J":{name:"J",nom:40000,max:52000,pri:1,curt:true,pen:0.15,purity:"STD"},"K":{name:"K",nom:40000,max:52000,pri:1,curt:false,pen:0.15,purity:"STD"}};document.getElementById('cp-imp-max').value=15000;document.getElementById('cp-imp-cost').value=0.075;document.getElementById('cp-exp-max').value=5000;document.getElementById('cp-exp-rev').value=0.025;document.getElementById('cp-purifiers').checked=true;document.getElementById('purifier-config').style.display='grid';document.getElementById('cp-psa-split').value=55;document.getElementById('cp-psa-rec').value=85;document.getElementById('cp-psa-max').value=60000;document.getElementById('cp-mem-rec').value=92;document.getElementById('cp-mem-max').value=40000;document.getElementById('cp-mem-split').value=45;renderCL();buildCustomDiagram()};
-// Direct-supply solver (no purifiers — used for custom builder when toggle is off)
-function solveDirectSupply(producers, consumers, imp, exp) {
-  const sorted = Object.entries(producers).sort((a,b)=>a[1].cost-b[1].cost);
-  const totalDemand = Object.values(consumers).reduce((s,c)=>s+c.nom,0);
-  let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,
-    costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0}};
-  let totalSupply=0;
-  // Merit-order dispatch: turn on cheapest producers first
-  for(const[pid,p]of sorted){
-    const remaining=totalDemand-totalSupply;
-    if(remaining<=0){r.prodFlows[pid]=0;r.prodOn[pid]=false;continue}
-    // Respect minimum stable rate: if we need less than min, still run at min
-    let flow;
-    if(remaining<p.min){flow=p.min}
-    else{flow=Math.min(p.max,Math.max(p.min,remaining))}
-    flow=Math.max(p.min,Math.min(p.max,flow));
-    r.prodFlows[pid]=flow; r.prodOn[pid]=true;
-    r.costs.production+=p.cost*flow;
-    totalSupply+=flow;
-  }
-  // Import if short
-  let deficit=totalDemand-totalSupply;
-  if(deficit>0){r.importFlow=Math.min(deficit,imp.max);totalSupply+=r.importFlow;r.costs.import=imp.cost*r.importFlow}
-  // Allocate to consumers by priority
-  let avail=totalSupply;
-  const sortedCons=Object.entries(consumers).sort((a,b)=>a[1].pri-b[1].pri);
-  for(const[cid,c]of sortedCons){
-    const supply=Math.min(c.nom,avail);
-    r.consSupplied[cid]=supply;
-    const unmet=Math.max(0,c.nom-supply);
-    r.consUnmet[cid]=unmet;
-    avail-=supply;
-    if(unmet>0)r.costs.unmet_penalty+=c.pen*unmet;
-  }
-  // Export surplus
-  if(avail>0){r.exportFlow=Math.min(avail,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
-  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.unmet_penalty;
-  return r;
-}
+// solveDirectSupply removed — runs server-side at /api/optimize
 
-window.runCustomOpt=function(){
+window.runCustomOpt=async function(){
   if(!Object.keys(cProds).length||!Object.keys(cCons).length)return alert('Add producers and consumers first.');
   const usePurifiers=document.getElementById('cp-purifiers').checked;
   const impCfg={max:+(document.getElementById('cp-imp-max').value)||15000, cost:+(document.getElementById('cp-imp-cost').value)||0.075};
   const expCfg={max:+(document.getElementById('cp-exp-max').value)||5000, revenue:+(document.getElementById('cp-exp-rev').value)||0.025};
-  // Build custom HPC list and purifier config from UI
   const customHpcIds = Object.entries(cCons).filter(([,c])=>c.purity==='STD').map(([id])=>id);
   const purCfg = usePurifiers ? {
     psaSplit: Math.min(90,Math.max(10,+(document.getElementById('cp-psa-split').value)||70))/100,
@@ -1638,7 +1478,8 @@ window.runCustomOpt=function(){
     memRec: Math.min(99,Math.max(50,+(document.getElementById('cp-mem-rec').value)||92))/100,
     memMax: +(document.getElementById('cp-mem-max').value)||25000,
   } : null;
-  const r = usePurifiers ? solveMeritOrder(cProds,cCons,impCfg,expCfg,customHpcIds,purCfg) : solveDirectSupply(cProds,cCons,impCfg,expCfg);
+  const r = await solveAPI({mode:'custom',producers:cProds,consumers:cCons,importCfg:impCfg,exportCfg:expCfg,usePurifiers:usePurifiers,customHpcIds:customHpcIds,purCfg:purCfg});
+  if(!r) return alert('Optimization failed. Please try again.');
   const pan=document.getElementById('customResult');pan.style.display='block';
 
   // ── Compute insights ──
@@ -2147,11 +1988,12 @@ window.handleFeedback=function(e){e.preventDefault();const d={name:document.getE
 // ═══════════════════════════════════════════════════════════════════════════
 // SCENARIO COMPARISON
 // ═══════════════════════════════════════════════════════════════════════════
-window.compareScenarios = function(){
+window.compareScenarios = async function(){
   const nameA=document.getElementById('cmpA').value, nameB=document.getElementById('cmpB').value;
   const labels={base:'Base Case',smr1_outage:'SMR-1 Outage',smr2_outage:'SMR-2 Outage',dual_smr_outage:'Dual SMR Outage',hck_surge:'HCK +20%',global_surge:'Global +10%'};
-  const{p:pA,c:cA}=getScenarioInputs(nameA), {p:pB,c:cB}=getScenarioInputs(nameB);
-  const rA=solveMeritOrder(pA,cA,NET.import,NET.export), rB=solveMeritOrder(pB,cB,NET.import,NET.export);
+  const data = await solveAPI({mode:'compare',scenarioA:nameA,scenarioB:nameB});
+  if(!data) return;
+  const rA=data.resultA, rB=data.resultB;
 
   const metrics=[
     ['Total Cost',rA.costs.total,rB.costs.total,'$/h',true],
@@ -2189,27 +2031,14 @@ window.compareScenarios = function(){
 // ═══════════════════════════════════════════════════════════════════════════
 // SENSITIVITY ANALYSIS
 // ═══════════════════════════════════════════════════════════════════════════
-window.runSensitivity = function(){
+window.runSensitivity = async function(){
   const param=document.getElementById('sensParam').value;
-  const steps=11, results=[];
   const labels={smr1_cost:'SMR-1 Cost',smr2_cost:'SMR-2 Cost',elec1_cost:'ELEC-1 Cost',import_cost:'Import Cost',hck_demand:'HCK Demand',global_demand:'Global Demand'};
 
-  for(let i=0;i<steps;i++){
-    const factor=0.5 + (i/(steps-1)); // 50% to 150%
-    const p=JSON.parse(JSON.stringify(NET.producers)), c=JSON.parse(JSON.stringify(NET.consumers));
-    let baseVal=0;
-    switch(param){
-      case'smr1_cost': baseVal=p["SMR-1"].cost; p["SMR-1"].cost=baseVal*factor; break;
-      case'smr2_cost': baseVal=p["SMR-2"].cost; p["SMR-2"].cost=baseVal*factor; break;
-      case'elec1_cost': baseVal=p["ELEC-1"].cost; p["ELEC-1"].cost=baseVal*factor; break;
-      case'import_cost': baseVal=NET.import.cost; break;
-      case'hck_demand': baseVal=c["C-HCK"].nom; c["C-HCK"].nom=Math.round(baseVal*factor); c["C-HCK"].max=Math.round(c["C-HCK"].max*factor); break;
-      case'global_demand': Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*factor);x.max=Math.round(x.max*factor)}); baseVal=83400; break;
-    }
-    const impCfg={max:NET.import.max, cost:param==='import_cost'?NET.import.cost*factor:NET.import.cost};
-    const r=solveMeritOrder(p,c,impCfg,NET.export);
-    results.push({factor,cost:r.costs.total,import:r.importFlow,penalty:r.costs.unmet_penalty,prod:r.costs.production});
-  }
+  const data = await solveAPI({mode:'sensitivity',param:param});
+  if(!data || !data.results) return;
+  const results = data.results;
+  const steps = results.length;
 
   const maxCost=Math.max(...results.map(r=>r.cost));
   const baseIdx=Math.floor(steps/2);
