@@ -17,6 +17,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='28' fill='%23008B8B'/><text x='90' y='122' text-anchor='middle' fill='white' font-size='90' font-weight='800' font-family='system-ui'>O</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <style>
 :root{
   --bg:#F5F2EE;--surface:#FFFFFF;--surface2:#FAF8F5;--surface3:#F0EDE8;
@@ -718,6 +719,19 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
   </div>
 </div>
 
+<script>
+// Netlify Identity — handle email confirmation redirect and init
+if(window.netlifyIdentity){
+  window.netlifyIdentity.on('init',function(user){
+    if(!user){
+      // Process confirmation token from email link if present
+      if(window.location.hash.includes('confirmation_token')||window.location.hash.includes('invite_token')){
+        window.netlifyIdentity.open();
+      }
+    }
+  });
+}
+</script>
 <script type="module">
 // ═══════════════════════════════════════════════════════════════════════════
 // NETWORK DATA
@@ -2051,14 +2065,35 @@ window.updateContextBar=function(){
   }
 }
 
+// ── Netlify Identity gate for AI Tutor ──
+function getCurrentUser(){
+  return window.netlifyIdentity && window.netlifyIdentity.currentUser();
+}
+
 window.openChat=function(){
+  const user = getCurrentUser();
+  if(!user){
+    // Show registration/login via Netlify Identity widget
+    window.netlifyIdentity.open('signup');
+    // Listen for login event — once logged in, open chat
+    window.netlifyIdentity.on('login', function onLogin(u){
+      window.netlifyIdentity.off('login', onLogin);
+      window.netlifyIdentity.close();
+      openChatForUser(u);
+    });
+    return;
+  }
+  openChatForUser(user);
+};
+
+function openChatForUser(user){
   document.getElementById('chatOverlay').classList.add('open');
   ensureChat();
   window.updateContextBar();
   startContextUpdates();
   showSugg();
   document.getElementById('chatInput').focus();
-};
+}
 // Keep context bar live — refresh every 2 seconds when chat is visible
 let chatContextInterval=null;
 function startContextUpdates(){if(!chatContextInterval)chatContextInterval=setInterval(()=>window.updateContextBar(),2000)}
