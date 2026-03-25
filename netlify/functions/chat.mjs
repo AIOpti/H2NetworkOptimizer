@@ -86,7 +86,7 @@ export default async (req) => {
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: "GROQ_API_KEY not configured. Set it in Netlify Environment Variables." }), {
+    return new Response(JSON.stringify({ error: "AI Tutor is temporarily unavailable. Please contact the administrator." }), {
       status: 500,
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": corsOrigin },
     });

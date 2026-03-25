@@ -567,7 +567,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
             <div class="form-group"><label>Demand (Nm&#179;/h)</label><input id="cc-demand" type="number" value="8000"></div>
             <div class="form-group"><label>Priority (1-5)</label><input id="cc-pri" type="number" min="1" max="5" value="2"></div>
             <div class="form-group"><label>Curtailable?</label><select id="cc-curt"><option value="false">No</option><option value="true">Yes</option></select></div>
-            <div class="form-group"><label>Penalty ($/Nm&#179;)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
+            <div class="form-group"><label>Lost Value ($/Nm&#179;)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
           </div>
           <div class="form-group"><label>Purity (purifiers only)</label><select id="cc-purity"><option value="UHP">UHP (PSA, 99.9%)</option><option value="STD">STD (Membrane, 98%)</option></select></div>
           <button class="btn btn-primary btn-sm" style="width:100%" onclick="addCustomConsumer()">+ Add Consumer</button>
@@ -678,7 +678,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
     </div>
     <div class="chat-progress" id="chatProgress">
       <div class="chat-progress-bar"><div class="chat-progress-fill" id="chatProgressFill" style="width:0%"></div></div>
-      <div class="chat-progress-text" id="chatProgressText">Preparing AI model...</div>
+      <div class="chat-progress-text" id="chatProgressText">Connecting to OptiFLO AI Tutor...</div>
     </div>
     <div class="chat-messages" id="chatMessages">
       <div class="chat-msg assistant">Hello! I'm the <strong>OptiFLO AI Tutor</strong> &#8212; and I can see your live optimizer results.<br><br>Ask me anything about hydrogen network optimization, or ask about <strong>your current scenario</strong> &#8212; I'll reference the actual numbers. Try the suggestions below:</div>
@@ -840,7 +840,7 @@ function renderCarbonPanel(r, prods, costs, prevResult){
   // Specific Energy Cost = total cost / total H2 delivered
   const sec=costs.total/totalServed;
 
-  h+=`<div class="insight-row"><span class="insight-label">Marginal production cost</span><span class="insight-value">$${prodCostPerNm3.toFixed(4)}/Nm\u00B3</span></div>`;
+  h+=`<div class="insight-row"><span class="insight-label">Avg. production cost</span><span class="insight-value">$${prodCostPerNm3.toFixed(4)}/Nm\u00B3</span></div>`;
   h+=`<div class="insight-row"><span class="insight-label">Specific delivery cost (SDC)</span><span class="insight-value">$${sec.toFixed(4)}/Nm\u00B3</span></div>`;
   h+=`<div class="insight-row"><span class="insight-label">Avg. asset utilization</span><span class="insight-value">${networkUtil.toFixed(0)}%</span></div>`;
   h+=`<div class="insight-row"><span class="insight-label">Carbon cost ratio</span><span class="insight-value">${(ci/sec*1000).toFixed(1)} g CO\u2082 / $</span></div>`;
@@ -905,7 +905,6 @@ function solveMeritOrder(producers, consumers, imp, exp, customHpcIds, purCfg) {
     flow=Math.max(p.min,Math.min(p.max,flow));
     r.prodFlows[pid]=flow;r.prodOn[pid]=true;
     r.costs.production+=p.cost*flow;
-    r.costs.startup+=(p.startup||0)/8;
     if(pid==="ELEC-1")uhpDirect+=flow; else hpSupply+=flow;
   }
 
@@ -999,7 +998,7 @@ function solveMeritOrder(producers, consumers, imp, exp, customHpcIds, purCfg) {
   // Phase 6: Export surplus from EITHER tier (PSA surplus + MEM surplus)
   const totalSurplus=uhpRemain+hpcRemain;
   if(totalSurplus>0){r.exportFlow=Math.min(totalSurplus,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
-  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.startup+r.costs.unmet_penalty;
+  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.unmet_penalty;
   return r;
 }
 function getScenarioInputs(name){let p=JSON.parse(JSON.stringify(NET.producers)),c=JSON.parse(JSON.stringify(NET.consumers));switch(name){case'smr1_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;break;case'smr2_outage':p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'dual_smr_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'hck_surge':c["C-HCK"].nom=33600;c["C-HCK"].max=42000;break;case'global_surge':Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*1.1);x.max=Math.round(x.max*1.1)});break}return{p,c}}
@@ -1292,15 +1291,12 @@ function buildCustomDiagram(customResult) {
 
     // Material balance summary bar (below purifiers when result exists)
     if(customResult){
-      const totalProd=Object.values(customResult.prodFlows).reduce((s,v)=>s+v,0);
-      const totalPurIn=customResult.purFeeds["PSA-1"]+customResult.purFeeds["MEM-1"];
-      const totalPurOut=(customResult.psaOut||0)+(customResult.memOut||0);
-      const totalLoss=(customResult.psaLoss||0)+(customResult.memLoss||0);
       const bp=customResult.purBypass||0;
-      const mbY=memY+purH+8;
-      html+=`<rect x="${midX-10}" y="${mbY}" width="${purW+20}" height="${bp>0?38:26}" rx="5" fill="#FAF8F5" stroke="#E0DBD4" stroke-width="1"/>`;
-      html+=`<text x="${midX+purW/2}" y="${mbY+12}" font-size="7.5" font-weight="600" fill="#2D3436" text-anchor="middle">BALANCE: ${fmt(Math.round(totalPurIn))} in \u2192 ${fmt(Math.round(totalPurOut))} product + ${fmt(Math.round(totalLoss))} loss</text>`;
-      if(bp>0) html+=`<text x="${midX+purW/2}" y="${mbY+26}" font-size="7.5" font-weight="600" fill="#E74C3C" text-anchor="middle">\u26A0 ${fmt(Math.round(bp))} bypass (both purifiers at max cap)</text>`;
+      if(bp>0){
+        const mbY=memY+purH+8;
+        html+=`<rect x="${midX-10}" y="${mbY}" width="${purW+20}" height="22" rx="5" fill="#FDEDEC" stroke="#E74C3C" stroke-width="1"/>`;
+        html+=`<text x="${midX+purW/2}" y="${mbY+15}" font-size="7.5" font-weight="600" fill="#E74C3C" text-anchor="middle">\u26A0 ${fmt(Math.round(bp))} bypass (both purifiers at max cap)</text>`;
+      }
     }
 
     // Producer → PSA/MEM lines
@@ -1475,7 +1471,7 @@ function buildCustomDiagram(customResult) {
 function renderMerit(){
   const order=Object.entries(NET.producers).sort((a,b)=>a[1].cost-b[1].cost);
   const cols={ByProduct:'var(--green)',SMR:'var(--accent)',Electrolyser:'var(--purple)'};
-  document.getElementById('sidebarMerit').innerHTML=order.map(([pid,p],i)=>`<div style="display:flex;align-items:center;gap:6px;padding:3px 0"><span style="color:var(--text3);width:14px;font-weight:600">${i+1}.</span><span style="width:7px;height:7px;border-radius:50%;background:${cols[p.type]||'#888'}"></span><span style="font-weight:500">${pid}</span><span style="margin-left:auto;color:var(--text2);font-weight:500">$${p.cost}</span></div>`).join('');
+  document.getElementById('sidebarMerit').innerHTML=order.map(([pid,p],i)=>`<div style="display:flex;align-items:center;gap:6px;padding:3px 0"><span style="color:var(--text3);width:14px;font-weight:600">${i+1}.</span><span style="width:7px;height:7px;border-radius:50%;background:${cols[p.type]||'#888'}"></span><span style="font-weight:500">${pid}</span><span style="margin-left:auto;color:var(--text2);font-weight:500">$${p.cost}/Nm\u00B3</span></div>`).join('');
 }
 
 window.runScenario = function(name,btn){
@@ -1490,11 +1486,11 @@ window.runScenario = function(name,btn){
 
 function renderOpt(r,prods,cons){
   const cb=r.costs;
-  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,'color:var(--text)'],['Production',cb.production,'color:var(--accent)'],['Import',cb.import,'color:var(--blue)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" data-target="${v}" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
+  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,'color:var(--text)'],['Production',cb.production,'color:var(--accent)'],['Import',cb.import,'color:var(--blue)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Lost Prod. Value',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" data-target="${v}" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
   document.querySelectorAll('#kpiRow .kpi-value[data-target]').forEach(el=>{const t=parseFloat(el.dataset.target);if(!isNaN(t))countUp(el,t)});
-  const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.startup,c:'#F39C12',l:'Startup'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Penalty'}];
+  const tot=cb.production+cb.import+cb.unmet_penalty||1;const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Lost Prod. Value'}];
   document.getElementById('costBar').innerHTML=segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('');
-  document.getElementById('costLegend').innerHTML=segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('');
+  document.getElementById('costLegend').innerHTML=segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('')+(cb.export_revenue>0?`<div class="legend-i" style="color:var(--text3);font-size:10px;margin-top:4px">Bar shows gross costs. Export revenue ($${fmt(cb.export_revenue)}/h) deducted in Total Cost.</div>`:'');
   document.getElementById('prodTbl').innerHTML=Object.entries(r.prodFlows).map(([pid,flow])=>{const p=prods[pid];const on=r.prodOn[pid];const pct=p.max>0?(flow/p.max*100):0;const col=on?(pct>90?'var(--orange)':'var(--green)'):'var(--red)';return`<tr><td><b>${pid}</b><br><span style="font-size:10px;color:var(--text2)">${p.name}</span></td><td><span class="tag ${on?'tag-on':'tag-off'}">${on?'ON':'OFF'}</span></td><td>${fmt(flow)}</td><td><div class="bar-c"><div class="bar-f" style="width:${pct}%;background:${col}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
   document.getElementById('consTbl').innerHTML=Object.entries(r.consSupplied).map(([cid,sup])=>{const c=cons[cid];const unmet=r.consUnmet[cid]||0;const pct=c.nom>0?(sup/c.nom*100):100;return`<tr><td><b>${cid}</b><br><span style="font-size:10px;color:var(--text2)">${c.name}</span></td><td>${fmt(sup)}</td><td>${unmet>0.1?`<span class="tag tag-warn">-${fmt(unmet)}</span>`:'<span class="tag tag-on">OK</span>'}</td><td><div class="bar-c"><div class="bar-f" style="width:${Math.min(pct,100)}%;background:${unmet>0?'var(--orange)':'var(--accent)'}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
   let pi='';for(const[uid,feed]of Object.entries(r.purFeeds)){const u=NET.purifiers[uid];const pct=u?(feed/u.max*100):0;pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">${uid}</span><span style="font-weight:500">${fmt(feed)} Nm\u00B3/h (${pct.toFixed(0)}%)</span></div>`}
@@ -1585,7 +1581,6 @@ function solveDirectSupply(producers, consumers, imp, exp) {
     flow=Math.max(p.min,Math.min(p.max,flow));
     r.prodFlows[pid]=flow; r.prodOn[pid]=true;
     r.costs.production+=p.cost*flow;
-    r.costs.startup+=(p.startup||0)/8;
     totalSupply+=flow;
   }
   // Import if short
@@ -1604,7 +1599,7 @@ function solveDirectSupply(producers, consumers, imp, exp) {
   }
   // Export surplus
   if(avail>0){r.exportFlow=Math.min(avail,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
-  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.startup+r.costs.unmet_penalty;
+  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.unmet_penalty;
   return r;
 }
 
@@ -1646,12 +1641,12 @@ window.runCustomOpt=function(){
   // KPI row + Cost breakdown → rendered in RIGHT panel (above diagram)
   const ckpi=document.getElementById('customKpiRow');
   ckpi.style.display='grid';
-  ckpi.innerHTML=[['Total Cost',cb.total,'color:var(--accent)'],['Production',cb.production,'color:var(--text)'],['Import',cb.import,cb.import>0?'color:var(--orange)':'color:var(--text2)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
-  const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;
-  const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.startup,c:'#F39C12',l:'Startup'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Penalty'}];
+  ckpi.innerHTML=[['Total Cost',cb.total,'color:var(--accent)'],['Production',cb.production,'color:var(--text)'],['Import',cb.import,cb.import>0?'color:var(--orange)':'color:var(--text2)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Lost Prod. Value',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
+  const tot=cb.production+cb.import+cb.unmet_penalty||1;
+  const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Lost Prod. Value'}];
   const ccp=document.getElementById('customCostPanel');
   ccp.style.display='block';
-  ccp.innerHTML=`<div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar">${segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('')}</div><div class="legend">${segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('')}</div>`;
+  ccp.innerHTML=`<div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar">${segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('')}</div><div class="legend">${segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('')}${cb.export_revenue>0?`<div class="legend-i" style="color:var(--text3);font-size:10px;margin-top:4px">Bar shows gross costs. Export revenue ($${fmt(cb.export_revenue)}/h) deducted in Total Cost.</div>`:''}</div>`;
 
   // Producer + Consumer tables
   h+='<div class="grid-2">';
@@ -1684,7 +1679,7 @@ window.runCustomOpt=function(){
 
   // Curtailment
   if(curtailedCons.length>0){
-    insights.push(`<b style="color:var(--red)">Curtailment:</b> ${curtailedCons.join(', ')} receiving less than nominal demand. Total unmet: ${fmt(totalUnmet)} Nm\u00B3/h. Penalty cost: $${fmt(r.costs.unmet_penalty)}/h.`);
+    insights.push(`<b style="color:var(--red)">Curtailment:</b> ${curtailedCons.join(', ')} receiving less than nominal demand. Total unmet: ${fmt(totalUnmet)} Nm\u00B3/h. Lost production value: $${fmt(r.costs.unmet_penalty)}/h.`);
   } else {
     insights.push(`<b style="color:var(--green)">All consumers satisfied</b> \u2014 zero curtailment across all ${Object.keys(cCons).length} consumers.`);
   }
@@ -1752,17 +1747,17 @@ window.compareCustomRuns=function(){
     ['Import Cost',rA.costs.import,rB.costs.import,'$/h',true],
     ['Import Flow',rA.importFlow,rB.importFlow,'Nm\u00B3/h',true],
     ['Export Revenue',rA.costs.export_revenue,rB.costs.export_revenue,'$/h',false],
-    ['Penalty',rA.costs.unmet_penalty,rB.costs.unmet_penalty,'$/h',true],
+    ['Lost Prod. Value',rA.costs.unmet_penalty,rB.costs.unmet_penalty,'$/h',true],
     ['Export Flow',rA.exportFlow,rB.exportFlow,'Nm\u00B3/h',false],
   ];
 
   let h=`<div class="panel" style="margin-top:14px"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Run Comparison</div>`;
   h+=`<div class="compare-grid">`;
   h+=`<div class="compare-col"><div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${escapeHTML(runA.label)}</div>`;
-  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(a)}</span></div>`});
+  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Value'))?'$':''}${fmt(a)}${l.includes('Flow')?' Nm\u00B3/h':''}</span></div>`});
   h+=`</div><div class="compare-vs">vs</div>`;
   h+=`<div class="compare-col"><div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${escapeHTML(runB.label)}</div>`;
-  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(b)}</span></div>`});
+  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Value'))?'$':''}${fmt(b)}${l.includes('Flow')?' Nm\u00B3/h':''}</span></div>`});
   h+=`</div></div>`;
 
   // Delta summary
@@ -1819,7 +1814,7 @@ function describeResult(r, label, consumerDefs, shortLabel){
   s+=`IMPORT: ${fmt(r.importFlow)} | EXPORT: ${fmt(r.exportFlow)}\n`;
   if(r.crossTier&&Object.keys(r.crossTier).length>0) s+=`CROSS-TIER: ${Object.entries(r.crossTier).map(([id,v])=>`${id} got ${fmt(Math.round(v))} from PSA surplus`).join(', ')}\n`;
   if(r.importAlloc&&Object.keys(r.importAlloc).length>0) s+=`IMPORT ALLOCATION: ${Object.entries(r.importAlloc).map(([id,v])=>`${id} got ${fmt(Math.round(v))}`).join(', ')}\n`;
-  s+=`COSTS: Total=$${fmt(r.costs.total)}/h | Prod=$${fmt(r.costs.production)} | Import=$${fmt(r.costs.import)} | Export Rev=$${fmt(r.costs.export_revenue)} | Penalty=$${fmt(r.costs.unmet_penalty)}\n`;
+  s+=`COSTS: Total=$${fmt(r.costs.total)}/h | Prod=$${fmt(r.costs.production)} | Import=$${fmt(r.costs.import)} | Export Rev=$${fmt(r.costs.export_revenue)} | Lost Prod Value=$${fmt(r.costs.unmet_penalty)}\n`;
 
   // ── PRE-WRITTEN ANSWERS (use these verbatim when user asks) ──
   s+=`\n== READY-MADE ANSWERS for ${tag} — Always prefix with "In ${tag}:" when using these numbers. ==\n`;
@@ -1953,7 +1948,7 @@ async function initChat(){
   try{
     document.getElementById('learnDot').style.display='inline-block';
     setStatus('loading','Connecting...');
-    document.getElementById('chatProgressText').textContent='Connecting to AI...';
+    document.getElementById('chatProgressText').textContent='Connecting to OptiFLO AI Tutor...';
     const res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:"ping"}]})});
     if(!res.ok) throw new Error('API: '+res.status);
     modelLoaded=true;
@@ -2114,17 +2109,17 @@ window.compareScenarios = function(){
     ['Import Cost',rA.costs.import,rB.costs.import,'$/h',true],
     ['Import Flow',rA.importFlow,rB.importFlow,'Nm\u00B3/h',true],
     ['Export Revenue',rA.costs.export_revenue,rB.costs.export_revenue,'$/h',false],
-    ['Penalty',rA.costs.unmet_penalty,rB.costs.unmet_penalty,'$/h',true],
+    ['Lost Prod. Value',rA.costs.unmet_penalty,rB.costs.unmet_penalty,'$/h',true],
     ['Export Flow',rA.exportFlow,rB.exportFlow,'Nm\u00B3/h',false],
   ];
 
   let h=`<div class="panel" style="margin-top:14px"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Scenario Comparison</div>`;
   h+=`<div class="compare-grid">`;
   h+=`<div class="compare-col"><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${labels[nameA]}</div>`;
-  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(a)}</span></div>`});
+  metrics.forEach(([l,a,,u])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Value'))?'$':''}${fmt(a)}${l.includes('Flow')?' Nm\u00B3/h':''}</span></div>`});
   h+=`</div><div class="compare-vs">vs</div>`;
   h+=`<div class="compare-col"><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${labels[nameB]}</div>`;
-  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty'))?'$':''}${fmt(b)}</span></div>`});
+  metrics.forEach(([l,,b,u])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&(l.includes('Cost')||l.includes('Revenue')||l.includes('Value'))?'$':''}${fmt(b)}${l.includes('Flow')?' Nm\u00B3/h':''}</span></div>`});
   h+=`</div></div>`;
 
   // Delta summary
@@ -2284,7 +2279,7 @@ window.exportCSV = function(){
   let csv='OptiFLO AI - Optimization Results\n';
   csv+=`Generated,${new Date().toISOString()}\n\n`;
   csv+='COSTS\nMetric,Value ($/h)\n';
-  csv+=`Total Cost,${r.costs.total.toFixed(2)}\nProduction,${r.costs.production.toFixed(2)}\nImport,${r.costs.import.toFixed(2)}\nExport Revenue,${r.costs.export_revenue.toFixed(2)}\nStartup,${r.costs.startup.toFixed(2)}\nPenalty,${r.costs.unmet_penalty.toFixed(2)}\n\n`;
+  csv+=`Total Cost,${r.costs.total.toFixed(2)}\nProduction,${r.costs.production.toFixed(2)}\nImport,${r.costs.import.toFixed(2)}\nExport Revenue,${r.costs.export_revenue.toFixed(2)}\nLost Production Value,${r.costs.unmet_penalty.toFixed(2)}\n\n`;
   csv+='PRODUCERS\nID,Type,Status,Flow (Nm3/h),Cost ($/Nm3),Loading (%)\n';
   Object.entries(r.prodFlows).forEach(([id,flow])=>{
     const p=cProds[id];
