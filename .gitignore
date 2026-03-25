@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp files
+~*
+*.tmp
+
+# Old Python backend (superseded by single-page HTML app)
+app.py
+optimizer.py
+network_config.py
+data_generator.py
+dashboard.html
+requirements.txt
+
+# Session/status files
+SESSION_STATUS.md
+
+# Test files
+test.txt

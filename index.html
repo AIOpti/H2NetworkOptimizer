@@ -8,115 +8,169 @@
 <meta property="og:title" content="OptiFLO AI — Open Learning Platform for AI in Oil and Gas">
 <meta property="og:description" content="Hands-on learning: Build, optimize, and analyze hydrogen networks using MIP. Free interactive platform for O&G engineers by OptiFLO AI Solutions.">
 <meta property="og:type" content="website">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#008B8B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="OptiFLO AI">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='28' fill='%23008B8B'/><text x='90' y='122' text-anchor='middle' fill='white' font-size='90' font-weight='800' font-family='system-ui'>O</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a1628;--surface:#111d32;--surface2:#182842;--surface3:#1f3355;--border:#2a4060;--text:#e2eaf3;--text2:#8a9bb5;--accent:#00b4d8;--accent2:#0096c7;--accent-glow:#00b4d833;--green:#06d6a0;--red:#ef476f;--orange:#ffd166;--purple:#b388ff;--blue:#4cc9f0;--grad1:linear-gradient(135deg,#0077b6,#00b4d8);--grad2:linear-gradient(135deg,#06d6a0,#00b4d8);--radius:10px}
+:root{
+  --bg:#F5F2EE;--surface:#FFFFFF;--surface2:#FAF8F5;--surface3:#F0EDE8;
+  --border:#E0DBD4;--border2:#C8C2B8;
+  --text:#2D3436;--text2:#636E72;--text3:#95A5A6;
+  --accent:#008B8B;--accent2:#006D6D;--accent-light:#E0F5F5;--accent-glow:rgba(0,139,139,0.1);
+  --green:#27AE60;--green-light:#E8F8F0;
+  --red:#E74C3C;--red-light:#FDEDEC;
+  --orange:#F39C12;--orange-light:#FEF5E7;
+  --purple:#8E44AD;--blue:#2980B9;
+  --grad1:linear-gradient(135deg,#008B8B,#00ACAC);
+  --grad2:linear-gradient(135deg,#008B8B,#27AE60);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 30px rgba(0,0,0,0.1);
+  --radius:12px;--radius-lg:16px
+}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
-a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline;color:var(--accent2)}
 ::selection{background:var(--accent);color:#fff}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,22,40,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:52px;gap:6px}
-.nav-brand{font-weight:700;font-size:17px;margin-right:auto;display:flex;align-items:center;gap:8px;white-space:nowrap}
-.nav-brand span{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-link{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;transition:all .15s;text-decoration:none}
-.nav-link:hover{color:var(--text);background:var(--surface2);text-decoration:none}
-.nav-link.active{color:var(--text);background:var(--surface2)}
-.nav-btn{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s}
-.nav-btn-learn{background:var(--grad2);color:#000}.nav-btn-learn:hover{transform:scale(1.03)}
-.nav-btn-fb{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.nav-btn-fb:hover{border-color:var(--accent)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:56px;gap:8px}
+.nav-brand{margin-right:auto;white-space:nowrap;font-weight:800;font-size:20px;color:var(--text);letter-spacing:-0.3px}
+.nav-brand span{color:var(--accent)}
+.nav-link{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface3);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--accent-light);font-weight:600}
+.nav-btn{padding:7px 18px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .2s}
+.nav-btn-learn{background:var(--grad1);color:#fff;box-shadow:0 2px 8px rgba(0,139,139,0.25)}.nav-btn-learn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,139,139,0.35)}
+.nav-btn-fb{background:var(--surface);color:var(--text);border:1px solid var(--border)}.nav-btn-fb:hover{border-color:var(--accent);color:var(--accent)}
 
-/* ── HERO (compact) ── */
-.hero{padding:72px 24px 20px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#0077b618 0%,transparent 55%)}
-.hero-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;background:var(--accent-glow);color:var(--accent);border:1px solid var(--accent);letter-spacing:.5px;margin-bottom:12px}
-.hero h1{font-size:clamp(24px,4vw,40px);font-weight:800;line-height:1.15;margin-bottom:8px}
-.hero h1 em{font-style:normal;background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:15px;color:var(--text2);max-width:620px;margin:0 auto 16px}
-.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
-.hero-stat .val{font-size:24px;font-weight:800;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-stat .lbl{font-size:11px;color:var(--text2)}
+/* ── HERO (removed - stats now in section subtitle) ── */
 
 /* ── SECTIONS ── */
-.section{padding:32px 24px;max-width:1200px;margin:0 auto}
-.section-title{font-size:22px;font-weight:700;margin-bottom:4px}
-.section-sub{color:var(--text2);font-size:14px;margin-bottom:20px}
-.divider{width:50px;height:3px;background:var(--grad1);border-radius:2px;margin-bottom:20px}
+.section{padding:40px 32px;max-width:1240px;margin:0 auto}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.section-title{font-size:22px;font-weight:700;color:var(--text)}
+.section-sub{color:var(--text2);font-size:14px;margin-bottom:24px;margin-left:48px}
+
+/* ── NETWORK DIAGRAM ── */
+.network-svg-wrap{position:relative;width:100%;overflow:hidden;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:14px}
+.network-svg-wrap svg{display:block;width:100%;height:auto}
+.node-group{cursor:pointer;transition:transform .15s}
+.node-group:hover{transform:scale(1.04)}
+.node-rect{rx:8;transition:stroke .2s,stroke-width .2s}
+.node-group:hover .node-rect{stroke-width:2.5}
+.flow-line{stroke-dasharray:8 4;animation:flowDash 1.5s linear infinite}
+.flow-line.inactive{stroke:#D5D0C8;stroke-dasharray:4 4;animation:none;opacity:.5}
+@keyframes flowDash{to{stroke-dashoffset:-12}}
+.tooltip-box{pointer-events:none;opacity:0;transition:opacity .15s}
+.tooltip-box.show{opacity:1}
+
+/* ── TWO-PANEL LAYOUT (used by both Optimizer and Builder) ── */
+.two-panel{display:grid;grid-template-columns:2fr 3fr;gap:20px;align-items:start}
+.panel-left{min-width:0}
+.panel-right{position:sticky;top:72px;min-width:0;max-height:calc(100vh - 88px);overflow-y:auto;overflow-x:auto}
+.panel-right::-webkit-scrollbar{width:4px}
+.panel-right::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
 /* ── OPTIMIZER ── */
-.opt-grid{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.opt-sb{background:var(--surface2);border-right:1px solid var(--border);padding:14px;overflow-y:auto}
-.opt-main{padding:16px;overflow-y:auto}
-.opt-sb h4{font-size:11px;text-transform:uppercase;color:var(--text2);letter-spacing:.5px;margin:12px 0 6px}
-.opt-sb h4:first-child{margin-top:0}
-.sc-btn{display:block;width:100%;padding:8px 10px;margin-bottom:4px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;cursor:pointer;text-align:left;transition:all .12s}
-.sc-btn:hover{border-color:var(--accent);background:var(--surface3)}
-.sc-btn.active{border-color:var(--accent);background:var(--accent2);color:#fff}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px}
-.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
-.kpi-label{font-size:10px;text-transform:uppercase;color:var(--text2);letter-spacing:.3px}
-.kpi-value{font-size:20px;font-weight:700;margin-top:1px}
-.kpi-unit{font-size:11px;color:var(--text2)}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.panel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px}
-.panel-title{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.dot{width:7px;height:7px;border-radius:50%}
+.opt-controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);margin-bottom:14px}
+.opt-controls h4{font-size:10px;text-transform:uppercase;color:var(--text3);letter-spacing:.8px;font-weight:600;margin:14px 0 8px}
+.opt-controls h4:first-child{margin-top:0}
+.sc-btn{display:block;width:100%;padding:9px 12px;margin-bottom:5px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12.5px;cursor:pointer;text-align:left;transition:all .15s;font-weight:500}
+.sc-btn:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent2)}
+.sc-btn.active{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(0,139,139,0.2)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;transition:transform .15s}
+.kpi:hover{transform:translateY(-1px)}
+.kpi-label{font-size:10px;text-transform:uppercase;color:var(--text3);letter-spacing:.3px;font-weight:600}
+.kpi-value{font-size:22px;font-weight:700;margin-top:2px;color:var(--text)}
+.kpi-unit{font-size:11px;color:var(--text2);font-weight:400}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;transition:box-shadow .2s}
+.panel:hover{box-shadow:var(--shadow-sm)}
+.panel-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text)}
+.dot{width:8px;height:8px;border-radius:50%}
 table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;padding:5px;border-bottom:2px solid var(--border);color:var(--text2);font-weight:500;font-size:10px;text-transform:uppercase}
-td{padding:5px;border-bottom:1px solid var(--border)}
-.bar-c{width:100%;height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
-.bar-f{height:100%;border-radius:3px;transition:width .5s}
-.tag{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:500}
-.tag-on{background:#06d6a022;color:var(--green)}.tag-off{background:#ef476f22;color:var(--red)}.tag-warn{background:#ffd16622;color:var(--orange)}
-.cost-bar{display:flex;height:20px;border-radius:4px;overflow:hidden;margin:6px 0}
-.cost-bar div{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;min-width:2%}
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px}
-.legend-i{display:flex;align-items:center;gap:3px}
-.legend-d{width:8px;height:8px;border-radius:2px}
+th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--border);color:var(--text3);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.3px}
+td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.bar-c{width:100%;height:16px;background:var(--surface3);border-radius:4px;overflow:hidden}
+.bar-f{height:100%;border-radius:4px;transition:width .5s}
+.tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600}
+.tag-on{background:var(--green-light);color:var(--green)}.tag-off{background:var(--red-light);color:var(--red)}.tag-warn{background:var(--orange-light);color:var(--orange)}
+.cost-bar{display:flex;height:24px;border-radius:6px;overflow:hidden;margin:8px 0;box-shadow:inset 0 1px 2px rgba(0,0,0,0.06)}
+.cost-bar div{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;min-width:3%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text2)}
+.legend-i{display:flex;align-items:center;gap:4px}
+.legend-d{width:10px;height:10px;border-radius:3px}
 
 /* ── CUSTOM BUILDER ── */
 .builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-group{margin-bottom:10px}
-.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:3px;font-weight:500}
-.form-group input,.form-group select{width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:inherit}
-.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent)}
-.btn{padding:8px 18px;border:none;border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;transition:all .12s}
-.btn-primary{background:var(--grad1);color:#fff}.btn-primary:hover{transform:scale(1.03)}
-.btn-secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text)}.btn-secondary:hover{border-color:var(--accent)}
-.btn-sm{padding:6px 12px;font-size:11px}
-.asset-list{max-height:220px;overflow-y:auto}
-.asset-item{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-bottom:4px;font-size:12px}
-.asset-item .remove{color:var(--red);cursor:pointer;font-size:15px;padding:0 4px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:600}
+.form-group input,.form-group select{width:100%;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.btn{padding:9px 20px;border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--grad1);color:#fff;box-shadow:0 2px 8px rgba(0,139,139,0.2)}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,139,139,0.3)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:7px 14px;font-size:12px}
+.asset-list{max-height:180px;overflow-y:auto}
+.asset-list::-webkit-scrollbar{width:4px}
+.asset-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.asset-list::-webkit-scrollbar-track{background:transparent}
+.asset-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:5px;font-size:12px;transition:border-color .15s}
+.asset-item:hover{border-color:var(--accent)}
+.asset-item .remove{color:var(--red);cursor:pointer;font-size:16px;padding:0 4px;border-radius:4px;transition:background .15s}
+.asset-item .remove:hover{background:var(--red-light)}
 
-/* ── CHATBOT PANEL ── */
-.chat-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;padding:20px}
+/* ── CHATBOT ── */
+.chat-overlay{position:fixed;inset:0;z-index:200;background:rgba(45,52,54,0.4);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;padding:20px}
 .chat-overlay.open{display:flex}
-.chat-container{width:100%;max-width:800px;height:90vh;background:var(--surface);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
-.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface2)}
-.chat-header h3{font-size:16px;font-weight:600;flex:1}
-.chat-status{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500}
-.chat-status.loading{background:#ffd16622;color:var(--orange);animation:pulse 1.5s infinite}
-.chat-status.ready{background:#06d6a022;color:var(--green)}
-.chat-status.error{background:#ef476f22;color:var(--red)}
-.chat-close{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.chat-overlay.minimized{background:none;backdrop-filter:none;pointer-events:none;display:flex!important;align-items:flex-end;justify-content:flex-end;padding:20px}
+.chat-container{width:100%;max-width:820px;height:88vh;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lg);transition:all .3s ease}
+.chat-overlay.minimized .chat-container{width:340px;height:54px;border-radius:27px;pointer-events:all;box-shadow:0 4px 24px rgba(0,139,139,0.2);overflow:hidden}
+.chat-overlay.minimized .chat-header{padding:12px 18px;border:none}
+.chat-overlay.minimized .chat-header h3{font-size:13px}
+.chat-overlay.minimized .chat-status{display:none}
+.chat-overlay.minimized .chat-minimize{display:none}
+.chat-overlay.minimized .chat-close{display:none}
+.chat-overlay.minimized #chatContext,.chat-overlay.minimized .chat-progress,.chat-overlay.minimized .chat-messages,.chat-overlay.minimized .chat-suggestions,.chat-overlay.minimized .chat-input-row{display:none!important}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface)}
+.chat-header h3{font-size:16px;font-weight:600;flex:1;color:var(--text)}
+.chat-minimize{background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .15s;line-height:1}
+.chat-minimize:hover{background:var(--surface3);color:var(--text)}
+.chat-status{font-size:11px;padding:4px 12px;border-radius:12px;font-weight:600}
+.chat-status.loading{background:var(--orange-light);color:var(--orange);animation:pulse 1.5s infinite}
+.chat-status.ready{background:var(--green-light);color:var(--green)}
+.chat-status.error{background:var(--red-light);color:var(--red)}
+.chat-close{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .15s}
 .chat-close:hover{background:var(--surface3);color:var(--text)}
-.chat-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
-.chat-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.55;word-wrap:break-word}
-.chat-msg.assistant{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
-.chat-msg.user{background:var(--accent2);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;background:var(--surface2)}
+.chat-msg{max-width:82%;padding:12px 16px;border-radius:14px;font-size:14px;line-height:1.6;word-wrap:break-word}
+.chat-msg.assistant{background:var(--surface);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:var(--shadow-sm)}
+.chat-msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;box-shadow:0 2px 8px rgba(0,139,139,0.2)}
 .chat-msg.system{background:var(--surface3);border:1px dashed var(--border);align-self:center;text-align:center;font-size:12px;color:var(--text2);max-width:95%}
-.chat-msg code{background:var(--bg);padding:1px 5px;border-radius:3px;font-size:13px}
+.chat-msg code{background:var(--surface3);padding:2px 6px;border-radius:4px;font-size:13px}
 .chat-msg strong{color:var(--accent)}
-.chat-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
-.chat-suggest-btn{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .12s}
-.chat-suggest-btn:hover{border-color:var(--accent);color:var(--text)}
-.chat-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--surface2)}
-.chat-input{flex:1;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;resize:none;outline:none}
-.chat-input:focus{border-color:var(--accent)}
-.chat-send{padding:10px 18px;background:var(--grad1);border:none;border-radius:10px;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
-.chat-send:disabled{opacity:0.4;cursor:not-allowed}
-.chat-progress{padding:8px 20px;background:var(--surface2);border-top:1px solid var(--border)}
-.chat-progress-bar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden}
+.chat-msg.user strong{color:#fff}
+.chat-suggestions{display:flex;gap:8px;flex-wrap:wrap;padding:4px 20px 12px;background:var(--surface2)}
+.chat-suggest-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-weight:500}
+.chat-suggest-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.chat-input-row{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;background:var(--surface)}
+.chat-input{flex:1;padding:11px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-family:inherit;resize:none;outline:none;transition:border-color .2s}
+.chat-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.chat-send{padding:11px 22px;background:var(--grad1);border:none;border-radius:12px;color:#fff;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,139,139,0.2)}
+.chat-send:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,139,139,0.3)}
+.chat-send:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+.chat-progress{padding:8px 20px;background:var(--surface);border-top:1px solid var(--border)}
+.chat-progress-bar{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
 .chat-progress-fill{height:100%;background:var(--grad1);border-radius:2px;transition:width .3s}
 .chat-progress-text{font-size:11px;color:var(--text2);margin-top:4px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -124,166 +178,462 @@ td{padding:5px;border-bottom:1px solid var(--border)}
 @keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
 
 /* ── FEEDBACK MODAL ── */
-.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;padding:20px}
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(45,52,54,0.4);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
-.modal h3{font-size:20px;font-weight:700;margin-bottom:4px}
-.modal .modal-sub{color:var(--text2);font-size:14px;margin-bottom:16px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal h3{font-size:20px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.modal .modal-sub{color:var(--text2);font-size:14px;margin-bottom:20px}
 .modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer}
-.success-msg{padding:16px;background:#06d6a018;border:1px solid var(--green);border-radius:8px;color:var(--green);text-align:center;display:none}
+.success-msg{padding:18px;background:var(--green-light);border:1px solid var(--green);border-radius:10px;color:var(--green);text-align:center;display:none;font-weight:600}
 
 /* ── FOOTER ── */
-footer{background:var(--surface);border-top:1px solid var(--border);padding:24px;text-align:center}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:28px;text-align:center}
 footer p{color:var(--text2);font-size:13px}
-footer .social{margin-top:8px}
-footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px}
+footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px;font-weight:500}
+
+/* ── PAGE VIEWS ── */
+.page-view{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── ABOUT / HOW IT WORKS ── */
+.about-section{padding:32px;max-width:1240px;margin:0 auto}
+.about-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-sm)}
+.about-card h2{font-size:24px;font-weight:800;color:var(--text);margin-bottom:6px}
+.about-card .about-lead{font-size:15px;color:var(--text2);margin-bottom:24px;line-height:1.7;max-width:800px}
+.step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:28px}
+.step-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;transition:transform .2s,box-shadow .2s;position:relative}
+.step-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.step-num{position:absolute;top:12px;right:14px;font-size:28px;font-weight:800;color:var(--border);line-height:1}
+.step-icon{font-size:24px;margin-bottom:10px}
+.step-card h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.step-card p{font-size:12.5px;color:var(--text2);line-height:1.6}
+.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.concept-box{padding:20px;border-radius:12px;border:1px solid var(--border)}
+.concept-box h3{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.concept-box p{font-size:13px;color:var(--text2);line-height:1.7}
+.use-case-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.use-case{padding:12px 16px;background:var(--accent-light);border-radius:8px;font-size:12.5px;color:var(--accent2);font-weight:500;line-height:1.5}
+.about-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0}
+.about-tab{padding:8px 18px;border:none;background:none;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.about-tab:hover{color:var(--text2)}
+.about-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.about-panel{display:none}
+.about-panel.active{display:block}
+
+/* ── SCENARIO COMPARE ── */
+.compare-grid{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;margin-top:14px}
+.compare-col{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.compare-vs{display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--text3);font-size:14px}
+.compare-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)}
+.compare-row:last-child{border-bottom:none}
+.delta-pos{color:var(--red);font-weight:600}.delta-neg{color:var(--green);font-weight:600}
+
+/* ── SENSITIVITY ── */
+.sens-wrap{margin-top:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.sens-slider{width:100%;accent-color:var(--accent);cursor:pointer;height:6px;margin:8px 0}
+.sens-chart{display:flex;align-items:flex-end;gap:2px;height:80px;margin-top:8px}
+.sens-bar{flex:1;background:var(--accent);border-radius:3px 3px 0 0;transition:height .3s;min-width:4px;position:relative}
+.sens-bar.active{background:var(--orange)}
+.sens-bar:hover{opacity:0.8}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
-  nav{padding:0 12px;gap:4px}.nav-link{padding:5px 8px;font-size:12px}.nav-btn{padding:5px 10px;font-size:12px}
-  .hero{padding:60px 14px 14px}.hero h1{font-size:22px}
-  .section{padding:20px 14px}
-  .opt-grid{grid-template-columns:1fr}
+  nav{padding:0 14px;gap:4px}.nav-link{padding:5px 10px;font-size:12px}.nav-btn{padding:5px 12px;font-size:12px}
+  .section{padding:24px 16px}
+  .two-panel{grid-template-columns:1fr}
+  .panel-right{position:static;max-height:none;order:-1}
+  .opt-controls{padding:12px}
+  .builder-grid{grid-template-columns:1fr}
   .grid-2{grid-template-columns:1fr}
   .builder-grid{grid-template-columns:1fr}
+  .compare-grid{grid-template-columns:1fr;gap:8px}
+  .compare-vs{transform:rotate(90deg);padding:4px}
   .chat-container{height:100vh;border-radius:0;max-width:100%}
+  .network-svg-wrap{overflow-x:scroll}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ NAV ══ -->
+<!-- NAV (no F symbol - clean text logo) -->
 <nav>
-  <div class="nav-brand"><svg width="24" height="24" viewBox="0 0 40 40" style="flex-shrink:0"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0077b6"/><stop offset="100%" stop-color="#00b4d8"/></linearGradient></defs><rect width="40" height="40" rx="8" fill="url(#lg)"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="system-ui">O</text></svg><span>OptiFLO</span> AI</div>
-  <a href="#optimize" class="nav-link active">Optimize</a>
-  <a href="#build" class="nav-link">Build Your Own</a>
-  <button class="nav-btn nav-btn-learn" id="learnBtn" onclick="openChat()"><span id="learnDot" style="display:none;width:6px;height:6px;border-radius:50%;margin-right:4px;background:var(--orange);animation:pulse 1.5s infinite"></span>Start Learning</button>
+  <div class="nav-brand">Opti<span>FLO</span> AI</div>
+  <button class="nav-link" onclick="showPage('about',this)">About</button>
+  <button class="nav-link active" onclick="showPage('optimizer',this)">Optimizer</button>
+  <button class="nav-btn nav-btn-learn" id="learnBtn" onclick="openChat()"><span id="learnDot" style="display:none;width:6px;height:6px;border-radius:50%;margin-right:5px;background:var(--orange);animation:pulse 1.5s infinite;vertical-align:middle"></span>AI Tutor</button>
   <button class="nav-btn nav-btn-fb" onclick="openFeedback()">Feedback</button>
 </nav>
 
-<!-- ══ HERO ══ -->
-<section class="hero">
-  <div class="hero-badge">OPTIFLO AI &mdash; OPEN LEARNING PLATFORM FOR AI IN OIL AND GAS</div>
-  <h1>AI-Driven <em>Hydrogen Network Optimization</em></h1>
-  <p>Run MIP-based dispatch optimization on a realistic refinery H₂ network. Explore scenarios, build custom networks, or chat with an AI tutor to learn the concepts. By <strong>OptiFLO AI Solutions</strong>, Abu Dhabi.</p>
-  <div class="hero-stats">
-    <div class="hero-stat"><div class="val">5</div><div class="lbl">Producers</div></div>
-    <div class="hero-stat"><div class="val">10</div><div class="lbl">Consumers</div></div>
-    <div class="hero-stat"><div class="val">120k</div><div class="lbl">Nm³/h Capacity</div></div>
-    <div class="hero-stat"><div class="val">MIP</div><div class="lbl">Solver</div></div>
+<!-- PAGE: ABOUT (hidden by default) -->
+<div id="page-about" class="page-view" style="display:none">
+<section class="about-section section" id="about">
+  <div class="about-card">
+    <h2>What Is This Platform?</h2>
+    <p class="about-lead">OptiFLO AI is a free, interactive learning platform that teaches you how artificial intelligence can optimize hydrogen networks in oil and gas refineries. No prior AI knowledge needed &#8212; everything runs in your browser with zero setup.</p>
+
+    <!-- Tabbed navigation -->
+    <div class="about-tabs">
+      <button class="about-tab active" onclick="showAboutTab('overview',this)">Overview</button>
+      <button class="about-tab" onclick="showAboutTab('concepts',this)">Key Concepts</button>
+      <button class="about-tab" onclick="showAboutTab('features',this)">Platform Features</button>
+      <button class="about-tab" onclick="showAboutTab('usecases',this)">Use Cases</button>
+    </div>
+
+    <!-- TAB: Overview -->
+    <div class="about-panel active" id="tab-overview">
+      <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:20px">
+        <p style="margin-bottom:12px">In a typical oil refinery, <b>hydrogen</b> is essential &#8212; it is used to remove sulfur from fuels, crack heavy oils into lighter products, and meet environmental standards. A refinery may have multiple hydrogen sources (steam methane reformers, electrolysers, by-product streams) and many consumers (hydrocrackers, desulfurization units, hydrotreaters).</p>
+        <p style="margin-bottom:12px">The challenge: <b>How do you decide which producers to run, at what rate, to meet all consumer demands at the lowest possible cost?</b> This is called the hydrogen network optimization problem.</p>
+        <p>This platform lets you solve that problem interactively using a technique called <b>Mixed Integer Programming (MIP)</b> &#8212; the same approach used by real refineries worldwide. You can explore pre-built scenarios, build your own networks, and ask an AI tutor to explain every concept along the way.</p>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">How it works in 4 steps:</div>
+      <div class="step-grid">
+        <div class="step-card"><div class="step-num">1</div><div class="step-icon" style="color:var(--accent)">&#128218;</div><h3>Explore the Network</h3><p>See a realistic hydrogen network with 5 producers, 2 purifiers, and 10 consumers. The interactive diagram shows how hydrogen flows from source to sink.</p></div>
+        <div class="step-card"><div class="step-num">2</div><div class="step-icon" style="color:var(--green)">&#9881;</div><h3>Run Scenarios</h3><p>Select scenarios like equipment outages or demand surges. The optimizer instantly recalculates the best dispatch strategy, showing costs, flows, and any supply shortfalls.</p></div>
+        <div class="step-card"><div class="step-num">3</div><div class="step-icon" style="color:var(--purple)">&#128295;</div><h3>Build Your Own</h3><p>Define custom producers and consumers with your own costs, capacities, and priorities. The platform auto-generates a network diagram and optimizes it for you.</p></div>
+        <div class="step-card"><div class="step-num">4</div><div class="step-icon" style="color:var(--orange)">&#129302;</div><h3>Ask the AI Tutor</h3><p>Have a question about MIP, merit order, or constraints? The built-in AI tutor explains concepts in plain language, tailored to hydrogen optimization.</p></div>
+      </div>
+    </div>
+
+    <!-- TAB: Key Concepts -->
+    <div class="about-panel" id="tab-concepts">
+      <div class="concept-grid">
+        <div class="concept-box" style="background:var(--accent-light)">
+          <h3><span style="color:var(--accent)">&#9672;</span> What is a Hydrogen Network?</h3>
+          <p>A hydrogen network is the system of pipelines, equipment, and controls that produce, purify, and distribute hydrogen across a refinery. Think of it like a city water system: multiple sources feed into a shared grid, and different buildings (consumers) draw from it based on their needs. Each source has a different cost and capacity, and the goal is to supply everyone at minimum cost.</p>
+        </div>
+        <div class="concept-box" style="background:var(--green-light)">
+          <h3><span style="color:var(--green)">&#9672;</span> What is Merit Order Dispatch?</h3>
+          <p>Merit order means turning on the cheapest sources first. Imagine you have three generators: one costs $0.01/unit, another $0.04, and a third $0.07. You start with the cheapest and only turn on expensive ones when demand exceeds cheap capacity. This is exactly how the optimizer decides which hydrogen producers to run and in what order.</p>
+        </div>
+        <div class="concept-box" style="background:var(--orange-light)">
+          <h3><span style="color:var(--orange)">&#9672;</span> What is Mixed Integer Programming (MIP)?</h3>
+          <p>MIP is a mathematical optimization technique. "Mixed" means it uses both continuous variables (flow rates that can be any number) and integer/binary variables (ON/OFF decisions). It finds the absolute best solution given all constraints &#8212; not just a good guess, but the mathematically optimal answer. Refineries use MIP to save millions of dollars per year in hydrogen costs.</p>
+        </div>
+        <div class="concept-box" style="background:#F6F0FF">
+          <h3><span style="color:var(--purple)">&#9672;</span> Why Do Purifiers Matter?</h3>
+          <p>Raw hydrogen from producers is not always pure enough for certain consumers. Purifiers like PSA (Pressure Swing Adsorption) and membranes clean it up, but they lose some hydrogen in the process (recovery is typically 85-95%). This means you need to produce MORE than the demand to account for purification losses &#8212; a critical factor the optimizer handles.</p>
+        </div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-box" style="background:var(--surface2)">
+          <h3><span style="color:var(--blue)">&#9672;</span> What Are Constraints?</h3>
+          <p>Constraints are the real-world rules the optimizer must respect: minimum stable production rates (you cannot run a reformer at 5% capacity), maximum capacities, priority levels (the hydrocracker cannot be shut off before a wax unit), and non-curtailability (some consumers must always get full supply). These make the problem hard to solve manually but perfect for MIP.</p>
+        </div>
+        <div class="concept-box" style="background:var(--surface2)">
+          <h3><span style="color:var(--red)">&#9672;</span> What Happens During an Outage?</h3>
+          <p>When a major producer goes offline (e.g., an SMR trips), the optimizer must rapidly re-dispatch: ramp up other producers, increase pipeline imports, and if supply is still short, curtail the lowest-priority consumers first. The penalty cost for curtailment incentivizes the solver to avoid it. Try the &#8220;SMR-1 Outage&#8221; scenario to see this in action.</p>
+        </div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-box" style="background:var(--orange-light)">
+          <h3><span style="color:var(--orange)">&#9672;</span> What Is Pipeline Import?</h3>
+          <p><b>Import</b> means purchasing hydrogen from an external pipeline that connects to the refinery. Think of it as buying electricity from the grid when your own generators are not enough. It is typically the most expensive source ($0.075/Nm&#179; in this model) because you are paying a third party. The optimizer only uses import when internal production cannot meet demand &#8212; for example, during a producer outage or a demand surge. On the diagram, the orange &#8220;Pipeline Import&#8221; box shows how much is being purchased and at what cost. If it says &#8220;Not needed,&#8221; your internal producers are sufficient.</p>
+        </div>
+        <div class="concept-box" style="background:#EBF5FB">
+          <h3><span style="color:var(--blue)">&#9672;</span> What Is the Export Header?</h3>
+          <p><b>Export</b> means selling surplus hydrogen out of the refinery through a pipeline to neighbouring facilities. This happens when your producers generate more than your consumers need &#8212; often because a minimum-stable-rate constraint forces a producer to run above what is actually required. Rather than wasting this excess, the refinery sells it at a lower price ($0.025/Nm&#179;) to recover some cost. On the diagram, the blue &#8220;Export Header&#8221; box shows how much surplus is being sold. Export revenue reduces your total operating cost. If it says &#8220;No surplus,&#8221; all produced hydrogen is consumed internally.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Platform Features -->
+    <div class="about-panel" id="tab-features">
+      <div class="step-grid">
+        <div class="step-card" style="border-left:3px solid var(--accent)"><h3>Live Optimizer</h3><p>Run 6 pre-configured scenarios on a realistic refinery network. See cost breakdowns, producer loading, consumer satisfaction, CO&#8322; emissions, and purifier utilization &#8212; all updating in real time.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--green)"><h3>Network Diagram</h3><p>Interactive SVG diagram embedded directly in the optimizer. Nodes show live flow values, color-coded status (green=OK, orange=curtailed, red=OFF), and animated flow lines. Hover for details.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--purple)"><h3>Scenario Comparison</h3><p>Compare any two scenarios side-by-side. See delta costs, curtailment differences, and a quantified impact summary. Great for understanding the cost of resilience.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--orange)"><h3>Sensitivity Analysis</h3><p>Sweep a parameter &#177;50% (costs, demand) and visualize how total cost responds. The tool rates sensitivity as Low/Moderate/High and highlights risky parameters.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--blue)"><h3>Custom Network Builder</h3><p>Define your own producers and consumers. Set costs, capacities, priorities, and curtailability. Auto-generates a network diagram. Toggle purifier routing on/off. Configure import/export parameters.</p></div>
+        <div class="step-card" style="border-left:3px solid var(--accent2)"><h3>Smart Insights</h3><p>After optimization, get auto-generated insights: merit order rationale, supply/demand analysis, utilization warnings, unit economics, and export revenue impact.</p></div>
+        <div class="step-card" style="border-left:3px solid #008B8B"><h3>AI Tutor</h3><p>Chat with an AI trained on hydrogen optimization, MIP, and process engineering. Ask anything from "what is a binary variable?" to "how do I build my own optimizer in Python?"</p></div>
+        <div class="step-card" style="border-left:3px solid var(--text3)"><h3>Save / Load / Export</h3><p>Save custom networks as JSON files and reload them later. Export optimization results as CSV for further analysis in Excel. Everything runs locally &#8212; no data leaves your browser.</p></div>
+      </div>
+    </div>
+
+    <!-- TAB: Use Cases -->
+    <div class="about-panel" id="tab-usecases">
+      <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:16px">
+        <p style="margin-bottom:10px;font-weight:600">Who is this for?</p>
+        <p style="margin-bottom:16px">This platform is designed for anyone who wants to understand how AI-driven optimization works in real industrial settings &#8212; no programming or advanced math required.</p>
+      </div>
+      <div class="use-case-list" style="margin-bottom:20px">
+        <div class="use-case"><b>University students</b> studying chemical engineering, energy systems, or operations research who want hands-on exposure to industrial optimization</div>
+        <div class="use-case"><b>Process engineers</b> in refineries or hydrogen plants who want to understand how MIP-based tools make dispatch decisions</div>
+        <div class="use-case"><b>Operations teams</b> evaluating whether AI optimization can improve their hydrogen network efficiency</div>
+        <div class="use-case"><b>Training instructors</b> looking for an interactive demo to teach optimization concepts without coding</div>
+        <div class="use-case"><b>Digital transformation leads</b> exploring AI use cases in Oil &amp; Gas with a working proof of concept</div>
+        <div class="use-case"><b>Self-learners</b> curious about the intersection of process engineering and artificial intelligence</div>
+      </div>
+      <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:16px">
+        <p style="margin-bottom:10px;font-weight:600">Common questions this platform helps answer:</p>
+      </div>
+      <div class="use-case-list">
+        <div class="use-case" style="background:var(--green-light);color:var(--accent2)">"What happens to cost when my largest reformer goes offline?"</div>
+        <div class="use-case" style="background:var(--green-light);color:var(--accent2)">"Which consumers should be curtailed first during a shortage?"</div>
+        <div class="use-case" style="background:var(--green-light);color:var(--accent2)">"Is it cheaper to run the electrolyser or import from pipeline?"</div>
+        <div class="use-case" style="background:var(--green-light);color:var(--accent2)">"How sensitive is my total cost to natural gas price changes?"</div>
+        <div class="use-case" style="background:var(--green-light);color:var(--accent2)">"Can I model my own plant&#8217;s hydrogen network and test scenarios?"</div>
+        <div class="use-case" style="background:var(--green-light);color:var(--accent2)">"What is MIP and how is it different from a simple spreadsheet?"</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:16px;background:var(--accent-light);border-radius:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:14px;font-weight:700;color:var(--accent2)">Ready to explore?</div>
+        <div style="font-size:13px;color:var(--text2);margin-top:2px">Scroll down to the Live Optimizer, or click "AI Tutor" to start learning with the chatbot.</div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('optimizer',document.querySelectorAll('.nav-link')[1])">Try the Optimizer</button>
+      <button class="btn btn-secondary" onclick="openChat()">Ask the AI Tutor</button>
+    </div>
   </div>
 </section>
 
-<!-- ══ OPTIMIZER ══ -->
-<section class="section" id="optimize">
-  <div class="section-title">Live Optimizer</div>
-  <div class="section-sub">Select a scenario — the merit-order dispatch runs instantly in your browser.</div>
-  <div class="divider"></div>
-  <div class="opt-grid">
-    <div class="opt-sb">
-      <h4>Scenarios</h4>
-      <button class="sc-btn active" onclick="runScenario('base',this)">Base Case — Nominal</button>
-      <button class="sc-btn" onclick="runScenario('smr1_outage',this)">SMR-1 Outage</button>
-      <button class="sc-btn" onclick="runScenario('smr2_outage',this)">SMR-2 Outage</button>
-      <button class="sc-btn" onclick="runScenario('dual_smr_outage',this)">Dual SMR Outage</button>
-      <button class="sc-btn" onclick="runScenario('hck_surge',this)">Hydrocracker +20%</button>
-      <button class="sc-btn" onclick="runScenario('global_surge',this)">Global Demand +10%</button>
-      <h4>Observations</h4>
-      <div style="font-size:11px;color:var(--text2);line-height:1.5">
-        <p style="margin-bottom:4px"><b>Base:</b> By-products max out first (cheapest). SMRs fill the gap.</p>
-        <p style="margin-bottom:4px"><b>SMR-1 Out:</b> Import surges. Low-priority consumers curtailed.</p>
-        <p style="margin-bottom:4px"><b>Dual SMR:</b> Massive curtailment — shows vulnerability.</p>
-        <p><b>HCK Surge:</b> SMR-1 near max. Cost rises but supply holds.</p>
+</div><!-- /page-about -->
+
+<!-- PAGE: OPTIMIZER (shown by default, includes Hero + Live Optimizer + Build Your Own) -->
+<div id="page-optimizer" class="page-view">
+
+<!-- OPTIMIZER — 2-panel layout: controls+results left, diagram right -->
+<section class="section" id="optimize" style="padding-top:72px">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--accent-light);color:var(--accent)">&#9881;</div>
+    <div class="section-title">Live Optimizer</div>
+  </div>
+  <div class="section-sub" style="margin-left:48px">Reference network: 5 producers, 2 purifiers, 10 consumers, 120,000 Nm&#179;/h capacity &#8212; MIP dispatch optimizer</div>
+
+  <div class="two-panel">
+    <!-- LEFT: Controls + Results -->
+    <div class="panel-left">
+      <div class="opt-controls">
+        <h4>Scenarios</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+          <button class="sc-btn active" onclick="runScenario('base',this)">Base Case</button>
+          <button class="sc-btn" onclick="runScenario('smr1_outage',this)">SMR-1 Outage</button>
+          <button class="sc-btn" onclick="runScenario('smr2_outage',this)">SMR-2 Outage</button>
+          <button class="sc-btn" onclick="runScenario('dual_smr_outage',this)">Dual SMR Outage</button>
+          <button class="sc-btn" onclick="runScenario('hck_surge',this)">HCK +20%</button>
+          <button class="sc-btn" onclick="runScenario('global_surge',this)">Global +10%</button>
+        </div>
       </div>
-      <h4>Merit Order</h4>
-      <div id="sidebarMerit" style="font-size:11px"></div>
-    </div>
-    <div class="opt-main">
+
       <div class="kpi-row" id="kpiRow"></div>
+
       <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar" id="costBar"></div><div class="legend" id="costLegend"></div></div>
+
       <div class="grid-2">
-        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producer Dispatch</div><table><thead><tr><th>Unit</th><th>Status</th><th>Flow</th><th>Loading</th></tr></thead><tbody id="prodTbl"></tbody></table></div>
+        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producer Dispatch</div><table><thead><tr><th>Unit</th><th>Status</th><th>Flow</th><th>Load</th></tr></thead><tbody id="prodTbl"></tbody></table></div>
         <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumer Supply</div><table><thead><tr><th>Unit</th><th>Supplied</th><th>Status</th><th>%</th></tr></thead><tbody id="consTbl"></tbody></table></div>
       </div>
+
       <div class="grid-2">
         <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Purifiers &amp; External</div><div id="purInfo"></div></div>
-        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>CO₂ &amp; Economics</div><div id="co2Info"></div></div>
+        <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>CO&#8322; &amp; Economics</div><div id="co2Info"></div></div>
+      </div>
+
+      <!-- Analysis Tools -->
+      <div class="opt-controls" style="margin-top:14px">
+        <h4 style="margin-top:0">Compare Scenarios</h4>
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <select id="cmpA" style="flex:1;padding:5px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text)">
+            <option value="base">Base Case</option><option value="smr1_outage">SMR-1 Outage</option><option value="smr2_outage">SMR-2 Outage</option><option value="dual_smr_outage">Dual SMR</option><option value="hck_surge">HCK +20%</option><option value="global_surge">Global +10%</option>
+          </select>
+          <span style="font-size:10px;color:var(--text3);align-self:center">vs</span>
+          <select id="cmpB" style="flex:1;padding:5px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text)">
+            <option value="smr1_outage">SMR-1 Outage</option><option value="base">Base Case</option><option value="smr2_outage">SMR-2 Outage</option><option value="dual_smr_outage">Dual SMR</option><option value="hck_surge">HCK +20%</option><option value="global_surge">Global +10%</option>
+          </select>
+        </div>
+        <button class="sc-btn" style="text-align:center;font-weight:600;color:var(--accent)" onclick="compareScenarios()">Compare</button>
+        <h4>Sensitivity Analysis</h4>
+        <div style="display:flex;gap:6px">
+          <select id="sensParam" style="flex:1;padding:5px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text)">
+            <option value="smr1_cost">SMR-1 Cost</option><option value="smr2_cost">SMR-2 Cost</option><option value="elec1_cost">ELEC-1 Cost</option><option value="import_cost">Import Cost</option><option value="hck_demand">HCK Demand</option><option value="global_demand">Global Demand</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="runSensitivity()">Run</button>
+        </div>
+        <h4>Merit Order</h4>
+        <div id="sidebarMerit" style="font-size:11px"></div>
+      </div>
+
+      <div id="comparePanel" style="display:none"></div>
+      <div id="sensPanel" style="display:none"></div>
+    </div>
+
+    <!-- RIGHT: Sticky Network Diagram -->
+    <div class="panel-right">
+      <div class="network-svg-wrap" id="optDiagramWrap">
+        <svg id="networkSvg" width="100%" viewBox="0 0 700 460" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ah" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto" fill="#008B8B"><polygon points="0 0,7 2.5,0 5"/></marker>
+            <marker id="ahg" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto" fill="#D5D0C8"><polygon points="0 0,7 2.5,0 5"/></marker>
+            <marker id="aho" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto" fill="#F39C12"><polygon points="0 0,7 2.5,0 5"/></marker>
+            <marker id="ahb" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto" fill="#2980B9"><polygon points="0 0,7 2.5,0 5"/></marker>
+            <filter id="ns" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.07"/></filter>
+          </defs>
+          <text x="70" y="18" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">PRODUCERS</text>
+          <text x="260" y="18" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">PURIFIERS</text>
+          <text x="530" y="18" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">CONSUMERS</text>
+          <g id="flowLines"></g>
+          <g id="prodNodes"></g>
+          <g id="purNodes"></g>
+          <g id="consNodes"></g>
+          <g id="extNodes"></g>
+          <g id="svgTooltip" class="tooltip-box">
+            <rect x="0" y="0" width="200" height="64" rx="8" fill="white" stroke="#E0DBD4" stroke-width="1" filter="url(#ns)"/>
+            <text id="ttTitle" x="10" y="18" font-size="11" font-weight="700" fill="#2D3436"></text>
+            <text id="ttLine1" x="10" y="34" font-size="10" fill="#636E72"></text>
+            <text id="ttLine2" x="10" y="50" font-size="10" fill="#636E72"></text>
+          </g>
+        </svg>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ BUILD YOUR OWN ══ -->
+<!-- Section divider -->
+<div style="max-width:1240px;margin:0 auto;padding:0 32px"><div style="border-top:2px solid var(--border);margin:8px 0 0"></div></div>
+
+<!-- BUILD YOUR OWN — 2-panel layout matching optimizer -->
 <section class="section" id="build">
-  <div class="section-title">Build Your Own Network</div>
-  <div class="section-sub">Define custom assets, run the optimizer. All processing is local — no data leaves your browser.</div>
-  <div class="divider"></div>
-  <div class="builder-grid">
-    <div>
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--green-light);color:var(--green);font-size:16px">&#128295;</div>
+    <div class="section-title">Build Your Own Network</div>
+  </div>
+  <div class="section-sub" style="margin-left:48px">Define custom assets and the network diagram builds automatically. Run the optimizer to see results.</div>
+
+  <div class="two-panel">
+    <!-- LEFT: Forms + Asset Lists + Results -->
+    <div class="panel-left">
+      <div class="builder-grid">
+        <div>
       <div class="panel">
         <div class="panel-title"><div class="dot" style="background:var(--green)"></div>Add Producer</div>
         <div class="form-group"><label>Name / ID</label><input id="cp-name" placeholder="e.g. SMR-3"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
           <div class="form-group"><label>Type</label><select id="cp-type"><option>SMR</option><option>Electrolyser</option><option>ByProduct</option></select></div>
-          <div class="form-group"><label>Cost ($/Nm³)</label><input id="cp-cost" type="number" step="0.001" value="0.040"></div>
-          <div class="form-group"><label>Min (Nm³/h)</label><input id="cp-min" type="number" value="5000"></div>
-          <div class="form-group"><label>Max (Nm³/h)</label><input id="cp-max" type="number" value="30000"></div>
+          <div class="form-group"><label>Cost ($/Nm&#179;)</label><input id="cp-cost" type="number" step="0.001" value="0.040"></div>
+          <div class="form-group"><label>Min (Nm&#179;/h)</label><input id="cp-min" type="number" value="5000"></div>
+          <div class="form-group"><label>Max (Nm&#179;/h)</label><input id="cp-max" type="number" value="30000"></div>
         </div>
         <input type="hidden" id="cp-startup" value="10000">
         <button class="btn btn-primary btn-sm" onclick="addCustomProducer()">+ Add Producer</button>
       </div>
-      <div class="panel" style="margin-top:10px">
+      <div class="panel" style="margin-top:12px">
         <div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Add Consumer</div>
         <div class="form-group"><label>Name / ID</label><input id="cc-name" placeholder="e.g. HDS-3"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="form-group"><label>Demand (Nm³/h)</label><input id="cc-demand" type="number" value="8000"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group"><label>Demand (Nm&#179;/h)</label><input id="cc-demand" type="number" value="8000"></div>
           <div class="form-group"><label>Priority (1-5)</label><input id="cc-pri" type="number" min="1" max="5" value="2"></div>
           <div class="form-group"><label>Curtailable?</label><select id="cc-curt"><option value="false">No</option><option value="true">Yes</option></select></div>
-          <div class="form-group"><label>Penalty ($/Nm³)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
+          <div class="form-group"><label>Penalty ($/Nm&#179;)</label><input id="cc-pen" type="number" step="0.01" value="0.15"></div>
         </div>
+        <div class="form-group"><label>Purity requirement (only when purifiers enabled)</label><select id="cc-purity"><option value="UHP">Ultra-High Purity (via PSA, 99.9%)</option><option value="STD">Standard Purity (via Membrane, 98%)</option></select></div>
         <button class="btn btn-primary btn-sm" onclick="addCustomConsumer()">+ Add Consumer</button>
       </div>
-      <div style="margin-top:10px;display:flex;gap:6px">
-        <button class="btn btn-primary" onclick="runCustomOpt()">Optimize</button>
-        <button class="btn btn-secondary btn-sm" onclick="resetCustom()">Reset</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadSample()">Load Sample</button>
+      <div class="panel" style="margin-top:12px">
+        <div class="panel-title"><div class="dot" style="background:var(--orange)"></div>External Supply</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="form-group"><label>Import Max</label><input id="cp-imp-max" type="number" value="15000"></div>
+          <div class="form-group"><label>Import $/Nm&#179;</label><input id="cp-imp-cost" type="number" step="0.001" value="0.075"></div>
+          <div class="form-group"><label>Export Max</label><input id="cp-exp-max" type="number" value="5000"></div>
+          <div class="form-group"><label>Export $/Nm&#179;</label><input id="cp-exp-rev" type="number" step="0.001" value="0.025"></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <label style="font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="cp-purifiers" style="accent-color:var(--accent)" onchange="document.getElementById('purifier-config').style.display=this.checked?'grid':'none'"> Include PSA/MEM purifiers
+          </label>
+          <span style="font-size:10px;color:var(--text3)" title="H&#8322; splits between PSA and MEM. Configure the split ratio, recovery rates, and max capacities below.">&#9432;</span>
+        </div>
+        <div id="purifier-config" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+          <div class="form-group"><label>PSA split %</label><input id="cp-psa-split" type="number" min="10" max="90" value="70" title="% of feed routed to PSA (rest goes to MEM)"></div>
+          <div class="form-group"><label>PSA recovery %</label><input id="cp-psa-rec" type="number" min="50" max="99" value="85"></div>
+          <div class="form-group"><label>PSA max cap</label><input id="cp-psa-max" type="number" value="60000" title="Max PSA feed capacity (Nm&#179;/h)"></div>
+          <div class="form-group"><label>MEM split %</label><input id="cp-mem-split" type="number" value="30" disabled style="opacity:0.5" title="Auto-calculated: 100 - PSA split"></div>
+          <div class="form-group"><label>MEM recovery %</label><input id="cp-mem-rec" type="number" min="50" max="99" value="92"></div>
+          <div class="form-group"><label>MEM max cap</label><input id="cp-mem-max" type="number" value="25000" title="Max MEM feed capacity (Nm&#179;/h)"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-primary" onclick="runCustomOpt()">Optimize</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadSample()">Load Sample</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetCustom()">Reset</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="btn btn-secondary btn-sm" onclick="saveNetwork()" title="Download network config as JSON">&#128190; Save</button>
+          <label class="btn btn-secondary btn-sm" style="cursor:pointer" title="Load a saved JSON network">&#128194; Load<input type="file" id="loadFile" accept=".json" onchange="loadNetwork(event)" style="display:none"></label>
+          <button class="btn btn-secondary btn-sm" id="csvExportBtn" onclick="exportCSV()" style="display:none" title="Download results as CSV">&#128202; CSV</button>
+        </div>
       </div>
     </div>
     <div>
-      <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producers (<span id="cpCount">0</span>)</div><div class="asset-list" id="cpList"><div style="color:var(--text2);font-size:12px;padding:6px">No producers yet. Click "Load Sample" to start.</div></div></div>
-      <div class="panel" style="margin-top:10px"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumers (<span id="ccCount">0</span>)</div><div class="asset-list" id="ccList"><div style="color:var(--text2);font-size:12px;padding:6px">No consumers yet.</div></div></div>
-      <div class="panel" style="margin-top:10px;display:none" id="customResult"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Result</div><div id="customResultBody"></div></div>
+      <div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producers (<span id="cpCount">0</span>)</div><div class="asset-list" id="cpList"><div style="color:var(--text2);font-size:12px;padding:8px">No producers yet. Click "Load Sample" to start.</div></div></div>
+      <div class="panel" style="margin-top:12px"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumers (<span id="ccCount">0</span>)</div><div class="asset-list" id="ccList"><div style="color:var(--text2);font-size:12px;padding:8px">No consumers yet.</div></div></div>
     </div>
-  </div>
+      </div><!-- /builder-grid -->
+
+      <!-- Results below the forms -->
+      <div class="panel" style="margin-top:14px;display:none" id="customResult"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Result</div><div id="customResultBody"></div></div>
+    </div><!-- /panel-left -->
+
+    <!-- RIGHT: Sticky Auto-generated Diagram -->
+    <div class="panel-right">
+      <div class="network-svg-wrap" id="builderDiagramWrap" style="min-height:200px">
+        <svg id="builderSvg" width="100%" viewBox="0 0 700 200" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
+          <text x="470" y="90" font-size="14" fill="#95A5A6" text-anchor="middle">Add producers and consumers,</text>
+          <text x="470" y="112" font-size="14" fill="#95A5A6" text-anchor="middle">or click "Load Sample" to see the network.</text>
+        </svg>
+      </div>
+    </div>
+  </div><!-- /two-panel -->
 </section>
 
-<!-- ══ FOOTER ══ -->
+</div><!-- /page-optimizer -->
+
+<!-- FOOTER -->
 <footer>
-  <p>&copy; 2026 Mohd Sharique — <strong>Let the domain lead AI</strong></p>
-  <p style="margin-top:6px;font-size:11px">OptiFLO AI Solutions, Abu Dhabi &nbsp;|&nbsp; <a href="mailto:sharique@optifloai.com">sharique@optifloai.com</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/mohdsharique" target="_blank">LinkedIn</a></p>
+  <p>&copy; 2026 <strong>OptiFLO AI Solutions</strong>, Abu Dhabi &nbsp;&middot;&nbsp; <em>Fast Light-off In Digital Transformation</em></p>
+  <p style="margin-top:8px;font-size:12px">
+    <a href="mailto:sharique@optifloai.com">sharique@optifloai.com</a>
+  </p>
 </footer>
 
-<!-- ══ CHATBOT OVERLAY ══ -->
-<div class="chat-overlay" id="chatOverlay" onclick="if(event.target===this)closeChat()">
-  <div class="chat-container">
+<!-- CHATBOT OVERLAY -->
+<div class="chat-overlay" id="chatOverlay" onclick="if(event.target===this){if(this.classList.contains('minimized'))restoreChat();else closeChat()}">
+  <div class="chat-container" onclick="if(document.getElementById('chatOverlay').classList.contains('minimized'))restoreChat()">
     <div class="chat-header">
-      <svg width="22" height="22" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="url(#lg)"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="system-ui">O</text></svg>
+      <svg width="24" height="24" viewBox="0 0 40 40" style="flex-shrink:0"><rect width="40" height="40" rx="8" fill="#008B8B"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="system-ui">O</text></svg>
       <h3>OptiFLO AI Tutor</h3>
       <span class="chat-status loading" id="chatStatus">Initializing...</span>
-      <button class="chat-close" onclick="closeChat()">&times;</button>
+      <button class="chat-minimize" onclick="minimizeChat()" title="Minimize to floating bar">&#8722;</button>
+      <button class="chat-close" onclick="closeChat()" title="Close (chat is preserved)">&times;</button>
+    </div>
+    <!-- Context awareness indicator — shows both datasets equally -->
+    <div id="chatContext" style="padding:6px 16px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px">
+      <div id="chatCtxRef" style="display:flex;align-items:center;gap:5px;padding:3px 0;color:var(--accent2)">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>
+        <span id="chatCtxRefText">Reference: Base Case</span>
+      </div>
+      <div id="chatCtxCust" style="display:none;align-items:center;gap:5px;padding:3px 0;color:var(--green);border-top:1px solid var(--border)">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0"></span>
+        <span id="chatCtxCustText">No custom network</span>
+      </div>
+      <div style="font-size:9px;color:var(--text3);padding-top:2px">I can answer about both &#8212; ask anything</div>
     </div>
     <div class="chat-progress" id="chatProgress">
       <div class="chat-progress-bar"><div class="chat-progress-fill" id="chatProgressFill" style="width:0%"></div></div>
       <div class="chat-progress-text" id="chatProgressText">Preparing AI model...</div>
     </div>
     <div class="chat-messages" id="chatMessages">
-      <div class="chat-msg assistant">Hello! I'm the <strong>OptiFLO AI Tutor</strong>. Ask me anything about hydrogen network optimization, Mixed Integer Programming, and best practices. Here are some ideas to get started:</div>
+      <div class="chat-msg assistant">Hello! I'm the <strong>OptiFLO AI Tutor</strong> &#8212; and I can see your live optimizer results.<br><br>Ask me anything about hydrogen network optimization, or ask about <strong>your current scenario</strong> &#8212; I'll reference the actual numbers. Try the suggestions below:</div>
     </div>
     <div class="chat-suggestions" id="chatSuggestions">
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">Explain my current scenario results</button>
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">Why is import needed in this case?</button>
+      <button class="chat-suggest-btn" onclick="askSuggestion(this)">Walk me through the material balance</button>
       <button class="chat-suggest-btn" onclick="askSuggestion(this)">What is MIP and why use it?</button>
-      <button class="chat-suggest-btn" onclick="askSuggestion(this)">Explain the merit order concept</button>
-      <button class="chat-suggest-btn" onclick="askSuggestion(this)">How do I build my own H₂ optimizer?</button>
-      <button class="chat-suggest-btn" onclick="askSuggestion(this)">What happens in an SMR outage?</button>
     </div>
     <div class="chat-input-row">
       <textarea class="chat-input" id="chatInput" rows="1" placeholder="Ask about MIP, hydrogen optimization, network design..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
@@ -292,7 +642,7 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
   </div>
 </div>
 
-<!-- ══ FEEDBACK MODAL ══ -->
+<!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="fbOverlay" onclick="if(event.target===this)closeFeedback()">
   <div class="modal" style="position:relative">
     <button class="modal-close" onclick="closeFeedback()">&times;</button>
@@ -301,12 +651,12 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
     <form id="feedbackForm" onsubmit="return handleFeedback(event)">
       <div class="form-group"><label>Name *</label><input id="fb-name" required placeholder="Your name"></div>
       <div class="form-group"><label>Email *</label><input id="fb-email" type="email" required placeholder="you@company.com"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="form-group"><label>Organization</label><input id="fb-org" placeholder="Optional"></div>
         <div class="form-group"><label>Role</label><select id="fb-role"><option>Process Engineer</option><option>Operations</option><option>Planning Engineer</option><option>Data Scientist</option><option>Management</option><option>Student</option><option>Other</option></select></div>
       </div>
       <div class="form-group"><label>Most useful feature?</label><select id="fb-useful"><option>Live optimizer demo</option><option>Build Your Own Network</option><option>AI Tutor chatbot</option><option>All of the above</option></select></div>
-      <div class="form-group"><label>Feedback *</label><textarea id="fb-msg" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:13px;min-height:80px;resize:vertical" required placeholder="Share thoughts, questions, or how you'd apply this..."></textarea></div>
+      <div class="form-group"><label>Feedback *</label><textarea id="fb-msg" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;min-height:80px;resize:vertical" required placeholder="Share thoughts, questions, or how you'd apply this..."></textarea></div>
       <div class="form-group" style="font-size:12px"><label><input type="checkbox" id="fb-interest"> I'm interested in a live training workshop</label></div>
       <button type="submit" class="btn btn-primary" style="width:100%">Send Feedback</button>
     </form>
@@ -316,207 +666,14 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 
 <script type="module">
 // ═══════════════════════════════════════════════════════════════════════════
-//  GROQ-POWERED AI CHATBOT (via Netlify Function proxy)
-// ═══════════════════════════════════════════════════════════════════════════
-
-const CHAT_API = "/api/chat"; // Netlify Function endpoint
-let chatHistory = [];
-let isGenerating = false;
-let modelLoaded = false;
-
-// ── Connectivity check — ping the Netlify Function on load ──
-async function initChat() {
-  try {
-    document.getElementById('learnDot').style.display = 'inline-block';
-    setStatus('loading', 'Connecting...');
-    document.getElementById('chatProgressText').textContent = 'Connecting to AI service...';
-
-    // Quick health check — send a minimal request
-    const res = await fetch(CHAT_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: [{ role: "user", content: "ping" }] }),
-    });
-
-    if (res.ok) {
-      modelLoaded = true;
-      document.getElementById('chatProgress').style.display = 'none';
-      document.getElementById('chatSend').disabled = false;
-      setStatus('ready', 'AI Ready');
-      const dot = document.getElementById('learnDot');
-      dot.style.background = 'var(--green)';
-      dot.style.animation = 'none';
-      document.getElementById('learnBtn').title = 'AI Tutor ready — click to chat';
-    } else {
-      throw new Error('API returned ' + res.status);
-    }
-  } catch (err) {
-    console.warn('Chat init check:', err);
-    // Still allow usage — the actual send will show errors if needed
-    modelLoaded = true;
-    document.getElementById('chatProgress').style.display = 'none';
-    document.getElementById('chatSend').disabled = false;
-    setStatus('ready', 'AI Ready');
-    const dot = document.getElementById('learnDot');
-    dot.style.background = 'var(--green)';
-    dot.style.animation = 'none';
-  }
-}
-
-function setStatus(type, text) {
-  const el = document.getElementById('chatStatus');
-  el.className = 'chat-status ' + type;
-  el.textContent = text;
-}
-
-function addMsg(role, content) {
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + role;
-  div.innerHTML = formatMsg(content);
-  document.getElementById('chatMessages').appendChild(div);
-  div.scrollIntoView({ behavior: 'smooth' });
-  return div;
-}
-
-function addSystemMsg(text) {
-  const div = document.createElement('div');
-  div.className = 'chat-msg system';
-  div.textContent = text;
-  document.getElementById('chatMessages').appendChild(div);
-}
-
-function formatMsg(text) {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`(.*?)`/g, '<code>$1</code>')
-    .replace(/\n/g, '<br>');
-}
-
-async function sendChat() {
-  if (isGenerating) return;
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  document.getElementById('chatSuggestions').style.display = 'none';
-  addMsg('user', text);
-
-  chatHistory.push({ role: "user", content: text });
-  isGenerating = true;
-  document.getElementById('chatSend').disabled = true;
-  setStatus('loading', 'Thinking...');
-
-  const assistantDiv = addMsg('assistant', '<span class="typing-dots">Generating</span>');
-
-  try {
-    const res = await fetch(CHAT_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: chatHistory }),
-    });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || `API error ${res.status}`);
-    }
-
-    // Parse SSE stream from Groq (via Netlify proxy)
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let response = '';
-    let buffer = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';  // keep incomplete line in buffer
-
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
-        if (data === '[DONE]') continue;
-        try {
-          const parsed = JSON.parse(data);
-          const delta = parsed.choices?.[0]?.delta?.content || '';
-          if (delta) {
-            response += delta;
-            assistantDiv.innerHTML = formatMsg(response);
-            assistantDiv.scrollIntoView({ behavior: 'smooth' });
-          }
-        } catch (e) { /* skip unparseable chunks */ }
-      }
-    }
-
-    if (!response) response = 'I received your question but couldn\'t generate a response. Please try again.';
-    chatHistory.push({ role: "assistant", content: response });
-
-    // Keep history manageable (last 12 messages)
-    if (chatHistory.length > 13) {
-      chatHistory = chatHistory.slice(-12);
-    }
-
-  } catch (err) {
-    assistantDiv.innerHTML = `<span style="color:var(--red)">Error: ${err.message}. Please try again.</span>`;
-    console.error('Chat error:', err);
-  }
-
-  isGenerating = false;
-  document.getElementById('chatSend').disabled = false;
-  setStatus('ready', 'AI Ready');
-  showSuggestions();
-}
-
-const SUGGESTIONS = [
-  ["What is MIP and why use it?","Explain the merit order concept","How do I build my own H₂ optimizer?","What happens in an SMR outage?"],
-  ["What are decision variables?","Explain the objective function","How does the PSA purifier work?","What tools do I need to start?"],
-  ["What is the Big-M constraint?","Compare PSA vs membrane","How to handle demand surges?","What is rolling-horizon optimization?"],
-  ["Explain mass balance constraints","Why use binary variables?","How to connect OPC-UA data?","What solver should I use in production?"],
-  ["What is branch and bound?","Explain startup cost amortisation","How to validate the model?","What is shadow-mode deployment?"],
-];
-let suggestionRound = 0;
-function showSuggestions() {
-  const el = document.getElementById('chatSuggestions');
-  const set = SUGGESTIONS[suggestionRound % SUGGESTIONS.length];
-  suggestionRound++;
-  el.innerHTML = set.map(s => `<button class="chat-suggest-btn" onclick="askSuggestion(this)">${s}</button>`).join('');
-  el.style.display = 'flex';
-}
-
-function askSuggestion(btn) {
-  document.getElementById('chatInput').value = btn.textContent;
-  sendChat();
-}
-
-// Expose to global scope for onclick handlers
-window.sendChat = sendChat;
-window.askSuggestion = askSuggestion;
-
-let chatInitialized = false;
-function ensureChatReady() {
-  if (!chatInitialized) { chatInitialized = true; initChat(); }
-}
-window.openChat = function() {
-  document.getElementById('chatOverlay').classList.add('open');
-  ensureChatReady();
-  document.getElementById('chatInput').focus();
-};
-window.closeChat = function() {
-  document.getElementById('chatOverlay').classList.remove('open');
-};
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  NETWORK DATA & SOLVER (same as before)
+// NETWORK DATA
 // ═══════════════════════════════════════════════════════════════════════════
 const NET = {
   producers: {
     "SMR-1":{name:"Steam Methane Reformer #1",type:"SMR",min:8000,max:50000,cost:0.035,startup:15000,co2:0.27},
     "SMR-2":{name:"Steam Methane Reformer #2",type:"SMR",min:5000,max:35000,cost:0.038,startup:12000,co2:0.26},
     "ELEC-1":{name:"PEM Electrolyser",type:"Electrolyser",min:1000,max:15000,cost:0.065,startup:500,co2:0.02},
-    "BYP-CCR":{name:"CCR By-product H₂",type:"ByProduct",min:3000,max:12000,cost:0.010,startup:0,co2:0},
+    "BYP-CCR":{name:"CCR By-product H\u2082",type:"ByProduct",min:3000,max:12000,cost:0.010,startup:0,co2:0},
     "BYP-ETH":{name:"Ethylene Cracker Off-gas",type:"ByProduct",min:2000,max:8000,cost:0.008,startup:0,co2:0},
   },
   purifiers:{"PSA-1":{name:"PSA #1",max:60000,recovery:0.85,purity:99.9},"MEM-1":{name:"Membrane #1",max:25000,recovery:0.92,purity:98}},
@@ -535,95 +692,1379 @@ const NET = {
   import:{max:20000,cost:0.075},export:{max:10000,revenue:0.025}
 };
 
-function solveMeritOrder(producers, consumers, imp, exp) {
+let currentResult = null;
+const fmt = v => v.toLocaleString(undefined,{maximumFractionDigits:0});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SOLVER
+// ═══════════════════════════════════════════════════════════════════════════
+function solveMeritOrder(producers, consumers, imp, exp, customHpcIds, purCfg) {
   const sorted = Object.entries(producers).sort((a,b)=>a[1].cost-b[1].cost);
   const totalDemand = Object.values(consumers).reduce((s,c)=>s+c.nom,0);
-  const uhpIds = Object.keys(consumers).filter(id=>!["C-HTR","C-NHT","C-WAX","C-H2S"].includes(id));
-  const hpcIds = ["C-HTR","C-NHT","C-WAX","C-H2S"].filter(id=>id in consumers);
+
+  // Determine HPC consumers: use custom list if provided, else hardcoded reference IDs
+  const defaultHpc = ["C-HTR","C-NHT","C-WAX","C-H2S"];
+  const hpcIds = customHpcIds || defaultHpc;
+  const uhpIds = Object.keys(consumers).filter(id=>!hpcIds.includes(id));
   const uhpDemand = uhpIds.reduce((s,id)=>s+consumers[id].nom,0);
-  let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0}};
+  const hpcDemand = hpcIds.reduce((s,id)=>s+(consumers[id]?consumers[id].nom:0),0);
+
+  // Purifier parameters (configurable or defaults)
+  const PSA_SPLIT = purCfg ? purCfg.psaSplit : 0.70;
+  const PSA_REC   = purCfg ? purCfg.psaRec   : 0.85;
+  const PSA_MAX   = purCfg ? purCfg.psaMax   : 60000;
+  const MEM_REC   = purCfg ? purCfg.memRec   : 0.92;
+  const MEM_MAX   = purCfg ? purCfg.memMax   : 25000;
+  const MEM_SPLIT = 1 - PSA_SPLIT;
+
+  // Compute correct dispatch factor based on UHP/HPC demand split and purifier config
+  const psaEffective = PSA_SPLIT * PSA_REC;  // e.g., 0.70×0.85 = 0.595
+  const memEffective = MEM_SPLIT * MEM_REC;  // e.g., 0.30×0.92 = 0.276
+  const reqForUHP = uhpDemand > 0 ? uhpDemand / psaEffective : 0;
+  const reqForHPC = hpcDemand > 0 ? hpcDemand / memEffective : 0;
+  const requiredHP = Math.max(reqForUHP, reqForHPC);
+  const dispatchFactor = requiredHP > 0 ? Math.max(totalDemand / requiredHP, 0.40) : (psaEffective+memEffective);
+
+  let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0},crossTier:{},importAlloc:{}};
   let hpSupply=0,uhpDirect=0;
-  for(const[pid,p]of sorted){let needed=totalDemand-hpSupply*0.87-uhpDirect-r.importFlow;if(needed<=0){r.prodFlows[pid]=0;r.prodOn[pid]=false;continue}let flow=Math.min(p.max,Math.max(p.min,needed*1.05));flow=Math.max(p.min,Math.min(p.max,flow));r.prodFlows[pid]=flow;r.prodOn[pid]=true;r.costs.production+=p.cost*flow;r.costs.startup+=(p.startup||0)/8;if(pid==="ELEC-1")uhpDirect+=flow;else hpSupply+=flow}
-  let psaFeed=Math.min(hpSupply*0.70,60000),memFeed=Math.min(hpSupply-psaFeed,25000);r.purFeeds["PSA-1"]=psaFeed;r.purFeeds["MEM-1"]=memFeed;let uhpAvail=psaFeed*0.85+uhpDirect,hpcAvail=memFeed*0.92;
-  let uhpShort=uhpDemand-uhpAvail;if(uhpShort>0){r.importFlow=Math.min(uhpShort,imp.max);uhpAvail+=r.importFlow;r.costs.import=imp.cost*r.importFlow}
-  const sortedCons=Object.entries(consumers).sort((a,b)=>a[1].pri-b[1].pri);for(const[cid,c]of sortedCons){const isUHP=uhpIds.includes(cid);let avail=isUHP?uhpAvail:hpcAvail;let supply=Math.min(c.nom,avail);r.consSupplied[cid]=supply;let unmet=Math.max(0,c.nom-supply);r.consUnmet[cid]=unmet;if(isUHP)uhpAvail-=supply;else hpcAvail-=supply;if(unmet>0)r.costs.unmet_penalty+=c.pen*unmet}
-  if(hpcAvail>0){r.exportFlow=Math.min(hpcAvail,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
+
+  // Merit-order dispatch with corrected factor
+  for(const[pid,p]of sorted){
+    let needed=totalDemand-hpSupply*dispatchFactor-uhpDirect-r.importFlow;
+    if(needed<=0){r.prodFlows[pid]=0;r.prodOn[pid]=false;continue}
+    let flow=Math.min(p.max,Math.max(p.min,needed*1.05));
+    flow=Math.max(p.min,Math.min(p.max,flow));
+    r.prodFlows[pid]=flow;r.prodOn[pid]=true;
+    r.costs.production+=p.cost*flow;
+    r.costs.startup+=(p.startup||0)/8;
+    if(pid==="ELEC-1")uhpDirect+=flow; else hpSupply+=flow;
+  }
+
+  // Purifier split (using configurable parameters)
+  // Step 1: Split by configured ratio
+  let psaFeed=Math.min(hpSupply*PSA_SPLIT, PSA_MAX);
+  let memFeed=Math.min(hpSupply*MEM_SPLIT, MEM_MAX);
+  // Step 2: Any overflow from caps goes to the other purifier
+  let overflow=hpSupply-psaFeed-memFeed;
+  if(overflow>0){
+    // Try to send overflow to whichever purifier has remaining capacity
+    const psaRoom=PSA_MAX-psaFeed;
+    const memRoom=MEM_MAX-memFeed;
+    const toPSA=Math.min(overflow,psaRoom);
+    psaFeed+=toPSA; overflow-=toPSA;
+    const toMEM=Math.min(overflow,memRoom);
+    memFeed+=toMEM; overflow-=toMEM;
+  }
+  // Material balance: psaFeed + memFeed + overflow = hpSupply (overflow = 0 if purifiers have capacity)
+  r.purFeeds={"PSA-1":psaFeed,"MEM-1":memFeed};
+  r.purBypass=overflow; // only >0 if BOTH purifiers are at max capacity
+  // Recovery calculations
+  const psaOut=psaFeed*PSA_REC;
+  const psaLoss=psaFeed*(1-PSA_REC);
+  const memOut=memFeed*MEM_REC;
+  const memLoss=memFeed*(1-MEM_REC);
+  r.psaOut=psaOut; r.psaLoss=psaLoss;
+  r.memOut=memOut; r.memLoss=memLoss;
+  let uhpAvail=psaOut+uhpDirect;
+  let hpcAvail=memOut+overflow; // true bypass only if both purifiers maxed
+
+  // Phase 1: Serve UHP consumers from PSA output
+  let uhpRemain=uhpAvail;
+  const sortedCons=Object.entries(consumers).sort((a,b)=>a[1].pri-b[1].pri);
+  for(const[cid,c]of sortedCons){
+    if(!uhpIds.includes(cid)) continue;
+    const supply=Math.min(c.nom,uhpRemain);
+    r.consSupplied[cid]=supply;
+    r.consUnmet[cid]=Math.max(0,c.nom-supply);
+    uhpRemain-=supply;
+  }
+
+  // Phase 2: Serve HPC consumers from MEM output
+  let hpcRemain=hpcAvail;
+  for(const[cid,c]of sortedCons){
+    if(uhpIds.includes(cid)) continue;
+    const supply=Math.min(c.nom,hpcRemain);
+    r.consSupplied[cid]=supply;
+    r.consUnmet[cid]=Math.max(0,c.nom-supply);
+    hpcRemain-=supply;
+  }
+
+  // Phase 3: Cross-tier flow — PSA surplus can serve HPC consumers (downgrade OK: 99.9% → 98% needs)
+  if(uhpRemain>0){
+    for(const[cid,c]of sortedCons){
+      if(uhpIds.includes(cid)) continue;
+      const unmet=r.consUnmet[cid];
+      if(unmet<=0) continue;
+      const extra=Math.min(unmet,uhpRemain);
+      r.consSupplied[cid]+=extra;
+      r.consUnmet[cid]-=extra;
+      r.crossTier[cid]=extra; // track how much came from PSA cross-tier
+      uhpRemain-=extra;
+      if(uhpRemain<=0) break;
+    }
+  }
+
+  // Phase 4: Import fills remaining shortfall on EITHER tier
+  let totalUnmet=0;
+  for(const[cid] of sortedCons) totalUnmet+=r.consUnmet[cid];
+  if(totalUnmet>0){
+    r.importFlow=Math.min(totalUnmet,imp.max);
+    r.costs.import=imp.cost*r.importFlow;
+    let importRemain=r.importFlow;
+    for(const[cid,c]of sortedCons){
+      const unmet=r.consUnmet[cid];
+      if(unmet<=0||importRemain<=0) continue;
+      const fill=Math.min(unmet,importRemain);
+      r.consSupplied[cid]+=fill;
+      r.consUnmet[cid]-=fill;
+      r.importAlloc[cid]=fill; // track how much came from import
+      importRemain-=fill;
+    }
+  }
+
+  // Phase 5: Compute penalties for any remaining unmet demand
+  for(const[cid,c]of sortedCons){
+    if(r.consUnmet[cid]>0) r.costs.unmet_penalty+=c.pen*r.consUnmet[cid];
+  }
+
+  // Phase 6: Export surplus from EITHER tier (PSA surplus + MEM surplus)
+  const totalSurplus=uhpRemain+hpcRemain;
+  if(totalSurplus>0){r.exportFlow=Math.min(totalSurplus,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
+  r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.startup+r.costs.unmet_penalty;
+  return r;
+}
+function getScenarioInputs(name){let p=JSON.parse(JSON.stringify(NET.producers)),c=JSON.parse(JSON.stringify(NET.consumers));switch(name){case'smr1_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;break;case'smr2_outage':p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'dual_smr_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'hck_surge':c["C-HCK"].nom=33600;c["C-HCK"].max=42000;break;case'global_surge':Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*1.1);x.max=Math.round(x.max*1.1)});break}return{p,c}}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// OPTIMIZER NETWORK DIAGRAM (embedded in optimizer section)
+// ═══════════════════════════════════════════════════════════════════════════
+// Diagram layout — computed to fit 700px viewBox with no overflow
+// Producer: x=10 w=120 right=130 | Purifier: x=195 w=130 right=325
+// Consumer1: x=400 w=95 right=495 | Consumer2: x=530 w=95 right=625+15=640
+// Import: x=80 w=160 right=240 | Export: x=420 w=160 right=580
+// Max right = 640 + 20 margin = 660 → viewBox 700
+const PROD_X=10, PUR_X=195, CONS_X=400, CONS_X2=530, EXT_Y=395;
+
+function buildOptDiagram() {
+  const prodG=document.getElementById('prodNodes'), purG=document.getElementById('purNodes'),
+        consG=document.getElementById('consNodes'), extG=document.getElementById('extNodes');
+  prodG.innerHTML=''; purG.innerHTML=''; consG.innerHTML=''; extG.innerHTML='';
+
+  // Producers — 5 nodes, 66px apart vertically
+  const prods=[
+    {id:"SMR-1",y:35,color:"#008B8B"},{id:"SMR-2",y:101,color:"#008B8B"},
+    {id:"ELEC-1",y:167,color:"#8E44AD"},{id:"BYP-CCR",y:233,color:"#27AE60"},{id:"BYP-ETH",y:299,color:"#27AE60"}
+  ];
+  prods.forEach(p => {
+    const d=NET.producers[p.id];
+    prodG.innerHTML+=`<g class="node-group" data-id="${p.id}" onmouseenter="showTT(event,'${p.id}')" onmouseleave="hideTT()">
+      <rect class="node-rect" x="${PROD_X}" y="${p.y}" width="120" height="44" fill="#F0FAFA" stroke="${p.color}" stroke-width="1.5" filter="url(#ns)"/>
+      <circle id="st-${p.id}" cx="${PROD_X+12}" cy="${p.y+11}" r="4" fill="#27AE60"/>
+      <text x="${PROD_X+60}" y="${p.y+18}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${p.id}</text>
+      <text id="pflow-${p.id}" x="${PROD_X+60}" y="${p.y+33}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(d.max)}</text>
+    </g>`;
+  });
+
+  // Purifiers — 2 nodes, centered between producers and consumers
+  [{id:"PSA-1",y:80,sub:"99.9% | 85% rec"},{id:"MEM-1",y:230,sub:"98% | 92% rec"}].forEach(p => {
+    purG.innerHTML+=`<g class="node-group" data-id="${p.id}" onmouseenter="showTT(event,'${p.id}')" onmouseleave="hideTT()">
+      <rect class="node-rect" x="${PUR_X}" y="${p.y}" width="130" height="50" fill="#F6F0FF" stroke="#8E44AD" stroke-width="1.5" rx="8" filter="url(#ns)"/>
+      <text x="${PUR_X+65}" y="${p.y+19}" font-size="10" font-weight="700" fill="#2D3436" text-anchor="middle">${p.id}</text>
+      <text id="purflow-${p.id}" x="${PUR_X+65}" y="${p.y+35}" font-size="8" fill="#636E72" text-anchor="middle">${p.sub}</text>
+    </g>`;
+  });
+
+  // Consumers — 2 columns of 5, 66px vertical spacing
+  const consData = Object.entries(NET.consumers);
+  const col1 = consData.slice(0,5), col2 = consData.slice(5);
+  col1.forEach(([id,c],i) => {
+    const y = 35 + i*66;
+    consG.innerHTML+=`<g class="node-group" data-id="${id}" onmouseenter="showTT(event,'${id}')" onmouseleave="hideTT()">
+      <rect class="node-rect" x="${CONS_X}" y="${y}" width="95" height="38" fill="#F0FBF5" stroke="#27AE60" stroke-width="1.5" rx="8" filter="url(#ns)"/>
+      <text x="${CONS_X+55}" y="${y+18}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id.replace('C-','')}</text>
+      <text id="cflow-${id}" x="${CONS_X+55}" y="${y+33}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(c.nom)}</text>
+      <circle id="cst-${id}" cx="${CONS_X+83}" cy="${y+12}" r="3.5" fill="#27AE60"/>
+    </g>`;
+  });
+  col2.forEach(([id,c],i) => {
+    const y = 35 + i*66;
+    consG.innerHTML+=`<g class="node-group" data-id="${id}" onmouseenter="showTT(event,'${id}')" onmouseleave="hideTT()">
+      <rect class="node-rect" x="${CONS_X2}" y="${y}" width="95" height="38" fill="#F0FBF5" stroke="#27AE60" stroke-width="1.5" rx="8" filter="url(#ns)"/>
+      <text x="${CONS_X2+55}" y="${y+18}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id.replace('C-','')}</text>
+      <text id="cflow-${id}" x="${CONS_X2+55}" y="${y+33}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(c.nom)}</text>
+      <circle id="cst-${id}" cx="${CONS_X2+83}" cy="${y+12}" r="3.5" fill="#27AE60"/>
+    </g>`;
+  });
+
+  // Import — bottom-left, with clear label and description
+  extG.innerHTML=`
+    <g class="node-group" data-id="IMPORT" onmouseenter="showTT(event,'IMPORT')" onmouseleave="hideTT()">
+      <rect class="node-rect" x="80" y="${EXT_Y}" width="160" height="44" fill="#FEF5E7" stroke="#F39C12" stroke-width="1.5" rx="8" filter="url(#ns)"/>
+      <text x="96" y="${EXT_Y+17}" font-size="12" fill="#F39C12">\u2192</text>
+      <text x="168" y="${EXT_Y+17}" font-size="9.5" font-weight="700" fill="#2D3436" text-anchor="middle">Import</text>
+      <text id="impflow" x="168" y="${EXT_Y+32}" font-size="8" fill="#636E72" text-anchor="middle">Max 20k @ $0.075</text>
+    </g>
+    <g class="node-group" data-id="EXPORT" onmouseenter="showTT(event,'EXPORT')" onmouseleave="hideTT()">
+      <rect class="node-rect" x="440" y="${EXT_Y}" width="160" height="44" fill="#EBF5FB" stroke="#2980B9" stroke-width="1.5" rx="8" filter="url(#ns)"/>
+      <text x="456" y="${EXT_Y+17}" font-size="12" fill="#2980B9">\u2190</text>
+      <text x="528" y="${EXT_Y+17}" font-size="9.5" font-weight="700" fill="#2D3436" text-anchor="middle">Export</text>
+      <text id="expflow" x="528" y="${EXT_Y+32}" font-size="8" fill="#636E72" text-anchor="middle">Max 10k @ $0.025</text>
+    </g>`;
+}
+
+function updateOptDiagram(r, prods, cons) {
+  if(!r) return;
+  const flowG = document.getElementById('flowLines');
+  flowG.innerHTML = '';
+
+  // Update producer node values and status
+  Object.entries(r.prodFlows).forEach(([pid,flow]) => {
+    const el = document.getElementById('pflow-'+pid);
+    const st = document.getElementById('st-'+pid);
+    if(el) el.textContent = r.prodOn[pid] ? fmt(Math.round(flow))+' Nm\u00B3/h' : 'OFF';
+    if(st) st.setAttribute('fill', r.prodOn[pid] ? '#27AE60' : '#E74C3C');
+  });
+
+  // Update purifier values with material balance
+  const psaEl=document.getElementById('purflow-PSA-1');
+  const memEl=document.getElementById('purflow-MEM-1');
+  if(psaEl) psaEl.textContent=`${fmt(Math.round(r.purFeeds["PSA-1"]))}\u2192${fmt(Math.round(r.psaOut||0))} (-${fmt(Math.round(r.psaLoss||0))})`;
+  if(memEl) memEl.textContent=`${fmt(Math.round(r.purFeeds["MEM-1"]))}\u2192${fmt(Math.round(r.memOut||0))} (-${fmt(Math.round(r.memLoss||0))})`;
+
+  // Update consumer values and status
+  Object.entries(r.consSupplied).forEach(([cid,sup]) => {
+    const el = document.getElementById('cflow-'+cid);
+    const st = document.getElementById('cst-'+cid);
+    const unmet = r.consUnmet[cid]||0;
+    if(el) el.textContent = fmt(Math.round(sup)) + (unmet>0.1 ? ' (-'+fmt(Math.round(unmet))+')' : '');
+    if(st) st.setAttribute('fill', unmet>0.1 ? '#F39C12' : '#27AE60');
+  });
+
+  // Update import/export values
+  const impEl=document.getElementById('impflow');
+  const expEl=document.getElementById('expflow');
+  if(impEl) impEl.textContent = r.importFlow>0 ? fmt(Math.round(r.importFlow))+' @$0.075' : 'Not needed';
+  if(expEl) expEl.textContent = r.exportFlow>0 ? fmt(Math.round(r.exportFlow))+' sold @$0.025' : 'No surplus';
+
+  // Draw flow lines: Producer -> Purifiers (matched to new Y positions)
+  const prodYs={"SMR-1":59,"SMR-2":125,"ELEC-1":191,"BYP-CCR":257,"BYP-ETH":323};
+  const PSA_CY=105, MEM_CY=255; // center Y of purifier blocks
+  const PUR_OUT_X=PUR_X+130; // right edge of purifier blocks
+  Object.entries(r.prodFlows).forEach(([pid,flow]) => {
+    const on=r.prodOn[pid], py=prodYs[pid];
+    if(py===undefined) return;
+    const sw = on&&flow>0 ? Math.max(1.2,Math.min(3.5,(flow/50000)*3.5)) : 0.8;
+    const cls = on&&flow>0 ? 'flow-line' : 'flow-line inactive';
+    const mk = on&&flow>0 ? 'url(#ah)' : 'url(#ahg)';
+    const col = on&&flow>0 ? '#008B8B' : '#D5D0C8';
+    // Main feed line to PSA
+    flowG.innerHTML+=`<line class="${cls}" x1="${PROD_X+120}" y1="${py}" x2="${PUR_X}" y2="${PSA_CY}" stroke="${col}" stroke-width="${sw}" marker-end="${mk}"/>`;
+    // Secondary thinner line to MEM
+    if(on&&flow>0) flowG.innerHTML+=`<line class="${cls}" x1="${PROD_X+120}" y1="${py}" x2="${PUR_X}" y2="${MEM_CY}" stroke="#008B8B" stroke-width="${sw*0.4}" marker-end="url(#ah)" opacity="0.35"/>`;
+  });
+
+  // HPC consumers (fed by MEM-1): C-HTR, C-NHT, C-WAX, C-H2S
+  // UHP consumers (fed by PSA-1 + electrolyser + import): everything else
+  const HPC_IDS = ["C-HTR","C-NHT","C-WAX","C-H2S"];
+
+  const consData=Object.entries(cons||NET.consumers);
+  const col1ids=consData.slice(0,5).map(e=>e[0]);
+  const col2ids=consData.slice(5).map(e=>e[0]);
+  const consYmap={};
+  col1ids.forEach((id,i)=>{consYmap[id]={x:CONS_X, y:57+i*66}});
+  col2ids.forEach((id,i)=>{consYmap[id]={x:CONS_X2, y:57+i*66}});
+
+  Object.entries(r.consSupplied).forEach(([cid,sup]) => {
+    const pos=consYmap[cid];
+    if(!pos) return;
+    const unmet=r.consUnmet[cid]||0;
+    const active=sup>0;
+    const sw=active?Math.max(1,Math.min(2.5,(sup/28000)*2.5)):0.8;
+    const col=unmet>0.1?'#F39C12':'#27AE60';
+    const isHPC = HPC_IDS.includes(cid);
+    // Route from correct purifier: PSA for UHP, MEM for HPC
+    const srcY = isHPC ? MEM_CY : PSA_CY;
+    const srcColor = isHPC && active ? '#8E44AD' : col; // purple tint for MEM-fed lines
+    if(active) flowG.innerHTML+=`<line class="flow-line" x1="${PUR_OUT_X}" y1="${srcY}" x2="${pos.x}" y2="${pos.y}" stroke="${srcColor}" stroke-width="${sw}" marker-end="url(#ah)"/>`;
+    else flowG.innerHTML+=`<line class="flow-line inactive" x1="${PUR_OUT_X}" y1="${srcY}" x2="${pos.x}" y2="${pos.y}" stroke="#D5D0C8" stroke-width="0.8" marker-end="url(#ahg)"/>`;
+  });
+
+  // IMPORT: curved path from import box up to PSA output area
+  if(r.importFlow>0) {
+    const impSw = Math.max(2, Math.min(4, (r.importFlow/20000)*4));
+    flowG.innerHTML+=`<path class="flow-line" d="M 168,${EXT_Y} C 200,${EXT_Y-60} ${PUR_OUT_X-20},${PSA_CY+60} ${PUR_OUT_X},${PSA_CY+10}" stroke="#F39C12" stroke-width="${impSw}" fill="none" marker-end="url(#aho)"/>`;
+    flowG.innerHTML+=`<text x="120" y="${EXT_Y-8}" font-size="8" font-weight="600" fill="#F39C12">\u2191 ${fmt(Math.round(r.importFlow))} import</text>`;
+  }
+
+  // EXPORT: curved path from MEM output area down to export box
+  if(r.exportFlow>0) {
+    const expSw = Math.max(1.5, Math.min(3, (r.exportFlow/10000)*3));
+    flowG.innerHTML+=`<path class="flow-line" d="M ${PUR_OUT_X},${MEM_CY+25} C ${PUR_OUT_X+40},${MEM_CY+80} 480,${EXT_Y-20} 528,${EXT_Y}" stroke="#2980B9" stroke-width="${expSw}" fill="none" marker-end="url(#ahb)"/>`;
+    flowG.innerHTML+=`<text x="440" y="${EXT_Y-8}" font-size="8" font-weight="600" fill="#2980B9">\u2193 ${fmt(Math.round(r.exportFlow))} export</text>`;
+  }
+  // Auto-fit viewBox to actual content bounds
+  setTimeout(()=>autoFitSvg(document.getElementById('networkSvg')),50);
+}
+
+// Auto-fit SVG viewBox to actual rendered content — prevents ALL clipping
+function autoFitSvg(svgEl){
+  if(!svgEl) return;
+  try{
+    const bbox=svgEl.getBBox();
+    const pad=15; // padding around content
+    svgEl.setAttribute('viewBox',`${bbox.x-pad} ${bbox.y-pad} ${bbox.width+pad*2} ${bbox.height+pad*2}`);
+  }catch(e){}
+}
+
+window.showTT = function(evt,id) {
+  const tt=document.getElementById('svgTooltip'),ttT=document.getElementById('ttTitle'),
+        l1=document.getElementById('ttLine1'),l2=document.getElementById('ttLine2');
+  const r=currentResult;
+  if(NET.producers[id]){
+    const p=NET.producers[id];
+    ttT.textContent=p.name;
+    l1.textContent=r?`Flow: ${fmt(r.prodFlows[id])} / ${fmt(p.max)} Nm\u00B3/h`:`Cap: ${fmt(p.min)}\u2013${fmt(p.max)} Nm\u00B3/h`;
+    l2.textContent=`Cost: $${p.cost}/Nm\u00B3 | CO\u2082: ${p.co2} kg/Nm\u00B3`;
+  } else if(NET.consumers[id]){
+    const c=NET.consumers[id];
+    ttT.textContent=c.name;
+    l1.textContent=r?`Supplied: ${fmt(r.consSupplied[id])} / ${fmt(c.nom)} Nm\u00B3/h`:`Demand: ${fmt(c.nom)} Nm\u00B3/h`;
+    l2.textContent=`Priority: ${c.pri} | Curtailable: ${c.curt?'Yes':'No'}`;
+  } else if(NET.purifiers[id]){
+    const u=NET.purifiers[id];
+    ttT.textContent=u.name;
+    l1.textContent=r?`Feed: ${fmt(r.purFeeds[id])} Nm\u00B3/h`:`Max: ${fmt(u.max)} Nm\u00B3/h`;
+    l2.textContent=`Recovery: ${u.recovery*100}% | Purity: ${u.purity}%`;
+  } else if(id==='IMPORT'){
+    ttT.textContent='Pipeline Import';
+    l1.textContent=r?`Importing: ${fmt(r.importFlow)} Nm\u00B3/h`:'Brings external H\u2082 into network';
+    l2.textContent='Max: 20,000 Nm\u00B3/h | Cost: $0.075/Nm\u00B3';
+  } else if(id==='EXPORT'){
+    ttT.textContent='Export Header';
+    l1.textContent=r?`Exporting: ${fmt(r.exportFlow)} Nm\u00B3/h`:'Sells surplus H\u2082 from network';
+    l2.textContent='Max: 10,000 Nm\u00B3/h | Revenue: $0.025/Nm\u00B3';
+  } else { ttT.textContent=id; l1.textContent=''; l2.textContent=''; }
+  const svgR=document.getElementById('networkSvg').getBoundingClientRect();
+  const x=Math.min(evt.clientX-svgR.left+12,720), y=Math.max(evt.clientY-svgR.top-35,5);
+  tt.setAttribute('transform',`translate(${x},${y})`);
+  tt.classList.add('show');
+};
+window.hideTT=function(){document.getElementById('svgTooltip').classList.remove('show')};
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BUILDER AUTO-DIAGRAM
+// ═══════════════════════════════════════════════════════════════════════════
+function buildCustomDiagram(customResult) {
+  const svg=document.getElementById('builderSvg');
+  const pList=Object.entries(cProds), cList=Object.entries(cCons);
+  const purOn = document.getElementById('cp-purifiers').checked;
+
+  if(pList.length===0 && cList.length===0){
+    svg.setAttribute('viewBox','0 0 700 150');
+    svg.removeAttribute('height');
+    svg.innerHTML=`<text x="350" y="65" font-size="13" fill="#95A5A6" text-anchor="middle">Add producers and consumers below,</text><text x="350" y="85" font-size="13" fill="#95A5A6" text-anchor="middle">or click "Load Sample" to see the network.</text>`;
+    return;
+  }
+
+  const maxNodes=Math.max(pList.length,cList.length,1);
+  const hasExternal = customResult && (customResult.importFlow>0 || customResult.exportFlow>0);
+  const nodeAreaH = maxNodes*58+40;
+  const h = hasExternal ? nodeAreaH+85 : Math.max(nodeAreaH+30, 140);
+  svg.setAttribute('viewBox',`0 0 700 ${h}`);
+  svg.removeAttribute('height');
+  let html='';
+
+  const uhpCons = cList.filter(([,c])=>c.purity!=='STD');
+  const stdCons = cList.filter(([,c])=>c.purity==='STD');
+
+  // Column positions
+  const PX=10, PW=120; // producers (700px viewBox)
+  const CX=480, CW=120; // consumers
+
+  // Labels
+  html+=`<text x="${PX+PW/2}" y="20" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">PRODUCERS</text>`;
+  html+=`<text x="${CX+CW/2}" y="20" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">CONSUMERS</text>`;
+
+  if(purOn) {
+    // ── PURIFIER MODE: show PSA + MEM blocks with material balance ──
+    const midX=210, purW=140, purH=62;
+    const psaY = Math.max(nodeAreaH*0.22-purH/2, 30);
+    const memY = Math.max(nodeAreaH*0.72-purH/2, psaY+purH+16);
+    const psaRecPct = +(document.getElementById('cp-psa-rec').value)||85;
+    const memRecPct = +(document.getElementById('cp-mem-rec').value)||92;
+    html+=`<text x="${midX+purW/2}" y="20" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">PURIFIERS</text>`;
+
+    // PSA block with material balance streams
+    html+=`<rect x="${midX}" y="${psaY}" width="${purW}" height="${purH}" rx="8" fill="#F6F0FF" stroke="#8E44AD" stroke-width="1.5" filter="url(#ns)"/>`;
+    html+=`<text x="${midX+purW/2}" y="${psaY+16}" font-size="11" font-weight="700" fill="#2D3436" text-anchor="middle">PSA (${psaRecPct}% recovery)</text>`;
+    if(customResult){
+      const pf=customResult.purFeeds["PSA-1"], po=customResult.psaOut||0, pl=customResult.psaLoss||0;
+      html+=`<text x="${midX+purW/2}" y="${psaY+31}" font-size="8.5" fill="#008B8B" text-anchor="middle" font-weight="600">In: ${fmt(Math.round(pf))} Nm\u00B3/h</text>`;
+      html+=`<text x="${midX+purW/2}" y="${psaY+44}" font-size="8.5" fill="#27AE60" text-anchor="middle" font-weight="600">Out: ${fmt(Math.round(po))} (product)</text>`;
+      html+=`<text x="${midX+purW/2}" y="${psaY+57}" font-size="8" fill="#E74C3C" text-anchor="middle">Loss: ${fmt(Math.round(pl))} (${100-psaRecPct}% tail gas)</text>`;
+    } else {
+      html+=`<text x="${midX+purW/2}" y="${psaY+34}" font-size="9" fill="#636E72" text-anchor="middle">99.9% purity | ${psaRecPct}% recovery</text>`;
+      html+=`<text x="${midX+purW/2}" y="${psaY+50}" font-size="8" fill="#E74C3C" text-anchor="middle">${100-psaRecPct}% loss as tail gas</text>`;
+    }
+
+    // MEM block with material balance streams
+    html+=`<rect x="${midX}" y="${memY}" width="${purW}" height="${purH}" rx="8" fill="#F6F0FF" stroke="#8E44AD" stroke-width="1.5" filter="url(#ns)"/>`;
+    html+=`<text x="${midX+purW/2}" y="${memY+16}" font-size="11" font-weight="700" fill="#2D3436" text-anchor="middle">MEM (${memRecPct}% recovery)</text>`;
+    if(customResult){
+      const mf=customResult.purFeeds["MEM-1"], mo=customResult.memOut||0, ml=customResult.memLoss||0;
+      html+=`<text x="${midX+purW/2}" y="${memY+31}" font-size="8.5" fill="#008B8B" text-anchor="middle" font-weight="600">In: ${fmt(Math.round(mf))} Nm\u00B3/h</text>`;
+      html+=`<text x="${midX+purW/2}" y="${memY+44}" font-size="8.5" fill="#27AE60" text-anchor="middle" font-weight="600">Out: ${fmt(Math.round(mo))} (product)</text>`;
+      html+=`<text x="${midX+purW/2}" y="${memY+57}" font-size="8" fill="#E74C3C" text-anchor="middle">Loss: ${fmt(Math.round(ml))} (${100-memRecPct}% permeate)</text>`;
+    } else {
+      html+=`<text x="${midX+purW/2}" y="${memY+34}" font-size="9" fill="#636E72" text-anchor="middle">98% purity | ${memRecPct}% recovery</text>`;
+      html+=`<text x="${midX+purW/2}" y="${memY+50}" font-size="8" fill="#E74C3C" text-anchor="middle">${100-memRecPct}% loss as permeate</text>`;
+    }
+
+    // Material balance summary bar (below purifiers when result exists)
+    if(customResult){
+      const totalProd=Object.values(customResult.prodFlows).reduce((s,v)=>s+v,0);
+      const totalPurIn=customResult.purFeeds["PSA-1"]+customResult.purFeeds["MEM-1"];
+      const totalPurOut=(customResult.psaOut||0)+(customResult.memOut||0);
+      const totalLoss=(customResult.psaLoss||0)+(customResult.memLoss||0);
+      const bp=customResult.purBypass||0;
+      const mbY=memY+purH+8;
+      html+=`<rect x="${midX-10}" y="${mbY}" width="${purW+20}" height="${bp>0?38:26}" rx="5" fill="#FAF8F5" stroke="#E0DBD4" stroke-width="1"/>`;
+      html+=`<text x="${midX+purW/2}" y="${mbY+12}" font-size="7.5" font-weight="600" fill="#2D3436" text-anchor="middle">BALANCE: ${fmt(Math.round(totalPurIn))} in \u2192 ${fmt(Math.round(totalPurOut))} product + ${fmt(Math.round(totalLoss))} loss</text>`;
+      if(bp>0) html+=`<text x="${midX+purW/2}" y="${mbY+26}" font-size="7.5" font-weight="600" fill="#E74C3C" text-anchor="middle">\u26A0 ${fmt(Math.round(bp))} bypass (both purifiers at max cap)</text>`;
+    }
+
+    // Producer → PSA/MEM lines
+    pList.forEach(([id,p],i) => {
+      const y=36+i*55;
+      const on = customResult ? customResult.prodOn[id] : true;
+      const flow = customResult ? customResult.prodFlows[id] : p.max;
+      const col = p.type==='SMR'?'#008B8B':p.type==='Electrolyser'?'#8E44AD':'#27AE60';
+      // Node
+      html+=`<rect x="${PX}" y="${y}" width="${PW}" height="42" rx="8" fill="${on?'#F0FAFA':'#FDEDEC'}" stroke="${on?col:'#E74C3C'}" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<circle cx="${PX+14}" cy="${y+12}" r="4" fill="${on?'#27AE60':'#E74C3C'}"/>`;
+      html+=`<text x="${PX+PW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${PX+PW/2}" y="${y+32}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(flow))+' Nm\u00B3/h':fmt(p.max)+' max'}</text>`;
+      const sw=on&&flow>0?Math.max(1,Math.min(3,(flow/(p.max||1))*3)):0.8;
+      const act=on&&flow>0;
+      // Line to PSA (primary split)
+      const psaSplitPct=+(document.getElementById('cp-psa-split').value)||70;
+      const memSplitPct=100-psaSplitPct;
+      html+=`<line class="flow-line${act?'':' inactive'}" x1="${PX+PW}" y1="${y+21}" x2="${midX}" y2="${psaY+purH/2}" stroke="${act?'#008B8B':'#D5D0C8'}" stroke-width="${sw*(psaSplitPct/100)}" marker-end="url(#${act?'ah':'ahg'})"/>`;
+      // Line to MEM (secondary split) — thickness proportional to split
+      if(act) html+=`<line class="flow-line" x1="${PX+PW}" y1="${y+21}" x2="${midX}" y2="${memY+purH/2}" stroke="#008B8B" stroke-width="${sw*(memSplitPct/100)}" marker-end="url(#ah)" opacity="0.5"/>`;
+    });
+
+    // PSA → UHP consumers
+    uhpCons.forEach(([id,c],i) => {
+      const y=36+i*55;
+      const sup = customResult ? (customResult.consSupplied[id]||0) : c.nom;
+      const unmet = customResult ? (customResult.consUnmet[id]||0) : 0;
+      const ok = unmet<=0.1;
+      html+=`<rect x="${CX}" y="${y}" width="${CW}" height="42" rx="8" fill="${ok?'#F0FBF5':'#FEF5E7'}" stroke="${ok?'#27AE60':'#F39C12'}" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<text x="${CX+CW/2}" y="${y+13}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+27}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(sup))+(unmet>0?' (-'+fmt(Math.round(unmet))+')':''):fmt(c.nom)+' nom'}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+39}" font-size="7.5" fill="#008B8B" text-anchor="middle" font-weight="600">PSA \u2192 UHP</text>`;
+      html+=`<circle cx="${CX+CW-12}" cy="${y+12}" r="3.5" fill="${ok?'#27AE60':'#F39C12'}"/>`;
+      const sw=sup>0?Math.max(1,Math.min(2.5,(sup/20000)*2.5)):0.8;
+      html+=`<line class="flow-line${sup>0?'':' inactive'}" x1="${midX+purW}" y1="${psaY+purH/2}" x2="${CX}" y2="${y+21}" stroke="${sup>0?(ok?'#27AE60':'#F39C12'):'#D5D0C8'}" stroke-width="${sw}" marker-end="url(#ah)"/>`;
+    });
+
+    // MEM → STD consumers (with cross-tier and import lines)
+    stdCons.forEach(([id,c],i) => {
+      const y=36+(uhpCons.length+i)*55;
+      const sup = customResult ? (customResult.consSupplied[id]||0) : c.nom;
+      const unmet = customResult ? (customResult.consUnmet[id]||0) : 0;
+      const cross = customResult ? (customResult.crossTier[id]||0) : 0;
+      const impAlloc = customResult ? (customResult.importAlloc[id]||0) : 0;
+      const memPortion = sup - cross - impAlloc; // what came directly from MEM
+      const ok = unmet<=0.1;
+      // Node box
+      html+=`<rect x="${CX}" y="${y}" width="${CW}" height="42" rx="8" fill="${ok?'#F0FBF5':'#FEF5E7'}" stroke="${ok?'#8E44AD':'#F39C12'}" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<text x="${CX+CW/2}" y="${y+13}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+27}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(sup))+(unmet>0?' (-'+fmt(Math.round(unmet))+')':''):fmt(c.nom)+' nom'}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+39}" font-size="7.5" fill="#8E44AD" text-anchor="middle" font-weight="600">MEM \u2192 STD</text>`;
+      html+=`<circle cx="${CX+CW-12}" cy="${y+12}" r="3.5" fill="${ok?'#27AE60':'#F39C12'}"/>`;
+      // MEM line (purple) — only for the portion from MEM
+      if(memPortion>0){
+        const sw=Math.max(1,Math.min(2.5,(memPortion/10000)*2.5));
+        html+=`<line class="flow-line" x1="${midX+purW}" y1="${memY+purH/2}" x2="${CX}" y2="${y+21}" stroke="#8E44AD" stroke-width="${sw}" marker-end="url(#ah)"/>`;
+      } else if(!customResult){
+        html+=`<line class="flow-line inactive" x1="${midX+purW}" y1="${memY+purH/2}" x2="${CX}" y2="${y+21}" stroke="#D5D0C8" stroke-width="0.8" marker-end="url(#ahg)"/>`;
+      }
+      // Cross-tier PSA→STD line (teal, dashed) — shows PSA surplus downgrade
+      if(cross>0){
+        const sw=Math.max(1,Math.min(2,(cross/10000)*2));
+        html+=`<line class="flow-line" x1="${midX+purW}" y1="${psaY+purH/2}" x2="${CX}" y2="${y+15}" stroke="#008B8B" stroke-width="${sw}" stroke-dasharray="6 3" marker-end="url(#ah)" opacity="0.7"/>`;
+      }
+      // Import allocation line (orange, dashed)
+      if(impAlloc>0){
+        const sw=Math.max(1,Math.min(2,(impAlloc/10000)*2));
+        html+=`<line class="flow-line" x1="${midX+purW}" y1="${memY+purH}" x2="${CX}" y2="${y+28}" stroke="#F39C12" stroke-width="${sw}" stroke-dasharray="4 3" marker-end="url(#aho)" opacity="0.7"/>`;
+      }
+    });
+
+    // Import → feeds directly to consumers (supplements supply)
+    if(customResult && customResult.importFlow>0){
+      const extY = nodeAreaH+20;
+      html+=`<rect x="140" y="${extY}" width="160" height="40" rx="8" fill="#FEF5E7" stroke="#F39C12" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<text x="156" y="${extY+16}" font-size="12" fill="#F39C12">\u2192</text>`;
+      html+=`<text x="228" y="${extY+16}" font-size="9.5" font-weight="700" fill="#2D3436" text-anchor="middle">Import</text>`;
+      html+=`<text x="228" y="${extY+30}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(Math.round(customResult.importFlow))} Nm\u00B3/h \u2192 to consumers</text>`;
+      // Line from import up to consumer area (not through PSA)
+      html+=`<path class="flow-line" d="M 300,${extY} Q 380,${extY-30} ${CX},${36+(uhpCons.length)*55+21}" stroke="#F39C12" stroke-width="2" fill="none" marker-end="url(#aho)" stroke-dasharray="6 3"/>`;
+    }
+
+    // Export ← from network surplus
+    if(customResult && customResult.exportFlow>0){
+      const extY = nodeAreaH+20;
+      html+=`<rect x="400" y="${extY}" width="160" height="40" rx="8" fill="#EBF5FB" stroke="#2980B9" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<text x="416" y="${extY+16}" font-size="12" fill="#2980B9">\u2190</text>`;
+      html+=`<text x="488" y="${extY+16}" font-size="9.5" font-weight="700" fill="#2D3436" text-anchor="middle">Export</text>`;
+      html+=`<text x="488" y="${extY+30}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(Math.round(customResult.exportFlow))} Nm\u00B3/h surplus sold</text>`;
+      html+=`<path class="flow-line" d="M ${midX+purW+5},${memY+purH} Q 550,${memY+purH+20} 640,${extY}" stroke="#2980B9" stroke-width="2" fill="none" marker-end="url(#ahb)"/>`;
+    }
+
+    // Purifier bypass warning — when production exceeds combined purifier capacity
+    if(customResult && customResult.purBypass>0){
+      const warnY = Math.min(memY+purH+8, nodeAreaH-15);
+      html+=`<rect x="${midX-5}" y="${warnY}" width="${purW+10}" height="22" rx="4" fill="#FDEDEC" stroke="#E74C3C" stroke-width="1" opacity="0.9"/>`;
+      html+=`<text x="${midX+purW/2}" y="${warnY+15}" font-size="8" font-weight="600" fill="#E74C3C" text-anchor="middle">\u26A0 ${fmt(Math.round(customResult.purBypass))} Nm\u00B3/h bypass (purifier cap exceeded)</text>`;
+    }
+
+  } else {
+    // ── DIRECT SUPPLY MODE: simple header bus ──
+    const busTop=30, busBot=nodeAreaH;
+    html+=`<text x="340" y="20" font-size="10" font-weight="700" fill="#95A5A6" text-anchor="middle" letter-spacing="1">H\u2082 HEADER</text>`;
+    html+=`<line x1="310" y1="${busTop}" x2="310" y2="${busBot}" stroke="#008B8B" stroke-width="3" opacity="0.15"/>`;
+    html+=`<line x1="370" y1="${busTop}" x2="370" y2="${busBot}" stroke="#27AE60" stroke-width="3" opacity="0.15"/>`;
+    html+=`<rect x="320" y="${(busTop+busBot)/2-10}" width="40" height="20" rx="4" fill="#F0FAFA" stroke="#008B8B" stroke-width="0.5" opacity="0.6"/>`;
+    html+=`<text x="340" y="${(busTop+busBot)/2+4}" font-size="7" font-weight="600" fill="#008B8B" text-anchor="middle" opacity="0.7">BUS</text>`;
+
+    // Producer nodes
+    pList.forEach(([id,p],i) => {
+      const y=36+i*55;
+      const on = customResult ? customResult.prodOn[id] : true;
+      const flow = customResult ? customResult.prodFlows[id] : p.max;
+      const col = p.type==='SMR'?'#008B8B':p.type==='Electrolyser'?'#8E44AD':'#27AE60';
+      html+=`<rect x="${PX}" y="${y}" width="${PW}" height="42" rx="8" fill="${on?'#F0FAFA':'#FDEDEC'}" stroke="${on?col:'#E74C3C'}" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<circle cx="${PX+14}" cy="${y+12}" r="4" fill="${on?'#27AE60':'#E74C3C'}"/>`;
+      html+=`<text x="${PX+PW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${PX+PW/2}" y="${y+32}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(flow))+' Nm\u00B3/h':fmt(p.max)+' max'}</text>`;
+      const sw=on&&flow>0?Math.max(1,Math.min(3,(flow/(p.max||1))*3)):0.8;
+      html+=`<line class="flow-line${on&&flow>0?'':' inactive'}" x1="${PX+PW}" y1="${y+21}" x2="310" y2="${y+21}" stroke="${on&&flow>0?col:'#D5D0C8'}" stroke-width="${sw}"/>`;
+    });
+
+    // Consumer nodes
+    cList.forEach(([id,c],i) => {
+      const y=36+i*55;
+      const sup = customResult ? (customResult.consSupplied[id]||0) : c.nom;
+      const unmet = customResult ? (customResult.consUnmet[id]||0) : 0;
+      const ok = unmet<=0.1;
+      html+=`<rect x="${CX}" y="${y}" width="${CW}" height="42" rx="8" fill="${ok?'#F0FBF5':'#FEF5E7'}" stroke="${ok?'#27AE60':'#F39C12'}" stroke-width="1.5" filter="url(#ns)"/>`;
+      html+=`<circle cx="${CX+CW-12}" cy="${y+12}" r="4" fill="${ok?'#27AE60':'#F39C12'}"/>`;
+      html+=`<text x="${CX+CW/2}" y="${y+17}" font-size="10.5" font-weight="700" fill="#2D3436" text-anchor="middle">${id}</text>`;
+      html+=`<text x="${CX+CW/2}" y="${y+32}" font-size="9" fill="#636E72" text-anchor="middle">${customResult?fmt(Math.round(sup))+(unmet>0?' (-'+fmt(Math.round(unmet))+')':''):fmt(c.nom)+' nom'}</text>`;
+      const sw=sup>0?Math.max(1,Math.min(3,(sup/(c.nom||1))*3)):0.8;
+      html+=`<line class="flow-line${sup>0?'':' inactive'}" x1="370" y1="${y+21}" x2="${CX}" y2="${y+21}" stroke="${sup>0?(ok?'#27AE60':'#F39C12'):'#D5D0C8'}" stroke-width="${sw}"/>`;
+    });
+
+    // Import/Export for direct supply
+    if(customResult){
+      const extY = nodeAreaH+20;
+      if(customResult.importFlow>0){
+        html+=`<rect x="140" y="${extY}" width="160" height="40" rx="8" fill="#FEF5E7" stroke="#F39C12" stroke-width="1.5" filter="url(#ns)"/>`;
+        html+=`<text x="156" y="${extY+16}" font-size="12" fill="#F39C12">\u2192</text>`;
+        html+=`<text x="228" y="${extY+16}" font-size="9.5" font-weight="700" fill="#2D3436" text-anchor="middle">Import</text>`;
+        html+=`<text x="228" y="${extY+30}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(Math.round(customResult.importFlow))} Nm\u00B3/h @ $${(+(document.getElementById('cp-imp-cost').value)||0.075).toFixed(3)}</text>`;
+        html+=`<path class="flow-line" d="M 310,${extY} L 310,${busBot}" stroke="#F39C12" stroke-width="2" fill="none" marker-end="url(#aho)"/>`;
+        html+=`<text x="318" y="${extY-5}" font-size="8" font-weight="600" fill="#F39C12">\u2191 Import</text>`;
+      }
+      if(customResult.exportFlow>0){
+        html+=`<rect x="400" y="${extY}" width="160" height="40" rx="8" fill="#EBF5FB" stroke="#2980B9" stroke-width="1.5" filter="url(#ns)"/>`;
+        html+=`<text x="416" y="${extY+16}" font-size="12" fill="#2980B9">\u2190</text>`;
+        html+=`<text x="488" y="${extY+16}" font-size="9.5" font-weight="700" fill="#2D3436" text-anchor="middle">Export</text>`;
+        html+=`<text x="488" y="${extY+30}" font-size="9" fill="#636E72" text-anchor="middle">${fmt(Math.round(customResult.exportFlow))} Nm\u00B3/h @ $${(+(document.getElementById('cp-exp-rev').value)||0.025).toFixed(3)}</text>`;
+        html+=`<path class="flow-line" d="M 370,${busBot} L 370,${extY}" stroke="#2980B9" stroke-width="2" fill="none" marker-end="url(#ahb)"/>`;
+        html+=`<text x="378" y="${extY-5}" font-size="8" font-weight="600" fill="#2980B9">\u2193 Export</text>`;
+      }
+      if(customResult.importFlow<=0 && customResult.exportFlow<=0){
+        html+=`<text x="350" y="${extY+10}" font-size="10" fill="#27AE60" text-anchor="middle" font-weight="600">\u2714 Balanced \u2014 no import or export needed</text>`;
+      }
+    }
+  }
+
+  svg.innerHTML=html;
+  // Auto-fit viewBox to actual content bounds
+  setTimeout(()=>autoFitSvg(svg),50);
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UI RENDERING
+// ═══════════════════════════════════════════════════════════════════════════
+function renderMerit(){
+  const order=Object.entries(NET.producers).sort((a,b)=>a[1].cost-b[1].cost);
+  const cols={ByProduct:'var(--green)',SMR:'var(--accent)',Electrolyser:'var(--purple)'};
+  document.getElementById('sidebarMerit').innerHTML=order.map(([pid,p],i)=>`<div style="display:flex;align-items:center;gap:6px;padding:3px 0"><span style="color:var(--text3);width:14px;font-weight:600">${i+1}.</span><span style="width:7px;height:7px;border-radius:50%;background:${cols[p.type]||'#888'}"></span><span style="font-weight:500">${pid}</span><span style="margin-left:auto;color:var(--text2);font-weight:500">$${p.cost}</span></div>`).join('');
+}
+
+window.runScenario = function(name,btn){
+  document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const{p,c}=getScenarioInputs(name); const r=solveMeritOrder(p,c,NET.import,NET.export);
+  currentResult=r;
+  currentScenarioName=name;
+  renderOpt(r,p,c);
+  updateOptDiagram(r,p,c);
+  updateContextBar();
+};
+
+function renderOpt(r,prods,cons){
+  const cb=r.costs;
+  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,'color:var(--text)'],['Production',cb.production,'color:var(--accent)'],['Import',cb.import,'color:var(--blue)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
+  const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.startup,c:'#F39C12',l:'Startup'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Penalty'}];
+  document.getElementById('costBar').innerHTML=segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('');
+  document.getElementById('costLegend').innerHTML=segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('');
+  document.getElementById('prodTbl').innerHTML=Object.entries(r.prodFlows).map(([pid,flow])=>{const p=prods[pid];const on=r.prodOn[pid];const pct=p.max>0?(flow/p.max*100):0;const col=on?(pct>90?'var(--orange)':'var(--green)'):'var(--red)';return`<tr><td><b>${pid}</b><br><span style="font-size:10px;color:var(--text2)">${p.name}</span></td><td><span class="tag ${on?'tag-on':'tag-off'}">${on?'ON':'OFF'}</span></td><td>${fmt(flow)}</td><td><div class="bar-c"><div class="bar-f" style="width:${pct}%;background:${col}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
+  document.getElementById('consTbl').innerHTML=Object.entries(r.consSupplied).map(([cid,sup])=>{const c=cons[cid];const unmet=r.consUnmet[cid]||0;const pct=c.nom>0?(sup/c.nom*100):100;return`<tr><td><b>${cid}</b><br><span style="font-size:10px;color:var(--text2)">${c.name}</span></td><td>${fmt(sup)}</td><td>${unmet>0.1?`<span class="tag tag-warn">-${fmt(unmet)}</span>`:'<span class="tag tag-on">OK</span>'}</td><td><div class="bar-c"><div class="bar-f" style="width:${Math.min(pct,100)}%;background:${unmet>0?'var(--orange)':'var(--accent)'}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
+  let pi='';for(const[uid,feed]of Object.entries(r.purFeeds)){const u=NET.purifiers[uid];const pct=u?(feed/u.max*100):0;pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">${uid}</span><span style="font-weight:500">${fmt(feed)} Nm\u00B3/h (${pct.toFixed(0)}%)</span></div>`}
+  pi+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
+  pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Import</span><span style="font-weight:500">${fmt(r.importFlow)} Nm\u00B3/h</span></div>`;
+  pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Export</span><span style="font-weight:500">${fmt(r.exportFlow)} Nm\u00B3/h</span></div>`;
+  document.getElementById('purInfo').innerHTML=pi;
+  let co2=0;Object.entries(r.prodFlows).forEach(([pid,flow])=>{if(r.prodOn[pid]&&prods[pid].co2)co2+=flow*prods[pid].co2});
+  let ci=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;font-weight:600"><span>Total CO\u2082</span><span>${fmt(co2)} kg/h</span></div>`;
+  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Annual est.</span><span style="font-weight:500">${fmt(co2*8760/1000)} t/yr</span></div>`;
+  ci+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
+  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Prod. cost/Nm\u00B3</span><span style="font-weight:500">$${(cb.production/(Object.values(r.prodFlows).reduce((s,v)=>s+v,0)||1)).toFixed(4)}</span></div>`;
+  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text2)">Avg. total cost</span><span style="font-weight:500">$${(cb.total/(Object.values(r.consSupplied).reduce((s,v)=>s+v,0)||1)).toFixed(4)}/Nm\u00B3</span></div>`;
+  document.getElementById('co2Info').innerHTML=ci;
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CUSTOM BUILDER
+// ═══════════════════════════════════════════════════════════════════════════
+let cProds={},cCons={};
+window.addCustomProducer=function(){const n=document.getElementById('cp-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cProds[id]={name:n,type:document.getElementById('cp-type').value,min:+document.getElementById('cp-min').value,max:+document.getElementById('cp-max').value,cost:+document.getElementById('cp-cost').value,startup:+document.getElementById('cp-startup').value,co2:document.getElementById('cp-type').value==='SMR'?0.27:0.02};document.getElementById('cp-name').value='';renderCL();buildCustomDiagram()};
+window.addCustomConsumer=function(){const n=document.getElementById('cc-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cCons[id]={name:n,nom:+document.getElementById('cc-demand').value,max:Math.round(+document.getElementById('cc-demand').value*1.3),pri:+document.getElementById('cc-pri').value,curt:document.getElementById('cc-curt').value==='true',pen:+document.getElementById('cc-pen').value,purity:document.getElementById('cc-purity').value};document.getElementById('cc-name').value='';renderCL();buildCustomDiagram()};
+window.removeProducer=function(id){delete cProds[id];renderCL();buildCustomDiagram()};
+window.removeConsumer=function(id){delete cCons[id];renderCL();buildCustomDiagram()};
+function renderCL(){const pl=Object.entries(cProds);document.getElementById('cpCount').textContent=pl.length;document.getElementById('cpList').innerHTML=pl.length?pl.map(([id,p])=>`<div class="asset-item"><span><b>${id}</b> ${p.type} | ${p.min.toLocaleString()}-${p.max.toLocaleString()} | $${p.cost}</span><span class="remove" onclick="removeProducer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>';const cl=Object.entries(cCons);document.getElementById('ccCount').textContent=cl.length;document.getElementById('ccList').innerHTML=cl.length?cl.map(([id,c])=>`<div class="asset-item"><span><b>${id}</b> ${c.nom.toLocaleString()} Nm\u00B3/h P${c.pri} <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:${c.purity==='STD'?'#F6F0FF':'#E0F5F5'};color:${c.purity==='STD'?'#8E44AD':'#008B8B'}">${c.purity==='STD'?'MEM':'PSA'}</span></span><span class="remove" onclick="removeConsumer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:12px;padding:8px">None yet.</div>'}
+window.resetCustom=function(){cProds={};cCons={};document.getElementById('customResult').style.display='none';renderCL();buildCustomDiagram()};
+window.loadSample=function(){cProds={"SMR-A":{name:"SMR-A",type:"SMR",min:5000,max:40000,cost:0.035,startup:12000,co2:0.27},"ELEC-A":{name:"ELEC-A",type:"Electrolyser",min:1000,max:10000,cost:0.060,startup:300,co2:0.02},"BYP-A":{name:"BYP-A",type:"ByProduct",min:2000,max:8000,cost:0.009,startup:0,co2:0}};cCons={"HDS-A":{name:"HDS Unit A",nom:12000,max:16000,pri:1,curt:false,pen:0.20,purity:"UHP"},"HCK-A":{name:"Hydrocracker A",nom:20000,max:28000,pri:1,curt:false,pen:0.25,purity:"UHP"},"HTR-A":{name:"Hydrotreater A",nom:6000,max:8000,pri:2,curt:true,pen:0.10,purity:"STD"},"NHT-A":{name:"Naphtha HT A",nom:4000,max:6000,pri:3,curt:true,pen:0.08,purity:"STD"}};renderCL();buildCustomDiagram()};
+// Direct-supply solver (no purifiers — used for custom builder when toggle is off)
+function solveDirectSupply(producers, consumers, imp, exp) {
+  const sorted = Object.entries(producers).sort((a,b)=>a[1].cost-b[1].cost);
+  const totalDemand = Object.values(consumers).reduce((s,c)=>s+c.nom,0);
+  let r={prodFlows:{},prodOn:{},consSupplied:{},consUnmet:{},importFlow:0,exportFlow:0,
+    costs:{production:0,import:0,export_revenue:0,startup:0,unmet_penalty:0,total:0},purFeeds:{"PSA-1":0,"MEM-1":0}};
+  let totalSupply=0;
+  // Merit-order dispatch: turn on cheapest producers first
+  for(const[pid,p]of sorted){
+    const remaining=totalDemand-totalSupply;
+    if(remaining<=0){r.prodFlows[pid]=0;r.prodOn[pid]=false;continue}
+    // Respect minimum stable rate: if we need less than min, still run at min
+    let flow;
+    if(remaining<p.min){flow=p.min}
+    else{flow=Math.min(p.max,Math.max(p.min,remaining))}
+    flow=Math.max(p.min,Math.min(p.max,flow));
+    r.prodFlows[pid]=flow; r.prodOn[pid]=true;
+    r.costs.production+=p.cost*flow;
+    r.costs.startup+=(p.startup||0)/8;
+    totalSupply+=flow;
+  }
+  // Import if short
+  let deficit=totalDemand-totalSupply;
+  if(deficit>0){r.importFlow=Math.min(deficit,imp.max);totalSupply+=r.importFlow;r.costs.import=imp.cost*r.importFlow}
+  // Allocate to consumers by priority
+  let avail=totalSupply;
+  const sortedCons=Object.entries(consumers).sort((a,b)=>a[1].pri-b[1].pri);
+  for(const[cid,c]of sortedCons){
+    const supply=Math.min(c.nom,avail);
+    r.consSupplied[cid]=supply;
+    const unmet=Math.max(0,c.nom-supply);
+    r.consUnmet[cid]=unmet;
+    avail-=supply;
+    if(unmet>0)r.costs.unmet_penalty+=c.pen*unmet;
+  }
+  // Export surplus
+  if(avail>0){r.exportFlow=Math.min(avail,exp.max);r.costs.export_revenue=exp.revenue*r.exportFlow}
   r.costs.total=r.costs.production+r.costs.import-r.costs.export_revenue+r.costs.startup+r.costs.unmet_penalty;
   return r;
 }
 
-function getScenarioInputs(name){let p=JSON.parse(JSON.stringify(NET.producers)),c=JSON.parse(JSON.stringify(NET.consumers));switch(name){case'smr1_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;break;case'smr2_outage':p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'dual_smr_outage':p["SMR-1"].max=0;p["SMR-1"].min=0;p["SMR-2"].max=0;p["SMR-2"].min=0;break;case'hck_surge':c["C-HCK"].nom=33600;c["C-HCK"].max=42000;break;case'global_surge':Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*1.1);x.max=Math.round(x.max*1.1)});break}return{p,c}}
+window.runCustomOpt=function(){
+  if(!Object.keys(cProds).length||!Object.keys(cCons).length)return alert('Add producers and consumers first.');
+  const usePurifiers=document.getElementById('cp-purifiers').checked;
+  const impCfg={max:+(document.getElementById('cp-imp-max').value)||15000, cost:+(document.getElementById('cp-imp-cost').value)||0.075};
+  const expCfg={max:+(document.getElementById('cp-exp-max').value)||5000, revenue:+(document.getElementById('cp-exp-rev').value)||0.025};
+  // Build custom HPC list and purifier config from UI
+  const customHpcIds = Object.entries(cCons).filter(([,c])=>c.purity==='STD').map(([id])=>id);
+  const purCfg = usePurifiers ? {
+    psaSplit: Math.min(90,Math.max(10,+(document.getElementById('cp-psa-split').value)||70))/100,
+    psaRec: Math.min(99,Math.max(50,+(document.getElementById('cp-psa-rec').value)||85))/100,
+    psaMax: +(document.getElementById('cp-psa-max').value)||60000,
+    memRec: Math.min(99,Math.max(50,+(document.getElementById('cp-mem-rec').value)||92))/100,
+    memMax: +(document.getElementById('cp-mem-max').value)||25000,
+  } : null;
+  const r = usePurifiers ? solveMeritOrder(cProds,cCons,impCfg,expCfg,customHpcIds,purCfg) : solveDirectSupply(cProds,cCons,impCfg,expCfg);
+  const pan=document.getElementById('customResult');pan.style.display='block';
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  UI RENDERING
-// ═══════════════════════════════════════════════════════════════════════════
-function renderMerit(){const order=Object.entries(NET.producers).sort((a,b)=>a[1].cost-b[1].cost);const cols={ByProduct:'var(--green)',SMR:'var(--accent)',Electrolyser:'var(--purple)'};document.getElementById('sidebarMerit').innerHTML=order.map(([pid,p],i)=>`<div style="display:flex;align-items:center;gap:5px;padding:2px 0"><span style="color:var(--text2);width:12px">${i+1}.</span><span style="width:6px;height:6px;border-radius:50%;background:${cols[p.type]||'#888'}"></span><span>${pid}</span><span style="margin-left:auto;color:var(--text2)">$${p.cost}</span></div>`).join('')}
+  // ── Compute insights ──
+  const totalProd=Object.values(r.prodFlows).reduce((s,v)=>s+v,0);
+  const totalDemand=Object.values(cCons).reduce((s,c)=>s+c.nom,0);
+  const totalSupplied=Object.values(r.consSupplied).reduce((s,v)=>s+v,0);
+  const totalUnmet=Object.values(r.consUnmet).reduce((s,v)=>s+v,0);
+  const activeProds=Object.values(r.prodOn).filter(v=>v).length;
+  const totalProds=Object.keys(cProds).length;
+  const curtailedCons=Object.entries(r.consUnmet).filter(([,v])=>v>0.1).map(([id])=>id);
+  const surplus=totalProd-totalDemand;
+  const sorted=Object.entries(cProds).sort((a,b)=>a[1].cost-b[1].cost);
+  const cheapest=sorted[0], costliest=sorted[sorted.length-1];
+  const avgCost=totalProd>0?(r.costs.production/totalProd):0;
+  const utilization=Object.entries(r.prodFlows).map(([id,f])=>({id,pct:cProds[id].max>0?(f/cProds[id].max*100):0,on:r.prodOn[id]}));
 
-window.runScenario = function(name,btn){
-  document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
-  const{p,c}=getScenarioInputs(name);const r=solveMeritOrder(p,c,NET.import,NET.export);renderOpt(r,p,c);
+  // ── Build result HTML (unified format matching Live Optimizer) ──
+  let h='';
+  const cb=r.costs;
+
+  // KPI row — same class as Live Optimizer
+  h+=`<div class="kpi-row">${[['Total Cost',cb.total,'color:var(--accent)'],['Production',cb.production,'color:var(--text)'],['Import',cb.import,cb.import>0?'color:var(--orange)':'color:var(--text2)'],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'color:var(--text2)']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${fmt(v)}<span class="kpi-unit">/h</span></div></div>`).join('')}</div>`;
+
+  // Cost breakdown bar — same as Live Optimizer
+  const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;
+  const segs=[{v:cb.production,c:'#008B8B',l:'Production'},{v:cb.import,c:'#2980B9',l:'Import'},{v:cb.startup,c:'#F39C12',l:'Startup'},{v:cb.unmet_penalty,c:'#E74C3C',l:'Penalty'}];
+  h+=`<div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Cost Breakdown</div><div class="cost-bar">${segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('')}</div><div class="legend">${segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${fmt(s.v)}</div>`).join('')}</div></div>`;
+
+  // Producer + Consumer tables — same structure as Live Optimizer
+  h+='<div class="grid-2">';
+  h+='<div class="panel"><div class="panel-title"><div class="dot" style="background:var(--green)"></div>Producer Dispatch</div><table><thead><tr><th>Unit</th><th>Status</th><th>Flow</th><th>Load</th></tr></thead><tbody>';
+  for(const[pid,flow]of Object.entries(r.prodFlows)){const p=cProds[pid];const on=r.prodOn[pid];const pct=p.max>0?(flow/p.max*100):0;const col=on?(pct>90?'var(--orange)':'var(--green)'):'var(--red)';h+=`<tr><td><b>${pid}</b><br><span style="font-size:10px;color:var(--text2)">${p.name||pid}</span></td><td><span class="tag ${on?'tag-on':'tag-off'}">${on?'ON':'OFF'}</span></td><td>${fmt(flow)}</td><td><div class="bar-c"><div class="bar-f" style="width:${pct}%;background:${col}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}
+  h+='</tbody></table></div>';
+  h+='<div class="panel"><div class="panel-title"><div class="dot" style="background:var(--accent)"></div>Consumer Supply</div><table><thead><tr><th>Unit</th><th>Supplied</th><th>Status</th><th>%</th></tr></thead><tbody>';
+  for(const[cid,sup]of Object.entries(r.consSupplied)){const c=cCons[cid];const u=r.consUnmet[cid]||0;const dem=c?c.nom:sup;const pct=dem>0?(sup/dem*100):100;h+=`<tr><td><b>${cid}</b><br><span style="font-size:10px;color:var(--text2)">${c?.name||cid}</span></td><td>${fmt(sup)}</td><td>${u>0.1?`<span class="tag tag-warn">-${fmt(u)}</span>`:'<span class="tag tag-on">OK</span>'}</td><td><div class="bar-c"><div class="bar-f" style="width:${Math.min(pct,100)}%;background:${u>0?'var(--orange)':'var(--accent)'}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}
+  h+='</tbody></table></div></div>';
+
+  // Import/Export boxes
+  if(r.importFlow>0||r.exportFlow>0){
+    h+='<div class="grid-2">';
+    if(r.importFlow>0) h+=`<div class="panel" style="border-left:3px solid var(--orange)"><div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Pipeline Import</div><div style="font-size:12px">${fmt(r.importFlow)} Nm\u00B3/h @ $${(+(document.getElementById('cp-imp-cost')?.value)||0.075).toFixed(3)}/Nm\u00B3 = <b>$${fmt(r.costs.import)}/h</b></div></div>`;
+    if(r.exportFlow>0) h+=`<div class="panel" style="border-left:3px solid var(--blue)"><div class="panel-title"><div class="dot" style="background:var(--blue)"></div>Export Header</div><div style="font-size:12px">${fmt(r.exportFlow)} Nm\u00B3/h @ $${(+(document.getElementById('cp-exp-rev')?.value)||0.025).toFixed(3)}/Nm\u00B3 = <b>$${fmt(r.costs.export_revenue)}/h revenue</b></div></div>`;
+    h+='</div>';
+  }
+
+  // ── SMART INSIGHTS ──
+  h+=`<div style="background:linear-gradient(135deg,#F0FAFA,#FAF8F5);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:0">`;
+  h+=`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px">\u26A1 Optimization Insights</div>`;
+
+  let insights=[];
+
+  // Dispatch strategy
+  if(cheapest && costliest && cheapest[0]!==costliest[0]){
+    insights.push(`<b>Merit order:</b> ${cheapest[0]} ($${cheapest[1].cost}/Nm\u00B3) dispatched first as cheapest source. ${activeProds}/${totalProds} producers active.`);
+  }
+
+  // Supply-demand balance
+  if(surplus>0 && r.importFlow===0){
+    insights.push(`<b>Supply surplus:</b> ${fmt(surplus)} Nm\u00B3/h excess production. ${r.exportFlow>0?fmt(r.exportFlow)+' exported for $'+fmt(r.costs.export_revenue)+'/h revenue.':'No export configured.'} Consider reducing costly producers.`);
+  } else if(r.importFlow>0 && !usePurifiers){
+    insights.push(`<b>Supply deficit:</b> Internal production (${fmt(totalProd)}) falls short of demand (${fmt(totalDemand)}) by ${fmt(r.importFlow)} Nm\u00B3/h. Pipeline import fills the gap at $0.075/Nm\u00B3 \u2014 ${((r.costs.import/r.costs.total)*100).toFixed(0)}% of total cost.`);
+  } else if(r.importFlow>0 && usePurifiers){
+    insights.push(`<b>Purifier losses drive import:</b> Gross production (${fmt(totalProd)}) exceeds demand (${fmt(totalDemand)}), but PSA/MEM recovery losses reduce effective supply. ${fmt(r.importFlow)} Nm\u00B3/h imported to compensate. Consider disabling purifiers if not needed.`);
+  }
+
+  // Curtailment
+  if(curtailedCons.length>0){
+    insights.push(`<b style="color:var(--red)">Curtailment:</b> ${curtailedCons.join(', ')} receiving less than nominal demand. Total unmet: ${fmt(totalUnmet)} Nm\u00B3/h. Penalty cost: $${fmt(r.costs.unmet_penalty)}/h.`);
+  } else {
+    insights.push(`<b style="color:var(--green)">All consumers satisfied</b> \u2014 zero curtailment across all ${Object.keys(cCons).length} consumers.`);
+  }
+
+  // Unit economics
+  insights.push(`<b>Unit economics:</b> Avg. production cost $${avgCost.toFixed(4)}/Nm\u00B3. Blended cost (incl. import, penalties): $${(r.costs.total/Math.max(totalSupplied,1)).toFixed(4)}/Nm\u00B3.`);
+
+  // Utilization insight
+  const overloaded=utilization.filter(u=>u.on&&u.pct>90);
+  const underloaded=utilization.filter(u=>u.on&&u.pct<50);
+  if(overloaded.length>0) insights.push(`<b style="color:var(--orange)">High utilization:</b> ${overloaded.map(u=>u.id+' ('+u.pct.toFixed(0)+'%)').join(', ')} running near capacity \u2014 limited headroom for demand spikes.`);
+  if(underloaded.length>0) insights.push(`<b>Low utilization:</b> ${underloaded.map(u=>u.id+' ('+u.pct.toFixed(0)+'%)').join(', ')} running below 50% \u2014 bound by minimum stable rate constraint.`);
+
+  // Export insight
+  if(r.exportFlow>0 && r.costs.export_revenue>0){
+    insights.push(`<b>Export revenue:</b> $${fmt(r.costs.export_revenue)}/h from ${fmt(r.exportFlow)} Nm\u00B3/h surplus. Net cost reduced by ${((r.costs.export_revenue/(r.costs.production+r.costs.import))*100).toFixed(1)}%.`);
+  }
+
+  h+=insights.map(i=>`<div style="font-size:12px;line-height:1.6;padding:4px 0;border-bottom:1px solid var(--border)">${i}</div>`).join('');
+  h+=`</div>`;
+
+  document.getElementById('customResultBody').innerHTML=h;
+  document.getElementById('csvExportBtn').style.display='inline-block';
+  window._lastCustomResult=r;
+  buildCustomDiagram(r);
+  updateContextBar();
 };
 
-function renderOpt(r,prods,cons){
-  const cb=r.costs;const f=v=>v.toLocaleString(undefined,{maximumFractionDigits:0});
-  document.getElementById('kpiRow').innerHTML=[['Total Cost',cb.total,''],['Production',cb.production,''],['Import',cb.import,''],['Export Rev.',cb.export_revenue,'color:var(--green)'],['Penalty',cb.unmet_penalty,cb.unmet_penalty>0?'color:var(--red)':'']].map(([l,v,s])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-value" style="${s}">$${f(v)}<span class="kpi-unit">/h</span></div></div>`).join('');
-  const tot=cb.production+cb.import+cb.startup+cb.unmet_penalty||1;const segs=[{v:cb.production,c:'#0077b6',l:'Production'},{v:cb.import,c:'#00b4d8',l:'Import'},{v:cb.startup,c:'#ffd166',l:'Startup'},{v:cb.unmet_penalty,c:'#ef476f',l:'Penalty'}];
-  document.getElementById('costBar').innerHTML=segs.filter(s=>s.v>0).map(s=>`<div style="width:${(s.v/tot*100).toFixed(1)}%;background:${s.c}">${(s.v/tot*100).toFixed(0)}%</div>`).join('');
-  document.getElementById('costLegend').innerHTML=segs.map(s=>`<div class="legend-i"><div class="legend-d" style="background:${s.c}"></div>${s.l}: $${f(s.v)}</div>`).join('');
-  document.getElementById('prodTbl').innerHTML=Object.entries(r.prodFlows).map(([pid,flow])=>{const p=prods[pid];const on=r.prodOn[pid];const pct=p.max>0?(flow/p.max*100):0;const col=on?(pct>90?'var(--orange)':'var(--green)'):'var(--red)';return`<tr><td><b>${pid}</b><br><span style="font-size:10px;color:var(--text2)">${p.name}</span></td><td><span class="tag ${on?'tag-on':'tag-off'}">${on?'ON':'OFF'}</span></td><td>${f(flow)}</td><td><div class="bar-c"><div class="bar-f" style="width:${pct}%;background:${col}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
-  document.getElementById('consTbl').innerHTML=Object.entries(r.consSupplied).map(([cid,sup])=>{const c=cons[cid];const unmet=r.consUnmet[cid]||0;const pct=c.nom>0?(sup/c.nom*100):100;return`<tr><td><b>${cid}</b><br><span style="font-size:10px;color:var(--text2)">${c.name}</span></td><td>${f(sup)}</td><td>${unmet>0.1?`<span class="tag tag-warn">-${f(unmet)}</span>`:'<span class="tag tag-on">OK</span>'}</td><td><div class="bar-c"><div class="bar-f" style="width:${Math.min(pct,100)}%;background:${unmet>0?'var(--orange)':'var(--accent)'}"></div></div><span style="font-size:10px;color:var(--text2)">${pct.toFixed(0)}%</span></td></tr>`}).join('');
-  let pi='';for(const[uid,feed]of Object.entries(r.purFeeds)){const u=NET.purifiers[uid];const pct=u?(feed/u.max*100):0;pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">${uid}</span><span>${f(feed)} Nm³/h (${pct.toFixed(0)}%)</span></div>`}
-  pi+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
-  pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Import</span><span>${f(r.importFlow)} Nm³/h</span></div>`;
-  pi+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Export</span><span>${f(r.exportFlow)} Nm³/h</span></div>`;
-  document.getElementById('purInfo').innerHTML=pi;
-  let co2=0;Object.entries(r.prodFlows).forEach(([pid,flow])=>{if(r.prodOn[pid]&&prods[pid].co2)co2+=flow*prods[pid].co2});
-  let ci=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:600"><span>Total CO₂</span><span>${f(co2)} kg/h</span></div>`;
-  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Annual est.</span><span>${f(co2*8760/1000)} t/yr</span></div>`;
-  ci+=`<div style="border-top:1px solid var(--border);margin:6px 0"></div>`;
-  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Prod. cost/Nm³</span><span>$${(cb.production/(Object.values(r.prodFlows).reduce((s,v)=>s+v,0)||1)).toFixed(4)}</span></div>`;
-  ci+=`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Avg. total cost</span><span>$${(cb.total/(Object.values(r.consSupplied).reduce((s,v)=>s+v,0)||1)).toFixed(4)}/Nm³</span></div>`;
-  document.getElementById('co2Info').innerHTML=ci;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CHATBOT
+// ═══════════════════════════════════════════════════════════════════════════
+// ── API Configuration ──
+// Local mode: calls Groq directly. Deployed mode: uses Netlify Function proxy.
+// IMPORTANT: Set your Groq API key here for local testing only. Clear before deploying.
+const GROQ_DIRECT_KEY="";
+const GROQ_DIRECT_URL="https://api.groq.com/openai/v1/chat/completions";
+const CHAT_API="/api/chat";
+const USE_DIRECT_API=location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:';
+
+let chatHistory=[],isGenerating=false,modelLoaded=false;
+let currentScenarioName='base';
+
+// ── Material balance helper ──
+function buildMaterialBalance(r){
+  const totalProd=Object.values(r.prodFlows).reduce((s,v)=>s+v,0);
+  const totalServed=Object.values(r.consSupplied).reduce((s,v)=>s+v,0);
+  const totalUnmet=Object.values(r.consUnmet).reduce((s,v)=>s+v,0);
+  const totalLoss=(r.psaLoss||0)+(r.memLoss||0);
+  const totalIn=totalProd+r.importFlow;
+  const totalOut=totalServed+totalLoss+r.exportFlow;
+  return {totalProd,totalServed,totalUnmet,totalLoss,totalIn,totalOut,balanced:Math.abs(totalIn-totalOut)<1};
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  CUSTOM BUILDER
-// ═══════════════════════════════════════════════════════════════════════════
-let cProds={},cCons={};
-window.addCustomProducer=function(){const n=document.getElementById('cp-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cProds[id]={name:n,type:document.getElementById('cp-type').value,min:+document.getElementById('cp-min').value,max:+document.getElementById('cp-max').value,cost:+document.getElementById('cp-cost').value,startup:+document.getElementById('cp-startup').value,co2:document.getElementById('cp-type').value==='SMR'?0.27:0.02};document.getElementById('cp-name').value='';renderCL()};
-window.addCustomConsumer=function(){const n=document.getElementById('cc-name').value.trim();if(!n)return alert('Enter a name');const id=n.replace(/\s+/g,'-').toUpperCase();cCons[id]={name:n,nom:+document.getElementById('cc-demand').value,max:Math.round(+document.getElementById('cc-demand').value*1.3),pri:+document.getElementById('cc-pri').value,curt:document.getElementById('cc-curt').value==='true',pen:+document.getElementById('cc-pen').value};document.getElementById('cc-name').value='';renderCL()};
-window.removeProducer=function(id){delete cProds[id];renderCL()};
-window.removeConsumer=function(id){delete cCons[id];renderCL()};
-function renderCL(){const pl=Object.entries(cProds);document.getElementById('cpCount').textContent=pl.length;document.getElementById('cpList').innerHTML=pl.length?pl.map(([id,p])=>`<div class="asset-item"><span><b>${id}</b> ${p.type} | ${p.min.toLocaleString()}-${p.max.toLocaleString()} | $${p.cost}</span><span class="remove" onclick="removeProducer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:11px;padding:6px">None yet.</div>';const cl=Object.entries(cCons);document.getElementById('ccCount').textContent=cl.length;document.getElementById('ccList').innerHTML=cl.length?cl.map(([id,c])=>`<div class="asset-item"><span><b>${id}</b> ${c.nom.toLocaleString()} Nm³/h P${c.pri}</span><span class="remove" onclick="removeConsumer('${id}')">&times;</span></div>`).join(''):'<div style="color:var(--text2);font-size:11px;padding:6px">None yet.</div>'}
-window.resetCustom=function(){cProds={};cCons={};document.getElementById('customResult').style.display='none';renderCL()};
-window.loadSample=function(){cProds={"SMR-A":{name:"SMR-A",type:"SMR",min:5000,max:40000,cost:0.035,startup:12000,co2:0.27},"ELEC-A":{name:"ELEC-A",type:"Electrolyser",min:1000,max:10000,cost:0.060,startup:300,co2:0.02},"BYP-A":{name:"BYP-A",type:"ByProduct",min:2000,max:8000,cost:0.009,startup:0,co2:0}};cCons={"HDS-A":{name:"HDS Unit A",nom:12000,max:16000,pri:1,curt:false,pen:0.20},"HCK-A":{name:"Hydrocracker A",nom:20000,max:28000,pri:1,curt:false,pen:0.25},"HTR-A":{name:"Hydrotreater A",nom:6000,max:8000,pri:2,curt:true,pen:0.10},"NHT-A":{name:"Naphtha HT A",nom:4000,max:6000,pri:3,curt:true,pen:0.08}};renderCL()};
-window.runCustomOpt=function(){if(!Object.keys(cProds).length||!Object.keys(cCons).length)return alert('Add producers and consumers first.');const r=solveMeritOrder(cProds,cCons,{max:15000,cost:0.075},{max:5000,revenue:0.025});const pan=document.getElementById('customResult');pan.style.display='block';const f=v=>v.toLocaleString(undefined,{maximumFractionDigits:0});let h=`<div style="font-size:13px;margin-bottom:8px"><b>Total: $${f(r.costs.total)}/h</b> | Prod: $${f(r.costs.production)} | Imp: $${f(r.costs.import)} | Pen: $${f(r.costs.unmet_penalty)}</div>`;h+='<table><thead><tr><th>Producer</th><th>Status</th><th>Flow</th></tr></thead><tbody>';for(const[pid,flow]of Object.entries(r.prodFlows))h+=`<tr><td>${pid}</td><td><span class="tag ${r.prodOn[pid]?'tag-on':'tag-off'}">${r.prodOn[pid]?'ON':'OFF'}</span></td><td>${f(flow)}</td></tr>`;h+='</tbody></table><table style="margin-top:8px"><thead><tr><th>Consumer</th><th>Supplied</th><th>Unmet</th></tr></thead><tbody>';for(const[cid,sup]of Object.entries(r.consSupplied)){const u=r.consUnmet[cid]||0;h+=`<tr><td>${cid}</td><td>${f(sup)}</td><td style="color:${u>0?'var(--red)':'var(--green)'}">${u>0?'-'+f(u):'OK'}</td></tr>`}h+='</tbody></table>';if(r.importFlow>0)h+=`<div style="margin-top:6px;font-size:11px;color:var(--text2)">Import: ${f(r.importFlow)} Nm³/h</div>`;document.getElementById('customResultBody').innerHTML=h};
+// ── Context Snapshot: captures live optimizer state for the tutor ──
+function describeResult(r, label, consumerDefs, shortLabel){
+  let s=`\n\n${label}\n`;
+  const mb=buildMaterialBalance(r);
+  const totalPurProduct=(r.psaOut||0)+(r.memOut||0);
+  const totalDemand=mb.totalServed+mb.totalUnmet;
+  const curtailed=Object.entries(r.consUnmet).filter(([,v])=>v>0.1);
+  const tag=shortLabel||'this network'; // used to label answers
+
+  // ── RAW DATA ──
+  s+=`PRODUCERS: ${Object.entries(r.prodFlows).map(([id,f])=>`${id}=${fmt(Math.round(f))}(${r.prodOn[id]?'ON':'OFF'})`).join(', ')} | Total=${fmt(mb.totalProd)}\n`;
+  s+=`PSA: ${fmt(r.purFeeds["PSA-1"])} in -> ${fmt(r.psaOut||0)} product + ${fmt(r.psaLoss||0)} loss\n`;
+  s+=`MEM: ${fmt(r.purFeeds["MEM-1"])} in -> ${fmt(r.memOut||0)} product + ${fmt(r.memLoss||0)} loss\n`;
+  s+=`CONSUMERS: ${Object.entries(r.consSupplied).map(([id,sup])=>{const u=r.consUnmet[id]||0;return `${id}: demand ${fmt(Math.round(sup+(u||0)))}, served ${fmt(Math.round(sup))}${u>0.1?', SHORT '+fmt(Math.round(u)):''}`}).join(' | ')}\n`;
+  s+=`IMPORT: ${fmt(r.importFlow)} | EXPORT: ${fmt(r.exportFlow)}\n`;
+  if(r.crossTier&&Object.keys(r.crossTier).length>0) s+=`CROSS-TIER: ${Object.entries(r.crossTier).map(([id,v])=>`${id} got ${fmt(Math.round(v))} from PSA surplus`).join(', ')}\n`;
+  if(r.importAlloc&&Object.keys(r.importAlloc).length>0) s+=`IMPORT ALLOCATION: ${Object.entries(r.importAlloc).map(([id,v])=>`${id} got ${fmt(Math.round(v))}`).join(', ')}\n`;
+  s+=`COSTS: Total=$${fmt(r.costs.total)}/h | Prod=$${fmt(r.costs.production)} | Import=$${fmt(r.costs.import)} | Export Rev=$${fmt(r.costs.export_revenue)} | Penalty=$${fmt(r.costs.unmet_penalty)}\n`;
+
+  // ── PRE-WRITTEN ANSWERS (use these verbatim when user asks) ──
+  s+=`\n== READY-MADE ANSWERS for ${tag} — Always prefix with "In ${tag}:" when using these numbers. ==\n`;
+
+  // Material balance answer
+  s+=`\nQ: "Material balance" or "does balance close?"\n`;
+  s+=`A: In ${tag}: Total IN = ${fmt(mb.totalProd)} (production) + ${fmt(r.importFlow)} (import) = ${fmt(mb.totalIn)} Nm3/h. Total OUT = ${fmt(mb.totalServed)} (consumers served) + ${fmt(mb.totalLoss)} (purifier losses) + ${fmt(r.exportFlow)} (export) = ${fmt(mb.totalOut)} Nm3/h. ${mb.balanced?'The balance closes: '+fmt(mb.totalIn)+' in = '+fmt(mb.totalOut)+' out. Every Nm3/h is accounted for.':'There is a discrepancy of '+fmt(Math.abs(mb.totalIn-mb.totalOut))+' Nm3/h.'}\n`;
+
+  // Why import answer
+  if(r.importFlow>0){
+    const availableSupply=totalPurProduct;
+    s+=`\nQ: "Why import?" or "Why does the network import ${fmt(r.importFlow)}?"\n`;
+    s+=`A: In ${tag}: Producers generate ${fmt(mb.totalProd)} Nm3/h, but after purification, only ${fmt(totalPurProduct)} Nm3/h of usable product reaches consumers. Total demand is ${fmt(totalDemand)} Nm3/h. The gap is ${fmt(totalDemand-totalPurProduct)} Nm3/h. Import of ${fmt(r.importFlow)} Nm3/h fills as much of this gap as possible.${mb.totalUnmet>0?' Even with import, '+fmt(mb.totalUnmet)+' Nm3/h remains unmet because import capacity was exhausted.':''}\n`;
+  }
+
+  // Why curtailed answer
+  if(curtailed.length>0){
+    s+=`\nQ: "Why is [consumer] curtailed?" or "Why is [consumer] short?"\n`;
+    curtailed.forEach(([id,unmet])=>{
+      const supplied=r.consSupplied[id]||0;
+      const demand=supplied+unmet;
+      const fromImport=r.importAlloc?.[id]||0;
+      const fromCross=r.crossTier?.[id]||0;
+      const fromPurifier=supplied-fromImport-fromCross;
+      let explanation=`In ${tag}: ${id} has demand of ${fmt(demand)} Nm3/h but only receives ${fmt(Math.round(supplied))} Nm3/h`;
+      if(fromPurifier>0) explanation+=` (${fmt(Math.round(fromPurifier))} from purifier`;
+      if(fromCross>0) explanation+=`, ${fmt(Math.round(fromCross))} from PSA cross-tier`;
+      if(fromImport>0) explanation+=`, ${fmt(Math.round(fromImport))} from import`;
+      if(fromPurifier>0||fromCross>0||fromImport>0) explanation+=')';
+      explanation+=`. It is short by ${fmt(Math.round(unmet))} Nm3/h because `;
+      if(r.importFlow>0) explanation+=`the import pipeline (max ${fmt(r.importFlow)} Nm3/h) was fully consumed by higher-priority consumers before ${id} could be fully served. ${id} is a lower-priority consumer, so it gets served last.`;
+      else explanation+=`total available supply (purifier product + import) is insufficient to meet all demand.`;
+      s+=`A (for ${id}): ${explanation}\n`;
+    });
+  }
+
+  // Why export answer
+  if(r.exportFlow>0){
+    s+=`\nQ: "Why export?" or "Why is there export when demand exists?"\n`;
+    s+=`A: In ${tag}: Export of ${fmt(r.exportFlow)} Nm3/h occurs because the MEM purifier produces surplus hydrogen not needed by standard-purity consumers. Rather than wasting it, the network sells this excess, generating $${fmt(r.costs.export_revenue)}/h in revenue.\n`;
+  }
+
+  // Cross-tier answer
+  if(r.crossTier&&Object.keys(r.crossTier).length>0){
+    const crossTotal=Object.values(r.crossTier).reduce((s,v)=>s+v,0);
+    s+=`\nQ: "What is cross-tier flow?" or "Explain PSA to MEM flow"\n`;
+    s+=`A: Cross-tier flow means PSA surplus hydrogen is "downgraded" to serve standard-purity consumers (PSA's 99.9% purity exceeds the 98% they require). In ${tag}: the cross-tier surplus is ${fmt(Math.round(crossTotal))} Nm3/h flowing from PSA to STD consumers. Without this cross-tier flow, import would need to be ${fmt(Math.round(crossTotal))} Nm3/h higher.\n`;
+  }
+
+  return s;
+}
+
+function buildContextSnapshot(){
+  const r=currentResult;
+  const cr=window._lastCustomResult;
+  let ctx='';
+
+  // When custom network exists, make it the PRIMARY context
+  // The user saying "my network" always means custom
+  if(cr){
+    const usedPur=document.getElementById('cp-purifiers')?.checked;
+    ctx+=describeResult(cr, `THE USER'S CUSTOM NETWORK (this is what "my network" refers to${usedPur?', has PSA/MEM purifiers':' direct supply'})`, cCons, 'your custom network');
+  }
+
+  // Reference network is SECONDARY context
+  if(r){
+    const labels={base:'Base Case',smr1_outage:'SMR-1 Outage',smr2_outage:'SMR-2 Outage',dual_smr_outage:'Dual SMR Outage',hck_surge:'Hydrocracker +20%',global_surge:'Global Demand +10%'};
+    ctx+=describeResult(r, `REFERENCE OPTIMIZER — "${labels[currentScenarioName]||currentScenarioName}" scenario (this is what "the optimizer" or "the scenario" refers to)`, NET.consumers, 'the reference '+labels[currentScenarioName]+' scenario');
+  }
+
+  // Build ID mapping so LLM can auto-detect which dataset a question refers to
+  const refIds=r?Object.keys(r.prodFlows).concat(Object.keys(r.consSupplied)).concat(Object.keys(NET.consumers)).join(', '):'';
+  const custIds=cr?Object.keys(cr.prodFlows).concat(Object.keys(cr.consSupplied)).join(', '):'';
+
+  if(ctx) ctx+=`\n\nCONTEXT DETECTION — Use these ID mappings to determine which dataset a question refers to:
+Reference network IDs: ${refIds||'none'}
+Custom network IDs: ${custIds||'none'}
+If the user mentions any ID from the reference list (like SMR-1, C-HDS1, C-HCK), answer using reference data.
+If the user mentions any ID from the custom list (like ${custIds||'none'}), answer using custom network data.
+If the user mentions a scenario name (Base Case, SMR-1 Outage, etc.), answer using reference data.
+If the question is purely conceptual (no IDs, no scenario names), explain the concept generally, then illustrate with the custom network data if available (since that is what the user built and cares about most).
+If genuinely ambiguous, briefly answer for both datasets with clear labels.
+
+HOW TO ANSWER:
+- When citing numbers, ALWAYS prefix with "In your custom network:" or "In the reference scenario:" so the user knows which dataset the numbers come from.
+- For conceptual questions: explain the concept first (2-3 sentences), then add a data example with clear attribution.
+- Do NOT recalculate — use the pre-verified ready-made answers above.
+- For general engineering questions not about either dataset, reason freely.
+- Keep answers concise and clear.`;
+  return ctx;
+}
+
+// ── Smart Suggestions based on current state ──
+function getContextSuggestions(){
+  const cr=window._lastCustomResult;
+  const r=currentResult;
+
+  // If custom network exists, prioritize those suggestions
+  if(cr){
+    const suggestions=[];
+    suggestions.push("Explain my custom network results");
+    if(cr.importFlow>0) suggestions.push(`Why does my network import ${fmt(cr.importFlow)} Nm\u00B3/h?`);
+    if(cr.exportFlow>0) suggestions.push(`Why is ${fmt(cr.exportFlow)} Nm\u00B3/h being exported?`);
+    const cCurt=Object.entries(cr.consUnmet).filter(([,v])=>v>0.1);
+    if(cCurt.length>0) suggestions.push(`Why is ${cCurt[0][0]} curtailed by ${fmt(cCurt[0][1])}?`);
+    if(cr.crossTier && Object.keys(cr.crossTier).length>0) suggestions.push("Explain the cross-tier PSA to MEM flow");
+    suggestions.push("Walk me through the material balance of my network");
+    suggestions.push("How can I reduce cost in my custom network?");
+    if(cr.costs.unmet_penalty===0) suggestions.push("What if I increase demand \u2014 when would curtailment start?");
+    return suggestions.slice(0,4);
+  }
+
+  // Fallback to reference network suggestions
+  if(!r) return ["What is MIP and why use it?","Explain the merit order concept","How do I build my own H\u2082 optimizer?","What happens in an SMR outage?"];
+
+  const suggestions=[];
+  if(currentScenarioName==='base') suggestions.push("Why does the base case need import despite surplus capacity?");
+  if(currentScenarioName.includes('outage')) suggestions.push("How could the network handle this outage better?");
+  if(currentScenarioName==='hck_surge') suggestions.push("What is the cost impact of the hydrocracker surge?");
+  if(currentScenarioName==='global_surge') suggestions.push("Which consumers are most at risk?");
+  if(r.importFlow>0) suggestions.push(`Why is ${fmt(r.importFlow)} Nm\u00B3/h being imported?`);
+  if(r.exportFlow>0) suggestions.push(`Why export ${fmt(r.exportFlow)} while demand exists?`);
+  if(r.costs.unmet_penalty>0) suggestions.push("Which consumers are curtailed and why?");
+  else suggestions.push("How much more demand before curtailment starts?");
+  suggestions.push("Walk me through the material balance");
+  suggestions.push("How would adding a producer change economics?");
+  return suggestions.slice(0,4);
+}
+
+async function initChat(){
+  try{
+    document.getElementById('learnDot').style.display='inline-block';
+    setStatus('loading','Connecting...');
+    const modeLabel=USE_DIRECT_API?'Local (Direct Groq)':'Deployed (Netlify Proxy)';
+    document.getElementById('chatProgressText').textContent='Connecting to AI... ('+modeLabel+')';
+
+    if(USE_DIRECT_API){
+      // Direct Groq API — test with a minimal call
+      const res=await fetch(GROQ_DIRECT_URL,{method:"POST",headers:{"Authorization":"Bearer "+GROQ_DIRECT_KEY,"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.1-8b-instant",messages:[{role:"user",content:"ping"}],max_tokens:5})});
+      if(!res.ok) throw new Error('Groq API: '+res.status);
+    } else {
+      const res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:"ping"}]})});
+      if(!res.ok) throw new Error('API: '+res.status);
+    }
+    modelLoaded=true;
+    document.getElementById('chatProgress').style.display='none';
+    document.getElementById('chatSend').disabled=false;
+    setStatus('ready','Context-Aware');
+    const dot=document.getElementById('learnDot');dot.style.background='var(--green)';dot.style.animation='none';
+  }catch(err){
+    console.warn('Chat init:',err);
+    modelLoaded=true;
+    document.getElementById('chatProgress').style.display='none';
+    document.getElementById('chatSend').disabled=false;
+    setStatus('ready','Context-Aware');
+    const dot=document.getElementById('learnDot');dot.style.background='var(--green)';dot.style.animation='none';
+  }
+}
+
+function setStatus(t,txt){const el=document.getElementById('chatStatus');el.className='chat-status '+t;el.textContent=txt}
+function addMsg(role,content){const div=document.createElement('div');div.className='chat-msg '+role;div.innerHTML=fmtMsg(content);document.getElementById('chatMessages').appendChild(div);div.scrollIntoView({behavior:'smooth'});return div}
+function fmtMsg(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/`(.*?)`/g,'<code>$1</code>').replace(/\n/g,'<br>')}
+
+async function sendChat(){
+  if(isGenerating)return;
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  document.getElementById('chatSuggestions').style.display='none';
+  addMsg('user',text);
+
+  // Build context-aware system message with live optimizer data
+  const contextSnap=buildContextSnapshot();
+  const systemMsg={role:"system",content:"You are the OptiFLO AI Tutor. You have access to the user's LIVE optimizer results and can reference specific numbers, flows, costs, and scenarios."+contextSnap};
+
+  // Send system + history to API (system prompt injected client-side with live data)
+  const apiMessages=[systemMsg, ...chatHistory.slice(-10), {role:"user",content:text}];
+  chatHistory.push({role:"user",content:text});
+
+  isGenerating=true;
+  document.getElementById('chatSend').disabled=true;
+  setStatus('loading','Analyzing...');
+  const aDiv=addMsg('assistant','<span class="typing-dots">Analyzing your results</span>');
+
+  try{
+    let res;
+    if(USE_DIRECT_API){
+      // Direct Groq API call (local testing)
+      res=await fetch(GROQ_DIRECT_URL,{method:"POST",headers:{"Authorization":"Bearer "+GROQ_DIRECT_KEY,"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.1-8b-instant",messages:apiMessages,temperature:0.7,max_tokens:500,stream:true})});
+    } else {
+      // Netlify Function proxy (deployed)
+      res=await fetch(CHAT_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:apiMessages})});
+    }
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`API error ${res.status}`)}
+    const reader=res.body.getReader();const dec=new TextDecoder();let resp='',buf='';
+    while(true){const{done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);const delta=p.choices?.[0]?.delta?.content||'';if(delta){resp+=delta;aDiv.innerHTML=fmtMsg(resp);aDiv.scrollIntoView({behavior:'smooth'})}}catch(e){}}}
+    if(!resp)resp='Could not generate a response. Please try again.';
+    chatHistory.push({role:"assistant",content:resp});
+    if(chatHistory.length>13)chatHistory=chatHistory.slice(-12);
+  }catch(err){aDiv.innerHTML=`<span style="color:var(--red)">Error: ${err.message}. Please try again.</span>`}
+  isGenerating=false;
+  document.getElementById('chatSend').disabled=false;
+  setStatus('ready','Context-Aware');
+  showSugg();
+}
+
+function showSugg(){
+  const el=document.getElementById('chatSuggestions');
+  const s=getContextSuggestions();
+  el.innerHTML=s.map(t=>`<button class="chat-suggest-btn" onclick="askSuggestion(this)">${t}</button>`).join('');
+  el.style.display='flex';
+}
+function askSuggestion(b){document.getElementById('chatInput').value=b.textContent;sendChat()}
+window.sendChat=sendChat;window.askSuggestion=askSuggestion;
+let chatInit=false;function ensureChat(){if(!chatInit){chatInit=true;initChat()}}
+
+// ── Live context bar update — called whenever state changes ──
+window.updateContextBar=function(){
+  const refEl=document.getElementById('chatCtxRefText');
+  const custRow=document.getElementById('chatCtxCust');
+  const custEl=document.getElementById('chatCtxCustText');
+  if(!refEl) return;
+  const labels={base:'Base Case',smr1_outage:'SMR-1 Outage',smr2_outage:'SMR-2 Outage',dual_smr_outage:'Dual SMR Outage',hck_surge:'HCK +20%',global_surge:'Global +10%'};
+  const cr=window._lastCustomResult;
+
+  // Reference row — always shown
+  if(currentResult){
+    const sc=labels[currentScenarioName]||currentScenarioName;
+    const cost='$'+fmt(currentResult.costs.total)+'/h';
+    const imp=currentResult.importFlow>0?' | Imp:'+fmt(currentResult.importFlow):'';
+    const exp=currentResult.exportFlow>0?' | Exp:'+fmt(currentResult.exportFlow):'';
+    const curt=currentResult.costs.unmet_penalty>0?' | Curtailed':'';
+    refEl.textContent=`Optimizer: ${sc} \u2014 ${cost}${imp}${exp}${curt}`;
+  }
+
+  // Custom row — shown when custom network exists
+  if(cr){
+    custRow.style.display='flex';
+    const prods=Object.keys(cr.prodFlows).length;
+    const cons=Object.keys(cr.consSupplied).length;
+    const cost='$'+fmt(cr.costs.total)+'/h';
+    const imp=cr.importFlow>0?' | Imp:'+fmt(cr.importFlow):'';
+    const curtList=Object.entries(cr.consUnmet).filter(([,v])=>v>0.1).map(([id])=>id);
+    const curt=curtList.length>0?' | Curtailed ['+curtList.join(',')+']':'';
+    custEl.textContent=`Your Network (${prods}P/${cons}C) \u2014 ${cost}${imp}${curt}`;
+  } else {
+    custRow.style.display='none';
+  }
+}
+
+window.openChat=function(){
+  document.getElementById('chatOverlay').classList.add('open');
+  ensureChat();
+  window.updateContextBar();
+  showSugg();
+  document.getElementById('chatInput').focus();
+};
+// Keep context bar live — refresh every 2 seconds when chat is visible
+setInterval(()=>{
+  const ov=document.getElementById('chatOverlay');
+  if(ov && (ov.classList.contains('open')||ov.classList.contains('minimized'))) window.updateContextBar();
+},2000);
+window.closeChat=function(){
+  const ov=document.getElementById('chatOverlay');
+  ov.classList.remove('open');
+  ov.classList.remove('minimized');
+  // Chat history (chatHistory array + DOM messages) is preserved — reopening restores everything
+};
+window.minimizeChat=function(){
+  const ov=document.getElementById('chatOverlay');
+  ov.classList.remove('open');
+  ov.classList.add('minimized');
+};
+window.restoreChat=function(){
+  const ov=document.getElementById('chatOverlay');
+  ov.classList.remove('minimized');
+  ov.classList.add('open');
+  updateContextBar();
+  showSugg();
+  document.getElementById('chatInput').focus();
+  const msgs=document.getElementById('chatMessages');
+  msgs.scrollTop=msgs.scrollHeight;
+};
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  FEEDBACK MODAL
+// FEEDBACK
 // ═══════════════════════════════════════════════════════════════════════════
 window.openFeedback=function(){document.getElementById('fbOverlay').classList.add('open')};
 window.closeFeedback=function(){document.getElementById('fbOverlay').classList.remove('open')};
-window.handleFeedback=function(e){
-  e.preventDefault();
-  const d={name:document.getElementById('fb-name').value,email:document.getElementById('fb-email').value,org:document.getElementById('fb-org').value,role:document.getElementById('fb-role').value,useful:document.getElementById('fb-useful').value,message:document.getElementById('fb-msg').value,interest:document.getElementById('fb-interest').checked};
-  const body=`Name: ${d.name}%0AEmail: ${d.email}%0AOrg: ${d.org}%0ARole: ${d.role}%0AMost Useful: ${d.useful}%0AInterested in training: ${d.interest}%0A%0AMessage: ${d.message}`;
-  const mailto=`mailto:sharique@optifloai.com?subject=OptiFLO%20AI%20Feedback%20from%20${encodeURIComponent(d.name)}&body=${body}`;
-  fetch('https://formspree.io/f/xpqykrwb',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(r=>{if(r.ok){document.getElementById('feedbackForm').style.display='none';document.getElementById('fbSuccess').style.display='block'}else{window.location.href=mailto}}).catch(()=>{window.location.href=mailto});
-  return false;
+window.handleFeedback=function(e){e.preventDefault();const d={name:document.getElementById('fb-name').value,email:document.getElementById('fb-email').value,org:document.getElementById('fb-org').value,role:document.getElementById('fb-role').value,useful:document.getElementById('fb-useful').value,message:document.getElementById('fb-msg').value,interest:document.getElementById('fb-interest').checked};const body=`Name: ${d.name}%0AEmail: ${d.email}%0AOrg: ${d.org}%0ARole: ${d.role}%0AMost Useful: ${d.useful}%0AInterested in training: ${d.interest}%0A%0AMessage: ${d.message}`;const mailto=`mailto:sharique@optifloai.com?subject=OptiFLO%20AI%20Feedback%20from%20${encodeURIComponent(d.name)}&body=${body}`;fetch('https://formspree.io/f/xpqykrwb',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(r=>{if(r.ok){document.getElementById('feedbackForm').style.display='none';document.getElementById('fbSuccess').style.display='block'}else{window.location.href=mailto}}).catch(()=>{window.location.href=mailto});return false};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SCENARIO COMPARISON
+// ═══════════════════════════════════════════════════════════════════════════
+window.compareScenarios = function(){
+  const nameA=document.getElementById('cmpA').value, nameB=document.getElementById('cmpB').value;
+  const labels={base:'Base Case',smr1_outage:'SMR-1 Outage',smr2_outage:'SMR-2 Outage',dual_smr_outage:'Dual SMR Outage',hck_surge:'HCK +20%',global_surge:'Global +10%'};
+  const{p:pA,c:cA}=getScenarioInputs(nameA), {p:pB,c:cB}=getScenarioInputs(nameB);
+  const rA=solveMeritOrder(pA,cA,NET.import,NET.export), rB=solveMeritOrder(pB,cB,NET.import,NET.export);
+
+  const metrics=[
+    ['Total Cost',rA.costs.total,rB.costs.total,'$/h',true],
+    ['Production',rA.costs.production,rB.costs.production,'$/h',true],
+    ['Import Cost',rA.costs.import,rB.costs.import,'$/h',true],
+    ['Import Flow',rA.importFlow,rB.importFlow,'Nm\u00B3/h',true],
+    ['Export Revenue',rA.costs.export_revenue,rB.costs.export_revenue,'$/h',false],
+    ['Penalty',rA.costs.unmet_penalty,rB.costs.unmet_penalty,'$/h',true],
+    ['Export Flow',rA.exportFlow,rB.exportFlow,'Nm\u00B3/h',false],
+  ];
+
+  let h=`<div class="panel" style="margin-top:14px"><div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Scenario Comparison</div>`;
+  h+=`<div class="compare-grid">`;
+  h+=`<div class="compare-col"><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${labels[nameA]}</div>`;
+  metrics.forEach(([l,a])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof a==='number'&&l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty')?'$':''}${fmt(a)}</span></div>`});
+  h+=`</div><div class="compare-vs">vs</div>`;
+  h+=`<div class="compare-col"><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;text-align:center">${labels[nameB]}</div>`;
+  metrics.forEach(([l,,b])=>{h+=`<div class="compare-row"><span style="color:var(--text2)">${l}</span><span style="font-weight:600">${typeof b==='number'&&l.includes('Cost')||l.includes('Revenue')||l.includes('Penalty')?'$':''}${fmt(b)}</span></div>`});
+  h+=`</div></div>`;
+
+  // Delta summary
+  const dTotal=rB.costs.total-rA.costs.total;
+  const dPct=rA.costs.total>0?((dTotal/rA.costs.total)*100):0;
+  const dUnmet=(Object.values(rB.consUnmet).reduce((s,v)=>s+v,0))-(Object.values(rA.consUnmet).reduce((s,v)=>s+v,0));
+  h+=`<div style="margin-top:12px;padding:12px;background:linear-gradient(135deg,#F0FAFA,#FAF8F5);border:1px solid var(--border);border-radius:8px;font-size:12px;line-height:1.7">`;
+  h+=`<b>\u0394 Impact:</b> ${labels[nameB]} ${dTotal>=0?'increases':'decreases'} total cost by <span class="${dTotal>=0?'delta-pos':'delta-neg'}">$${fmt(Math.abs(dTotal))}/h (${dTotal>=0?'+':''}${dPct.toFixed(1)}%)</span>`;
+  if(Math.abs(dUnmet)>0.1) h+=` | Curtailment ${dUnmet>0?'increases':'decreases'} by <span class="${dUnmet>0?'delta-pos':'delta-neg'}">${fmt(Math.abs(dUnmet))} Nm\u00B3/h</span>`;
+  h+=`</div></div>`;
+
+  document.getElementById('comparePanel').innerHTML=h;
+  document.getElementById('comparePanel').style.display='block';
+  document.getElementById('comparePanel').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  INIT
+// SENSITIVITY ANALYSIS
 // ═══════════════════════════════════════════════════════════════════════════
+window.runSensitivity = function(){
+  const param=document.getElementById('sensParam').value;
+  const steps=11, results=[];
+  const labels={smr1_cost:'SMR-1 Cost',smr2_cost:'SMR-2 Cost',elec1_cost:'ELEC-1 Cost',import_cost:'Import Cost',hck_demand:'HCK Demand',global_demand:'Global Demand'};
+
+  for(let i=0;i<steps;i++){
+    const factor=0.5 + (i/(steps-1)); // 50% to 150%
+    const p=JSON.parse(JSON.stringify(NET.producers)), c=JSON.parse(JSON.stringify(NET.consumers));
+    let baseVal=0;
+    switch(param){
+      case'smr1_cost': baseVal=p["SMR-1"].cost; p["SMR-1"].cost=baseVal*factor; break;
+      case'smr2_cost': baseVal=p["SMR-2"].cost; p["SMR-2"].cost=baseVal*factor; break;
+      case'elec1_cost': baseVal=p["ELEC-1"].cost; p["ELEC-1"].cost=baseVal*factor; break;
+      case'import_cost': baseVal=NET.import.cost; break;
+      case'hck_demand': baseVal=c["C-HCK"].nom; c["C-HCK"].nom=Math.round(baseVal*factor); c["C-HCK"].max=Math.round(c["C-HCK"].max*factor); break;
+      case'global_demand': Object.values(c).forEach(x=>{x.nom=Math.round(x.nom*factor);x.max=Math.round(x.max*factor)}); baseVal=83400; break;
+    }
+    const impCfg={max:NET.import.max, cost:param==='import_cost'?NET.import.cost*factor:NET.import.cost};
+    const r=solveMeritOrder(p,c,impCfg,NET.export);
+    results.push({factor,cost:r.costs.total,import:r.importFlow,penalty:r.costs.unmet_penalty,prod:r.costs.production});
+  }
+
+  const maxCost=Math.max(...results.map(r=>r.cost));
+  const baseIdx=Math.floor(steps/2);
+
+  let h=`<div class="panel" style="margin-top:14px"><div class="panel-title"><div class="dot" style="background:var(--blue)"></div>Sensitivity: ${labels[param]} (\u00B150%)</div>`;
+  h+=`<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:2px"><span>-50%</span><span>Base</span><span>+50%</span></div>`;
+  h+=`<div class="sens-chart">`;
+  results.forEach((r,i) => {
+    const pct=maxCost>0?((r.cost/maxCost)*100):0;
+    const isBase=i===baseIdx;
+    h+=`<div class="sens-bar${isBase?' active':''}" style="height:${Math.max(pct,5)}%" title="${(r.factor*100).toFixed(0)}%: $${fmt(r.cost)}/h"></div>`;
+  });
+  h+=`</div>`;
+  h+=`<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px"><span>$${fmt(results[0].cost)}/h</span><span style="font-weight:600;color:var(--orange)">$${fmt(results[baseIdx].cost)}/h</span><span>$${fmt(results[steps-1].cost)}/h</span></div>`;
+
+  // Key insight
+  const minR=results.reduce((a,b)=>a.cost<b.cost?a:b);
+  const maxR=results.reduce((a,b)=>a.cost>b.cost?a:b);
+  const range=maxR.cost-minR.cost;
+  const sensitivity=results[baseIdx].cost>0?((range/results[baseIdx].cost)*100):0;
+  h+=`<div style="margin-top:10px;padding:10px;background:var(--accent-light);border-radius:8px;font-size:12px;line-height:1.6">`;
+  h+=`<b>Sensitivity: ${sensitivity.toFixed(1)}%</b> \u2014 Total cost ranges from $${fmt(minR.cost)} to $${fmt(maxR.cost)}/h. `;
+  if(sensitivity>20) h+=`<span style="color:var(--red)">High sensitivity</span> \u2014 this parameter significantly impacts total cost.`;
+  else if(sensitivity>8) h+=`<span style="color:var(--orange)">Moderate sensitivity</span> \u2014 worth monitoring this parameter.`;
+  else h+=`<span style="color:var(--green)">Low sensitivity</span> \u2014 cost is relatively stable against this parameter.`;
+  if(maxR.penalty>0) h+=` At worst case, curtailment penalty reaches $${fmt(maxR.penalty)}/h.`;
+  h+=`</div></div>`;
+
+  document.getElementById('sensPanel').innerHTML=h;
+  document.getElementById('sensPanel').style.display='block';
+  document.getElementById('sensPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SAVE / LOAD / CSV EXPORT
+// ═══════════════════════════════════════════════════════════════════════════
+window.saveNetwork = function(){
+  const data={
+    producers:cProds, consumers:cCons,
+    config:{
+      importMax:+(document.getElementById('cp-imp-max').value)||15000,
+      importCost:+(document.getElementById('cp-imp-cost').value)||0.075,
+      exportMax:+(document.getElementById('cp-exp-max').value)||5000,
+      exportRevenue:+(document.getElementById('cp-exp-rev').value)||0.025,
+      purifiers:document.getElementById('cp-purifiers').checked,
+      psaSplit:+(document.getElementById('cp-psa-split').value)||70,
+      psaRec:+(document.getElementById('cp-psa-rec').value)||85,
+      psaMax:+(document.getElementById('cp-psa-max').value)||60000,
+      memRec:+(document.getElementById('cp-mem-rec').value)||92,
+      memMax:+(document.getElementById('cp-mem-max').value)||25000
+    }
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`optiflo-network-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+window.loadNetwork = function(evt){
+  const file=evt.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.producers)cProds=data.producers;
+      if(data.consumers)cCons=data.consumers;
+      if(data.config){
+        if(data.config.importMax) document.getElementById('cp-imp-max').value=data.config.importMax;
+        if(data.config.importCost) document.getElementById('cp-imp-cost').value=data.config.importCost;
+        if(data.config.exportMax) document.getElementById('cp-exp-max').value=data.config.exportMax;
+        if(data.config.exportRevenue) document.getElementById('cp-exp-rev').value=data.config.exportRevenue;
+        const pur=!!data.config.purifiers;
+        document.getElementById('cp-purifiers').checked=pur;
+        document.getElementById('purifier-config').style.display=pur?'grid':'none';
+        if(data.config.psaSplit) document.getElementById('cp-psa-split').value=data.config.psaSplit;
+        if(data.config.psaRec) document.getElementById('cp-psa-rec').value=data.config.psaRec;
+        if(data.config.psaMax) document.getElementById('cp-psa-max').value=data.config.psaMax;
+        if(data.config.memRec) document.getElementById('cp-mem-rec').value=data.config.memRec;
+        if(data.config.memMax) document.getElementById('cp-mem-max').value=data.config.memMax;
+        document.getElementById('cp-mem-split').value=100-(data.config.psaSplit||70);
+      }
+      renderCL();
+      buildCustomDiagram();
+      document.getElementById('build').scrollIntoView({behavior:'smooth'});
+    }catch(err){alert('Invalid JSON file: '+err.message)}
+  };
+  reader.readAsText(file);
+  evt.target.value=''; // reset for re-upload
+};
+
+window.exportCSV = function(){
+  const r=window._lastCustomResult;
+  if(!r)return alert('Run optimizer first.');
+  let csv='OptiFLO AI - Optimization Results\n';
+  csv+=`Generated,${new Date().toISOString()}\n\n`;
+  csv+='COSTS\nMetric,Value ($/h)\n';
+  csv+=`Total Cost,${r.costs.total.toFixed(2)}\nProduction,${r.costs.production.toFixed(2)}\nImport,${r.costs.import.toFixed(2)}\nExport Revenue,${r.costs.export_revenue.toFixed(2)}\nStartup,${r.costs.startup.toFixed(2)}\nPenalty,${r.costs.unmet_penalty.toFixed(2)}\n\n`;
+  csv+='PRODUCERS\nID,Type,Status,Flow (Nm3/h),Cost ($/Nm3),Loading (%)\n';
+  Object.entries(r.prodFlows).forEach(([id,flow])=>{
+    const p=cProds[id];
+    csv+=`${id},${p.type},${r.prodOn[id]?'ON':'OFF'},${flow.toFixed(0)},${p.cost},${p.max>0?(flow/p.max*100).toFixed(1):'0'}\n`;
+  });
+  csv+='\nCONSUMERS\nID,Demand (Nm3/h),Supplied (Nm3/h),Unmet (Nm3/h),Status\n';
+  Object.entries(r.consSupplied).forEach(([id,sup])=>{
+    const c=cCons[id], u=r.consUnmet[id]||0;
+    csv+=`${id},${c.nom},${sup.toFixed(0)},${u.toFixed(0)},${u>0.1?'CURTAILED':'OK'}\n`;
+  });
+  csv+=`\nEXTERNAL\nImport (Nm3/h),${r.importFlow.toFixed(0)}\nExport (Nm3/h),${r.exportFlow.toFixed(0)}\n`;
+
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`optiflo-results-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+// About tab switching
+// Page view switching (SPA-style)
+// Auto-sync MEM split with PSA split
+document.getElementById('cp-psa-split').addEventListener('input',function(){
+  document.getElementById('cp-mem-split').value=100-Math.min(90,Math.max(10,+this.value));
+});
+
+window.showPage=function(page,btn){
+  document.querySelectorAll('.page-view').forEach(p=>p.style.display='none');
+  document.getElementById('page-'+page).style.display='block';
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+// About tab switching
+window.showAboutTab=function(tab,btn){
+  document.querySelectorAll('.about-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.about-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+};
+
+buildOptDiagram();
 renderMerit();
 renderCL();
+buildCustomDiagram();
 window.runScenario('base',document.querySelector('.sc-btn'));
+setTimeout(()=>{ensureChat()},1000);
 
-// Verify API connectivity on load so the green dot shows immediately
-setTimeout(() => { ensureChatReady(); }, 1000);
+// PWA service worker registration
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+
+// Page view is managed by showPage() — no scroll tracking needed
 </script>
-<script data-goatcounter="https://optifloai.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://optifloai.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

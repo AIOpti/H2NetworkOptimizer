@@ -1,0 +1,203 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 15">
+<style>
+body{font-family:Arial,sans-serif;font-size:12pt;color:#2D3436;line-height:1.7;margin:72pt 72pt 72pt 72pt}
+h1{font-size:26pt;font-weight:800;color:#008B8B;margin-top:36pt;margin-bottom:12pt;page-break-after:avoid}
+h2{font-size:18pt;font-weight:700;color:#008B8B;margin-top:24pt;margin-bottom:8pt;border-bottom:2pt solid #E0F5F5;padding-bottom:6pt;page-break-after:avoid}
+h3{font-size:14pt;font-weight:700;color:#2D3436;margin-top:16pt;margin-bottom:6pt;page-break-after:avoid}
+p{margin-bottom:8pt;text-align:justify}
+.title-page{text-align:center;margin-top:200pt;page-break-after:always}
+.title-page h1{font-size:32pt;color:#008B8B;border:none;margin-bottom:8pt}
+.title-page .subtitle{font-size:16pt;color:#636E72;margin-bottom:24pt}
+.title-page .author{font-size:13pt;color:#2D3436;margin-top:60pt}
+.title-page .tagline{font-size:11pt;color:#008B8B;font-style:italic;margin-top:8pt}
+.toc{page-break-after:always}
+.toc a{color:#008B8B;text-decoration:none}
+.toc li{margin-bottom:6pt;font-size:12pt}
+table{border-collapse:collapse;width:100%;margin:12pt 0}
+th{background:#008B8B;color:white;padding:8pt 12pt;text-align:left;font-size:11pt;font-weight:600}
+td{padding:8pt 12pt;border-bottom:1pt solid #E0DBD4;font-size:11pt;vertical-align:top}
+tr:nth-child(even){background:#FAF8F5}
+.highlight-box{background:#E0F5F5;border-left:4pt solid #008B8B;padding:12pt 16pt;margin:12pt 0;border-radius:4pt}
+.highlight-box p{margin-bottom:4pt}
+.feature-name{font-weight:700;color:#008B8B}
+ul{margin-left:18pt;margin-bottom:10pt}
+li{margin-bottom:4pt}
+.footer{text-align:center;font-size:10pt;color:#636E72;margin-top:48pt;border-top:1pt solid #E0DBD4;padding-top:12pt}
+@page{size:A4;margin:72pt}
+</style>
+</head>
+<body>
+
+<!-- TITLE PAGE -->
+<div class="title-page">
+<h1>OptiFLO AI<br>Platform Guide</h1>
+<div class="subtitle">An Interactive Learning Platform for<br>AI-Driven Hydrogen Network Optimization</div>
+<div style="width:120pt;height:3pt;background:#008B8B;margin:0 auto"></div>
+<div class="author">
+<b>OptiFLO AI Solutions</b><br>Abu Dhabi, UAE
+</div>
+<div class="tagline">Fast Light-off In Digital Transformation</div>
+<div style="margin-top:30pt;font-size:10pt;color:#95A5A6">Version 1.0 &#8212; March 2026</div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol style="font-size:13pt;line-height:2">
+<li><a href="#s1">Introduction</a></li>
+<li><a href="#s2">Why Hydrogen Network Optimization Matters</a></li>
+<li><a href="#s3">Key Concepts Explained</a></li>
+<li><a href="#s4">Platform Features</a></li>
+<li><a href="#s5">Common Scenarios and What They Teach</a></li>
+<li><a href="#s6">Getting Started &#8212; Step by Step</a></li>
+<li><a href="#s7">Contact</a></li>
+</ol>
+</div>
+
+<!-- 1. INTRODUCTION -->
+<h1 id="s1">1. Introduction</h1>
+
+<p>Hydrogen is one of the most critical utilities in an oil refinery. It is used to remove sulfur from fuels (hydrodesulfurization), crack heavy crude oil into lighter and more valuable products (hydrocracking), and meet increasingly stringent environmental regulations around the world.</p>
+
+<p>A typical refinery operates multiple hydrogen sources &#8212; steam methane reformers (SMRs), electrolysers, and by-product streams from catalytic reformers and ethylene crackers &#8212; each with different production costs, capacities, and purities. On the demand side, a dozen or more process units consume hydrogen at varying rates, with different quality requirements and operational priorities.</p>
+
+<p>The core challenge is deceptively simple: <b>which producers should run, at what rate, to meet all consumer demands at the lowest possible cost?</b></p>
+
+<p>In practice, this dispatch decision is complicated by minimum stable production rates (you cannot run a reformer at 5% of its capacity), purifier recovery losses (up to 15% of hydrogen is lost during purification), equipment outages that can happen without warning, demand fluctuations driven by refinery throughput, and priority-based curtailment rules that protect critical units during supply shortages.</p>
+
+<div class="highlight-box">
+<p><b>OptiFLO AI</b> is a free, browser-based learning platform that makes this problem tangible. It provides an interactive environment where you can optimize a realistic hydrogen network, explore &#8220;what-if&#8221; scenarios, build your own custom networks, and learn the underlying concepts through an AI-powered tutor &#8212; all without installing software, writing code, or having any prior AI knowledge.</p>
+</div>
+
+<!-- 2. WHY IT MATTERS -->
+<h1 id="s2">2. Why Hydrogen Network Optimization Matters</h1>
+
+<p>Hydrogen is often the <b>second-largest operating cost</b> in a refinery, behind crude oil itself. Refineries typically spend $20&#8211;50 million per year on hydrogen production and procurement. The cost comes from natural gas feedstock for reformers, electricity for electrolysers, and pipeline import fees.</p>
+
+<p>Studies and industry experience show that AI-driven optimization using Mixed Integer Programming (MIP) can reduce hydrogen costs by <b>5&#8211;15%</b> &#8212; translating to $1&#8211;7 million in annual savings for a medium-scale refinery. In large, complex refineries with multiple hydrogen sources, the savings can be even greater.</p>
+
+<p>Beyond cost reduction, optimization improves <b>operational resilience</b>. When a major producer trips offline unexpectedly, an MIP-based optimizer can re-dispatch the remaining sources in seconds, curtailing only the lowest-priority consumers and minimizing economic damage. Manual dispatch, which relies on operator experience and rules of thumb, typically leaves significant savings on the table and responds more slowly to upsets.</p>
+
+<div class="highlight-box">
+<p><b>In short:</b> Hydrogen optimization is a high-impact, well-defined problem where mathematical optimization delivers measurable, repeatable results. This platform teaches you how it works.</p>
+</div>
+
+<!-- 3. KEY CONCEPTS -->
+<h1 id="s3">3. Key Concepts Explained</h1>
+
+<h2>3.1 The Hydrogen Network</h2>
+<p>A hydrogen network is the system of pipelines, equipment, and controls that produce, purify, and distribute hydrogen across a refinery. Think of it like a city water distribution system: multiple treatment plants (producers) feed into a shared grid, and different buildings (consumers) draw from it based on their needs. Each source has a different cost and capacity, and the goal is to supply everyone reliably at minimum total cost.</p>
+
+<p>The key components are:</p>
+<ul>
+<li><b>Producers</b> &#8212; Sources of hydrogen (SMRs, electrolysers, by-product streams)</li>
+<li><b>Purifiers</b> &#8212; PSA units and membranes that increase hydrogen purity</li>
+<li><b>Consumers</b> &#8212; Process units that use hydrogen (hydrocrackers, desulfurization units, hydrotreaters)</li>
+<li><b>External connections</b> &#8212; Import pipelines (buying H&#8322; from outside) and export headers (selling surplus)</li>
+</ul>
+
+<h2>3.2 Merit Order Dispatch</h2>
+<p>Merit order is the simplest and most intuitive optimization strategy: rank all producers by their unit cost (cheapest first) and turn them on in order until total demand is met.</p>
+
+<p>For example, if you have three producers costing $0.008, $0.035, and $0.065 per Nm&#179;, you run the cheapest one at maximum capacity first. If demand still is not met, you turn on the next cheapest, and so on. Pipeline imports (typically the most expensive option) are used only as a last resort.</p>
+
+<p>This merit-order principle is the foundation of the platform&#8217;s optimizer.</p>
+
+<h2>3.3 Mixed Integer Programming (MIP)</h2>
+<p>MIP extends merit-order dispatch by handling real-world constraints mathematically. The word &#8220;mixed&#8221; means it uses both:</p>
+<ul>
+<li><b>Continuous variables</b> &#8212; flow rates that can be any number within a range (e.g., SMR-1 running at 32,450 Nm&#179;/h)</li>
+<li><b>Binary/integer variables</b> &#8212; ON/OFF decisions (e.g., is SMR-1 running at all? 1 = yes, 0 = no)</li>
+</ul>
+
+<p>The binary variables are what make it &#8220;integer&#8221; programming, and they capture real operational behavior: a reformer has a minimum stable rate, so it is either OFF or running above that minimum &#8212; it cannot produce an arbitrarily small amount. MIP guarantees the <b>mathematically optimal solution</b>, not just a good approximation.</p>
+
+<h2>3.4 Constraints and Why They Matter</h2>
+
+<table>
+<tr><th>Constraint Type</th><th>What It Means</th><th>Why It Matters</th></tr>
+<tr><td><b>Capacity limits</b></td><td>Each producer has a minimum and maximum flow rate</td><td>An SMR cannot run at 5% capacity &#8212; there is a minimum stable rate. Below it, the unit must be shut off entirely.</td></tr>
+<tr><td><b>Mass balance</b></td><td>Total production + imports = consumption + exports + losses</td><td>Hydrogen cannot appear from nowhere or disappear. Every molecule must be accounted for.</td></tr>
+<tr><td><b>Priority-based curtailment</b></td><td>If supply falls short, lower-priority consumers are curtailed first</td><td>The hydrocracker (critical, priority 1) is protected before the wax hydrofinisher (priority 4).</td></tr>
+<tr><td><b>Purifier recovery</b></td><td>PSA recovery &#8776; 85%, membrane recovery &#8776; 92%</td><td>You need to produce MORE than nominal demand to compensate for purification losses.</td></tr>
+<tr><td><b>Non-curtailability</b></td><td>Some consumers cannot be reduced under any circumstances</td><td>Safety-critical units must always receive full hydrogen supply.</td></tr>
+</table>
+
+<!-- 4. PLATFORM FEATURES -->
+<h1 id="s4">4. Platform Features</h1>
+
+<h3>4.1 Live Optimizer</h3>
+<p>Run 6 pre-configured scenarios on a realistic refinery network with 5 producers, 2 purifiers, and 10 consumers (120,000 Nm&#179;/h total capacity). See real-time cost breakdowns, producer loading percentages, consumer satisfaction status, CO&#8322; emissions, and purifier utilization &#8212; all updating instantly when you switch scenarios.</p>
+
+<h3>4.2 Interactive Network Diagram</h3>
+<p>An SVG-based diagram embedded directly in the optimizer shows all network nodes with live flow values. Flow lines animate to indicate active hydrogen paths. Nodes are color-coded: green (OK), orange (curtailed), red (OFF). Hover over any node for detailed capacity, cost, and status information.</p>
+
+<h3>4.3 Scenario Comparison</h3>
+<p>Select any two scenarios from dropdown menus and compare them side-by-side. See total cost, production cost, import cost, curtailment penalty, and export revenue for each &#8212; with a delta summary showing the exact cost impact (in $/h and percentage) and curtailment difference.</p>
+
+<h3>4.4 Sensitivity Analysis</h3>
+<p>Sweep any parameter (producer cost, import cost, consumer demand) from &#8722;50% to +50% across 11 data points and visualize the cost response as a bar chart. The tool automatically rates the sensitivity as Low, Moderate, or High, helping you identify which parameters have the greatest impact on total operating cost.</p>
+
+<h3>4.5 Custom Network Builder</h3>
+<p>Define your own producers (name, type, cost, min/max capacity) and consumers (demand, priority, curtailability, penalty cost). The platform auto-generates a network diagram as you add assets. You can configure import/export parameters (capacity, cost, revenue), toggle purifier routing on or off, and run the optimizer to get smart insights including merit-order rationale, supply/demand analysis, utilization warnings, and unit economics.</p>
+
+<h3>4.6 Save, Load, and Export</h3>
+<p>Save custom network configurations as JSON files and reload them in future sessions. Export optimization results as CSV files for further analysis in Excel or other tools. Everything runs locally in your browser &#8212; no data is uploaded to any server.</p>
+
+<h3>4.7 AI Tutor</h3>
+<p>An integrated chatbot powered by Groq (Llama 3) answers questions about hydrogen optimization, MIP formulations, constraint design, and practical implementation. Ask anything from &#8220;what is a binary variable?&#8221; to &#8220;how do I build my own optimizer in Python?&#8221; The tutor is trained specifically on hydrogen network optimization concepts.</p>
+
+<!-- 5. SCENARIOS -->
+<h1 id="s5">5. Common Scenarios and What They Teach</h1>
+
+<table>
+<tr><th>Scenario</th><th>What Changes</th><th>What You Learn</th></tr>
+<tr><td><b>Base Case</b></td><td>All producers available, nominal demand</td><td>Merit-order dispatch &#8212; cheapest by-products run first, SMRs fill the gap. This is your cost baseline.</td></tr>
+<tr><td><b>SMR-1 Outage</b></td><td>Largest producer (50,000 Nm&#179;/h) goes offline</td><td>How the optimizer increases imports and may curtail low-priority consumers. Demonstrates single-point-of-failure risk.</td></tr>
+<tr><td><b>Dual SMR Outage</b></td><td>Both reformers offline simultaneously</td><td>Massive supply shortfall &#8212; only electrolysers, by-products, and imports remain. Shows the importance of supply diversity.</td></tr>
+<tr><td><b>Hydrocracker +20%</b></td><td>Largest consumer demands 20% more H&#8322;</td><td>SMR-1 ramps to near-maximum. Cost increases but supply holds. Tests system headroom for demand spikes.</td></tr>
+<tr><td><b>Global Demand +10%</b></td><td>All consumers increase by 10%</td><td>Tests overall system capacity. May trigger import surges or minor curtailment depending on available headroom.</td></tr>
+</table>
+
+<!-- 6. GETTING STARTED -->
+<h1 id="s6">6. Getting Started &#8212; Step by Step</h1>
+
+<table>
+<tr><th>Step</th><th>Action</th><th>What You Will See</th></tr>
+<tr><td><b>1</b></td><td>Open the platform in your web browser</td><td>The home page with hero section and navigation bar</td></tr>
+<tr><td><b>2</b></td><td>Scroll to the &#8220;About&#8221; section and read the Overview tab</td><td>A clear explanation of the platform concept and 4-step workflow</td></tr>
+<tr><td><b>3</b></td><td>Go to the Live Optimizer and click different scenario buttons</td><td>The network diagram, costs, and consumer status update in real time</td></tr>
+<tr><td><b>4</b></td><td>Try Scenario Comparison: select &#8220;Base Case&#8221; vs &#8220;SMR-1 Outage&#8221;</td><td>A side-by-side comparison panel with cost deltas</td></tr>
+<tr><td><b>5</b></td><td>Run Sensitivity Analysis on &#8220;SMR-1 Cost&#8221;</td><td>A bar chart showing how total cost responds to &#177;50% cost variation</td></tr>
+<tr><td><b>6</b></td><td>Go to &#8220;Build Your Own.&#8221; Click &#8220;Load Sample&#8221;</td><td>A 3-producer, 4-consumer network auto-generates with a diagram</td></tr>
+<tr><td><b>7</b></td><td>Click &#8220;Optimize&#8221;</td><td>Results with KPI cards, tables, and smart optimization insights</td></tr>
+<tr><td><b>8</b></td><td>Click &#8220;AI Tutor&#8221; and ask a question</td><td>An AI response explaining MIP, merit order, or any H&#8322; optimization concept</td></tr>
+</table>
+
+<!-- 7. CONTACT -->
+<h1 id="s7">7. Contact</h1>
+
+<p>This platform was built by <b>Mohd Sharique</b> at <b>OptiFLO AI Solutions</b>, Abu Dhabi.</p>
+
+<p>For questions, training workshops, or consulting on hydrogen network optimization:</p>
+
+<table>
+<tr><td><b>Email</b></td><td>sharique@optifloai.com</td></tr>
+<tr><td><b>LinkedIn</b></td><td>linkedin.com/in/mohdsharique</td></tr>
+<tr><td><b>Platform</b></td><td>[Your Netlify URL]</td></tr>
+</table>
+
+<div class="highlight-box" style="text-align:center;margin-top:24pt">
+<p style="font-size:14pt;font-weight:700;color:#008B8B;margin-bottom:0"><em>Let the domain lead AI.</em></p>
+</div>
+
+<div class="footer">
+&copy; 2026 OptiFLO AI Solutions, Abu Dhabi &#8212; Fast Light-off In Digital Transformation
+</div>
+
+</body>
+</html>

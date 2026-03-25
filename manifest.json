@@ -1,0 +1,18 @@
+{
+  "name": "OptiFLO AI",
+  "short_name": "OptiFLO",
+  "description": "AI-Driven Hydrogen Network Optimization Learning Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F2EE",
+  "theme_color": "#008B8B",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23008B8B'/><text x='96' y='130' text-anchor='middle' fill='white' font-size='100' font-weight='800' font-family='system-ui'>O</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

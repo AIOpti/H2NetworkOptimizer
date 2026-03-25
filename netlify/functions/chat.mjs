@@ -67,18 +67,23 @@ export default async (req) => {
     return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405 });
   }
 
-  const apiKey = Netlify.env.get("GROQ_API_KEY");
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: "GROQ_API_KEY not configured" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "GROQ_API_KEY not configured. Set it in Netlify Environment Variables." }), { status: 500 });
   }
 
   try {
     const { messages } = await req.json();
 
-    // Prepend system prompt if not already present
-    const fullMessages = messages[0]?.role === "system"
-      ? messages
-      : [{ role: "system", content: SYSTEM_PROMPT }, ...messages];
+    // Merge static knowledge base with any client-provided context
+    // Client sends a system message with live optimizer state; we append our knowledge base to it
+    let systemContent = SYSTEM_PROMPT;
+    if (messages[0]?.role === "system") {
+      // Client provided context-aware system prompt — merge it with our knowledge base
+      systemContent = messages[0].content + "\n\n" + SYSTEM_PROMPT;
+      messages.shift(); // remove from messages array since we'll prepend the merged version
+    }
+    const fullMessages = [{ role: "system", content: systemContent }, ...messages];
 
     // Keep conversation manageable (system + last 12 messages)
     const trimmed = fullMessages.length > 13
