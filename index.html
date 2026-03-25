@@ -720,14 +720,21 @@ footer .social a{display:inline;margin:0 10px;color:var(--accent);font-size:13px
 </div>
 
 <script>
-// Netlify Identity — handle email confirmation redirect and init
+// Netlify Identity — handle email confirmation and auto-close after login
 if(window.netlifyIdentity){
-  window.netlifyIdentity.on('init',function(user){
-    if(!user){
-      // Process confirmation token from email link if present
-      if(window.location.hash.includes('confirmation_token')||window.location.hash.includes('invite_token')){
-        window.netlifyIdentity.open();
-      }
+  var ni = window.netlifyIdentity;
+  // After confirmation token redirect, open widget to complete verification
+  ni.on('init',function(user){
+    if(!user && (window.location.hash.includes('confirmation_token')||window.location.hash.includes('invite_token'))){
+      ni.open();
+    }
+  });
+  // Global login handler — always close the widget after successful login
+  ni.on('login',function(){
+    ni.close();
+    // Remove the hash token from URL so refresh doesn't re-trigger
+    if(window.location.hash.includes('token')){
+      history.replaceState(null,'',window.location.pathname);
     }
   });
 }
@@ -2089,7 +2096,8 @@ window.openChat=function(){
   ni.on('login', function onLogin(u){
     ni.off('login', onLogin);
     ni.close();
-    openChatForUser(u);
+    // Delay opening chat to let Identity widget fully close on mobile
+    setTimeout(function(){ openChatForUser(u); }, 500);
   });
 };
 
