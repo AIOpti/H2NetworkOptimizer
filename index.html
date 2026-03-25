@@ -2066,24 +2066,31 @@ window.updateContextBar=function(){
 }
 
 // ── Netlify Identity gate for AI Tutor ──
-function getCurrentUser(){
-  return window.netlifyIdentity && window.netlifyIdentity.currentUser();
-}
+const IS_LOCAL = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
 window.openChat=function(){
-  const user = getCurrentUser();
-  if(!user){
-    // Show registration/login via Netlify Identity widget
-    window.netlifyIdentity.open('signup');
-    // Listen for login event — once logged in, open chat
-    window.netlifyIdentity.on('login', function onLogin(u){
-      window.netlifyIdentity.off('login', onLogin);
-      window.netlifyIdentity.close();
-      openChatForUser(u);
-    });
+  // Skip gate on local dev/file://
+  if(IS_LOCAL){
+    openChatForUser(null);
     return;
   }
-  openChatForUser(user);
+  const ni = window.netlifyIdentity;
+  if(!ni){
+    alert('Registration service is loading. Please try again in a moment.');
+    return;
+  }
+  const user = ni.currentUser();
+  if(user){
+    openChatForUser(user);
+    return;
+  }
+  // Not logged in — show registration/login
+  ni.open('signup');
+  ni.on('login', function onLogin(u){
+    ni.off('login', onLogin);
+    ni.close();
+    openChatForUser(u);
+  });
 };
 
 function openChatForUser(user){
